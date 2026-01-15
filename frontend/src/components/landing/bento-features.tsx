@@ -105,7 +105,7 @@ export function BentoFeatures() {
                             {/* Decorative element for large cards */}
                             {feature.className.includes('md:col-span-2') && (
                                 <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    {feature.icon && React.cloneElement(feature.icon as React.ReactElement, { size: 120 })}
+                                    {feature.icon && React.cloneElement(feature.icon as React.ReactElement<any>, { size: 120 })}
                                 </div>
                             )}
                         </motion.div>
