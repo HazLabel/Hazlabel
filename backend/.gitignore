@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PDF Files (large binary files from testing)
+*.pdf
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+.cursor/debug.log
+
+# Large reference files
+GHS*.pdf
+Chemical*.pdf
+
+# Temporary files
+tmp/
+temp/

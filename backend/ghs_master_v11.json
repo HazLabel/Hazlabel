@@ -1,0 +1,1952 @@
+{
+  "reference_statements": {
+    "H200": {
+      "type": "hazard",
+      "code": "H200",
+      "hazard_class": "",
+      "statement": "[Deleted]",
+      "category": ""
+    },
+    "H201": {
+      "type": "hazard",
+      "code": "H201",
+      "hazard_class": "",
+      "statement": "[Deleted]",
+      "category": ""
+    },
+    "H202": {
+      "type": "hazard",
+      "code": "H202",
+      "hazard_class": "",
+      "statement": "[Deleted]",
+      "category": ""
+    },
+    "H203": {
+      "type": "hazard",
+      "code": "H203",
+      "hazard_class": "",
+      "statement": "[Deleted]",
+      "category": ""
+    },
+    "H204": {
+      "type": "hazard",
+      "code": "H204",
+      "hazard_class": "Explosives (chapter 2.1) 2B, 2C",
+      "statement": "Fire or projection hazard",
+      "category": "2B, 2C"
+    },
+    "H205": {
+      "type": "hazard",
+      "code": "H205",
+      "hazard_class": "",
+      "statement": "[Deleted]",
+      "category": ""
+    },
+    "H206": {
+      "type": "hazard",
+      "code": "H206",
+      "hazard_class": "Desensitized explosives (chapter 2.17) 1",
+      "statement": "Fire, blast or projection hazard; increased risk of explosion if desensitizing agent is reduced",
+      "category": "1"
+    },
+    "H207": {
+      "type": "hazard",
+      "code": "H207",
+      "hazard_class": "Desensitized explosives (chapter 2.17) 2, 3",
+      "statement": "Fire or projection hazard; increased risk of explosion if desensitizing agent is reduced",
+      "category": "2, 3"
+    },
+    "H208": {
+      "type": "hazard",
+      "code": "H208",
+      "hazard_class": "Desensitized explosives (chapter 2.17) 4",
+      "statement": "Fire hazard; increased risk of explosion if desensitizing agent is reduced",
+      "category": "4"
+    },
+    "H209": {
+      "type": "hazard",
+      "code": "H209",
+      "hazard_class": "Explosives (chapter 2.1) 1, 2A",
+      "statement": "Explosive",
+      "category": "1, 2A"
+    },
+    "H210": {
+      "type": "hazard",
+      "code": "H210",
+      "hazard_class": "Explosives (chapter 2.1) 1",
+      "statement": "Very sensitive",
+      "category": "1"
+    },
+    "H211": {
+      "type": "hazard",
+      "code": "H211",
+      "hazard_class": "Explosives (chapter 2.1) 1",
+      "statement": "May be sensitive",
+      "category": "1"
+    },
+    "H220": {
+      "type": "hazard",
+      "code": "H220",
+      "hazard_class": "Flammable gases (chapter 2.2) 1A",
+      "statement": "Extremely flammable gas",
+      "category": "1A"
+    },
+    "H221": {
+      "type": "hazard",
+      "code": "H221",
+      "hazard_class": "Flammable gases (chapter 2.2) 1B, 2",
+      "statement": "Flammable gas",
+      "category": "1B, 2"
+    },
+    "H222": {
+      "type": "hazard",
+      "code": "H222",
+      "hazard_class": "Aerosols (chapter 2.3) 1",
+      "statement": "Extremely flammable aerosol",
+      "category": "1"
+    },
+    "H223": {
+      "type": "hazard",
+      "code": "H223",
+      "hazard_class": "Aerosols (chapter 2.3) 2",
+      "statement": "Flammable aerosol",
+      "category": "2"
+    },
+    "H224": {
+      "type": "hazard",
+      "code": "H224",
+      "hazard_class": "Flammable liquids (chapter 2.6) 1",
+      "statement": "Extremely flammable liquid and vapour",
+      "category": "1"
+    },
+    "H225": {
+      "type": "hazard",
+      "code": "H225",
+      "hazard_class": "Flammable liquids (chapter 2.6) 2",
+      "statement": "Highly flammable liquid and vapour",
+      "category": "2"
+    },
+    "H226": {
+      "type": "hazard",
+      "code": "H226",
+      "hazard_class": "Flammable liquids (chapter 2.6) 3",
+      "statement": "Flammable liquid and vapour",
+      "category": "3"
+    },
+    "H227": {
+      "type": "hazard",
+      "code": "H227",
+      "hazard_class": "Flammable liquids (chapter 2.6) 4",
+      "statement": "Combustible liquid",
+      "category": "4"
+    },
+    "H228": {
+      "type": "hazard",
+      "code": "H228",
+      "hazard_class": "Flammable solids (chapter 2.7) 1, 2",
+      "statement": "Flammable solid",
+      "category": "1, 2"
+    },
+    "H229": {
+      "type": "hazard",
+      "code": "H229",
+      "hazard_class": "Aerosols (chapter 2.3) 1, 2, 3",
+      "statement": "Pressurized container: may burst if heated",
+      "category": "1, 2, 3"
+    },
+    "H230": {
+      "type": "hazard",
+      "code": "H230",
+      "hazard_class": "Flammable gases (chapter 2.2) 1A, chemically unstable gas A",
+      "statement": "May react explosively even in the absence of air",
+      "category": "1A, chemically unstable gas A"
+    },
+    "H231": {
+      "type": "hazard",
+      "code": "H231",
+      "hazard_class": "Flammable gases (chapter 2.2) 1A, chemically unstable gas B",
+      "statement": "May react explosively even in the absence of air at elevated pressure and/or temperature",
+      "category": "1A, chemically unstable gas B"
+    },
+    "H232": {
+      "type": "hazard",
+      "code": "H232",
+      "hazard_class": "Flammable gases (chapter 2.2) 1A, pyrophoric gas",
+      "statement": "May ignite spontaneously if exposed to air",
+      "category": "1A, pyrophoric gas"
+    },
+    "H240": {
+      "type": "hazard",
+      "code": "H240",
+      "hazard_class": "Self-reactive substances and mixtures (chapter 2.8); and Organic peroxides (chapter 2.15) Type A",
+      "statement": "Heating may cause an explosion",
+      "category": "Type A"
+    },
+    "H241": {
+      "type": "hazard",
+      "code": "H241",
+      "hazard_class": "Self-reactive substances and mixtures (chapter 2.8); and Organic peroxides (chapter 2.15) Type B",
+      "statement": "Heating may cause a fire or explosion",
+      "category": "Type B"
+    },
+    "H242": {
+      "type": "hazard",
+      "code": "H242",
+      "hazard_class": "Self-reactive substances and mixtures (chapter 2.8); and Organic peroxides (chapter 2.15) Types C, D, E, F",
+      "statement": "Heating may cause a fire",
+      "category": "Types C, D, E, F"
+    },
+    "H250": {
+      "type": "hazard",
+      "code": "H250",
+      "hazard_class": "Pyrophoric liquids (chapter 2.9); Pyrophoric solids (chapter 2.10) 1",
+      "statement": "Catches fire spontaneously if exposed to air",
+      "category": "1"
+    },
+    "H251": {
+      "type": "hazard",
+      "code": "H251",
+      "hazard_class": "Self-heating substances and mixtures (chapter 2.11) 1",
+      "statement": "Self-heating; may catch fire",
+      "category": "1"
+    },
+    "H252": {
+      "type": "hazard",
+      "code": "H252",
+      "hazard_class": "Self-heating substances and mixtures (chapter 2.11) 2",
+      "statement": "Self-heating in large quantities; may catch fire",
+      "category": "2"
+    },
+    "H260": {
+      "type": "hazard",
+      "code": "H260",
+      "hazard_class": "Substances and mixtures which, in contact with water, emit flammable gases (chapter 2.12) 1",
+      "statement": "In contact with water releases flammable gases which may ignite spontaneously",
+      "category": "1"
+    },
+    "H261": {
+      "type": "hazard",
+      "code": "H261",
+      "hazard_class": "Substances and mixtures which, in contact with water, emit flammable gases (chapter 2.12) 2, 3",
+      "statement": "In contact with water releases flammable gas",
+      "category": "2, 3"
+    },
+    "H270": {
+      "type": "hazard",
+      "code": "H270",
+      "hazard_class": "Oxidizing gases (chapter 2.4) 1",
+      "statement": "May cause or intensify fire; oxidizer",
+      "category": "1"
+    },
+    "H271": {
+      "type": "hazard",
+      "code": "H271",
+      "hazard_class": "Oxidizing liquids (chapter 2.13); Oxidizing solids (chapter 2.14) 1",
+      "statement": "May cause fire or explosion; strong oxidizer",
+      "category": "1"
+    },
+    "H272": {
+      "type": "hazard",
+      "code": "H272",
+      "hazard_class": "Oxidizing liquids (chapter 2.13); Oxidizing solids (chapter 2.14) 2, 3",
+      "statement": "May intensify fire; oxidizer",
+      "category": "2, 3"
+    },
+    "H280": {
+      "type": "hazard",
+      "code": "H280",
+      "hazard_class": "Gases under pressure (chapter 2.5) Compressed gas Liquefied gas Dissolved gas",
+      "statement": "Contains gas under pressure; may explode if heated",
+      "category": "Compressed gas Liquefied gas Dissolved gas"
+    },
+    "H281": {
+      "type": "hazard",
+      "code": "H281",
+      "hazard_class": "Gases under pressure (chapter 2.5) Refrigerated liquefied gas",
+      "statement": "Contains refrigerated gas; may cause cryogenic burns or injury",
+      "category": "Refrigerated liquefied gas"
+    },
+    "H282": {
+      "type": "hazard",
+      "code": "H282",
+      "hazard_class": "Chemicals under pressure (chapter 2.3) 1",
+      "statement": "Extremely flammable chemical under pressure: May explode if heated",
+      "category": "1"
+    },
+    "H283": {
+      "type": "hazard",
+      "code": "H283",
+      "hazard_class": "Chemicals under pressure (chapter 2.3) 2",
+      "statement": "Flammable chemical under pressure: May explode if heated",
+      "category": "2"
+    },
+    "H284": {
+      "type": "hazard",
+      "code": "H284",
+      "hazard_class": "Chemicals under pressure (chapter 2.3) 3",
+      "statement": "Chemical under pressure: May explode if heated",
+      "category": "3"
+    },
+    "H290": {
+      "type": "hazard",
+      "code": "H290",
+      "hazard_class": "Corrosive to metals (chapter 2.16) 1",
+      "statement": "May be corrosive to metals",
+      "category": "1"
+    },
+    "H300": {
+      "type": "hazard",
+      "code": "H300",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) 1, 2",
+      "statement": "Fatal if swallowed",
+      "category": "1, 2"
+    },
+    "H301": {
+      "type": "hazard",
+      "code": "H301",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) 3",
+      "statement": "Toxic if swallowed",
+      "category": "3"
+    },
+    "H302": {
+      "type": "hazard",
+      "code": "H302",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) 4",
+      "statement": "Harmful if swallowed",
+      "category": "4"
+    },
+    "H303": {
+      "type": "hazard",
+      "code": "H303",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) 5",
+      "statement": "May be harmful if swallowed",
+      "category": "5"
+    },
+    "H304": {
+      "type": "hazard",
+      "code": "H304",
+      "hazard_class": "Aspiration hazard (chapter 3.10) 1",
+      "statement": "May be fatal if swallowed and enters airways",
+      "category": "1"
+    },
+    "H305": {
+      "type": "hazard",
+      "code": "H305",
+      "hazard_class": "Aspiration hazard (chapter 3.10) 2",
+      "statement": "May be harmful if swallowed and enters airways",
+      "category": "2"
+    },
+    "H310": {
+      "type": "hazard",
+      "code": "H310",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) 1, 2",
+      "statement": "Fatal in contact with skin",
+      "category": "1, 2"
+    },
+    "H311": {
+      "type": "hazard",
+      "code": "H311",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) 3",
+      "statement": "Toxic in contact with skin",
+      "category": "3"
+    },
+    "H312": {
+      "type": "hazard",
+      "code": "H312",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) 4",
+      "statement": "Harmful in contact with skin",
+      "category": "4"
+    },
+    "H313": {
+      "type": "hazard",
+      "code": "H313",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) 5",
+      "statement": "May be harmful in contact with skin",
+      "category": "5"
+    },
+    "H314": {
+      "type": "hazard",
+      "code": "H314",
+      "hazard_class": "Skin corrosion/irritation (chapter 3.2) 1, 1A, 1B, 1C",
+      "statement": "Causes severe skin burns and eye damage",
+      "category": "1, 1A, 1B, 1C"
+    },
+    "H315": {
+      "type": "hazard",
+      "code": "H315",
+      "hazard_class": "Skin corrosion/irritation (chapter 3.2) 2",
+      "statement": "Causes skin irritation",
+      "category": "2"
+    },
+    "H316": {
+      "type": "hazard",
+      "code": "H316",
+      "hazard_class": "Skin corrosion/irritation (chapter 3.2) 3",
+      "statement": "Causes mild skin irritation",
+      "category": "3"
+    },
+    "H317": {
+      "type": "hazard",
+      "code": "H317",
+      "hazard_class": "Skin sensitization (chapter 3.4) 1, 1A, 1B",
+      "statement": "May cause an allergic skin reaction",
+      "category": "1, 1A, 1B"
+    },
+    "H318": {
+      "type": "hazard",
+      "code": "H318",
+      "hazard_class": "Serious eye damage/eye irritation (chapter 3.3) 1",
+      "statement": "Causes serious eye damage",
+      "category": "1"
+    },
+    "H319": {
+      "type": "hazard",
+      "code": "H319",
+      "hazard_class": "Serious eye damage/eye irritation (chapter 3.3) 2/2A",
+      "statement": "Causes serious eye irritation",
+      "category": "2/2A"
+    },
+    "H320": {
+      "type": "hazard",
+      "code": "H320",
+      "hazard_class": "Serious eye damage/eye irritation (chapter 3.3) 2B",
+      "statement": "Causes eye irritation",
+      "category": "2B"
+    },
+    "H330": {
+      "type": "hazard",
+      "code": "H330",
+      "hazard_class": "Acute toxicity, inhalation (chapter 3.1) 1, 2",
+      "statement": "Fatal if inhaled",
+      "category": "1, 2"
+    },
+    "H331": {
+      "type": "hazard",
+      "code": "H331",
+      "hazard_class": "Acute toxicity, inhalation (chapter 3.1) 3",
+      "statement": "Toxic if inhaled",
+      "category": "3"
+    },
+    "H332": {
+      "type": "hazard",
+      "code": "H332",
+      "hazard_class": "Acute toxicity, inhalation (chapter 3.1) 4",
+      "statement": "Harmful if inhaled",
+      "category": "4"
+    },
+    "H333": {
+      "type": "hazard",
+      "code": "H333",
+      "hazard_class": "Acute toxicity, inhalation (chapter 3.1) 5",
+      "statement": "May be harmful if inhaled",
+      "category": "5"
+    },
+    "H334": {
+      "type": "hazard",
+      "code": "H334",
+      "hazard_class": "Respiratory sensitization (chapter 3.4) 1, 1A, 1B",
+      "statement": "May cause allergy or asthma symptoms or breathing difficulties if inhaled",
+      "category": "1, 1A, 1B"
+    },
+    "H335": {
+      "type": "hazard",
+      "code": "H335",
+      "hazard_class": "Specific target organ toxicity, single exposure; Respiratory tract irritation (chapter 3.8); 3",
+      "statement": "May cause respiratory irritation",
+      "category": "3"
+    },
+    "H336": {
+      "type": "hazard",
+      "code": "H336",
+      "hazard_class": "Specific target organ toxicity, single exposure; Narcotic effects (chapter 3.8) 3",
+      "statement": "May cause drowsiness or dizziness",
+      "category": "3"
+    },
+    "H340": {
+      "type": "hazard",
+      "code": "H340",
+      "hazard_class": "Germ cell mutagenicity (chapter 3.5) 1, 1A, 1B",
+      "statement": "May cause genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "1, 1A, 1B"
+    },
+    "H341": {
+      "type": "hazard",
+      "code": "H341",
+      "hazard_class": "Germ cell mutagenicity (chapter 3.5) 2",
+      "statement": "Suspected of causing genetic defects (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "2"
+    },
+    "H350": {
+      "type": "hazard",
+      "code": "H350",
+      "hazard_class": "Carcinogenicity (chapter 3.6) 1, 1A, 1B",
+      "statement": "May cause cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "1, 1A, 1B"
+    },
+    "H351": {
+      "type": "hazard",
+      "code": "H351",
+      "hazard_class": "Carcinogenicity (chapter 3.6) 2",
+      "statement": "Suspected of causing cancer (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "2"
+    },
+    "H360": {
+      "type": "hazard",
+      "code": "H360",
+      "hazard_class": "Reproductive toxicity (chapter 3.7) 1, 1A, 1B",
+      "statement": "May damage fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "1, 1A, 1B"
+    },
+    "H361": {
+      "type": "hazard",
+      "code": "H361",
+      "hazard_class": "Reproductive toxicity (chapter 3.7) 2",
+      "statement": "Suspected of damaging fertility or the unborn child (state specific effect if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "2"
+    },
+    "H362": {
+      "type": "hazard",
+      "code": "H362",
+      "hazard_class": "Reproductive toxicity, effects on or via lactation (chapter 3.7) Additional category",
+      "statement": "May cause harm to breast-fed children",
+      "category": "Additional category"
+    },
+    "H370": {
+      "type": "hazard",
+      "code": "H370",
+      "hazard_class": "Specific target organ toxicity, single exposure (chapter 3.8) 1",
+      "statement": "Causes damage to organs (or state all organs affected, if known) (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "1"
+    },
+    "H371": {
+      "type": "hazard",
+      "code": "H371",
+      "hazard_class": "Specific target organ toxicity, single exposure (chapter 3.8) 2",
+      "statement": "May cause damage to organs (or state all organs affected, if known)(state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "2"
+    },
+    "H372": {
+      "type": "hazard",
+      "code": "H372",
+      "hazard_class": "Specific target organ toxicity, repeated exposure (chapter 3.9) 1",
+      "statement": "Causes damage to organs (state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "1"
+    },
+    "H373": {
+      "type": "hazard",
+      "code": "H373",
+      "hazard_class": "Specific target organ toxicity, repeated exposure (chapter 3.9) 2",
+      "statement": "May cause damage to organs (state all organs affected, if known) through prolonged or repeated exposure (state route of exposure if it is conclusively proven that no other routes of exposure cause the hazard)",
+      "category": "2"
+    },
+    "H300+H310": {
+      "type": "hazard",
+      "code": "H300+H310",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, dermal (chapter 3.1) 1, 2",
+      "statement": "Fatal if swallowed or in contact with skin",
+      "category": "1, 2"
+    },
+    "H300+H330": {
+      "type": "hazard",
+      "code": "H300+H330",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 1, 2",
+      "statement": "Fatal if swallowed or if inhaled",
+      "category": "1, 2"
+    },
+    "H310+H330": {
+      "type": "hazard",
+      "code": "H310+H330",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 1, 2",
+      "statement": "Fatal in contact with skin or if inhaled",
+      "category": "1, 2"
+    },
+    "H300+H310+H330": {
+      "type": "hazard",
+      "code": "H300+H310+H330",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1), acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 1, 2",
+      "statement": "Fatal if swallowed, in contact with skin or if inhaled",
+      "category": "1, 2"
+    },
+    "H301+H311": {
+      "type": "hazard",
+      "code": "H301+H311",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, dermal (chapter 3.1) 3",
+      "statement": "Toxic if swallowed or in contact with skin",
+      "category": "3"
+    },
+    "H301+H331": {
+      "type": "hazard",
+      "code": "H301+H331",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 3",
+      "statement": "Toxic if swallowed or if inhaled",
+      "category": "3"
+    },
+    "H311+H331": {
+      "type": "hazard",
+      "code": "H311+H331",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 3",
+      "statement": "Toxic in contact with skin or if inhaled",
+      "category": "3"
+    },
+    "H301+H311+H331": {
+      "type": "hazard",
+      "code": "H301+H311+H331",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1), acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 3",
+      "statement": "Toxic if swallowed, in contact with skin or if inhaled",
+      "category": "3"
+    },
+    "H302+H312": {
+      "type": "hazard",
+      "code": "H302+H312",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, dermal (chapter 3.1) 4",
+      "statement": "Harmful if swallowed or in contact with skin",
+      "category": "4"
+    },
+    "H302+H332": {
+      "type": "hazard",
+      "code": "H302+H332",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 4",
+      "statement": "Harmful if swallowed or if inhaled",
+      "category": "4"
+    },
+    "H312+H332": {
+      "type": "hazard",
+      "code": "H312+H332",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 4",
+      "statement": "Harmful in contact with skin or if inhaled",
+      "category": "4"
+    },
+    "H302+H312+H332": {
+      "type": "hazard",
+      "code": "H302+H312+H332",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1), acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 4",
+      "statement": "Harmful if swallowed, in contact with skin or if inhaled",
+      "category": "4"
+    },
+    "H303+H313": {
+      "type": "hazard",
+      "code": "H303+H313",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, dermal (chapter 3.1) 5",
+      "statement": "May be harmful if swallowed or in contact with skin",
+      "category": "5"
+    },
+    "H303+H333": {
+      "type": "hazard",
+      "code": "H303+H333",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 5",
+      "statement": "May be harmful if swallowed or if inhaled",
+      "category": "5"
+    },
+    "H313+H333": {
+      "type": "hazard",
+      "code": "H313+H333",
+      "hazard_class": "Acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 5",
+      "statement": "May be harmful in contact with skin or if inhaled",
+      "category": "5"
+    },
+    "H303+H313+H333": {
+      "type": "hazard",
+      "code": "H303+H313+H333",
+      "hazard_class": "Acute toxicity, oral (chapter 3.1), acute toxicity, dermal (chapter 3.1) and acute toxicity, inhalation (chapter 3.1) 5",
+      "statement": "May be harmful if swallowed, in contact with skin or if inhaled",
+      "category": "5"
+    },
+    "H315+H319": {
+      "type": "hazard",
+      "code": "H315+H319",
+      "hazard_class": "Skin corrosion/irritation (chapter 3.2) and serious eye damage/eye irritation (chapter 3.3) 2 (skin) + 2/2A (eye)",
+      "statement": "Causes skin irritation and serious eye irritation a",
+      "category": "2 (skin) + 2/2A (eye)"
+    },
+    "H315+H320": {
+      "type": "hazard",
+      "code": "H315+H320",
+      "hazard_class": "Skin corrosion/irritation (chapter 3.2) and serious eye damage/eye irritation (chapter 3.3) 2 (skin) + 2B (eye)",
+      "statement": "Causes skin and eye irritation a",
+      "category": "2 (skin) + 2B (eye)"
+    },
+    "H400": {
+      "type": "hazard",
+      "code": "H400",
+      "hazard_class": "Hazardous to the aquatic environment, acute hazard (chapter 4.1) 1",
+      "statement": "Very toxic to aquatic life",
+      "category": "1"
+    },
+    "H401": {
+      "type": "hazard",
+      "code": "H401",
+      "hazard_class": "Hazardous to the aquatic environment, acute hazard (chapter 4.1) 2",
+      "statement": "Toxic to aquatic life",
+      "category": "2"
+    },
+    "H402": {
+      "type": "hazard",
+      "code": "H402",
+      "hazard_class": "Hazardous to the aquatic environment, acute hazard (chapter 4.1) 3",
+      "statement": "Harmful to aquatic life",
+      "category": "3"
+    },
+    "H410": {
+      "type": "hazard",
+      "code": "H410",
+      "hazard_class": "Hazardous to the aquatic environment, long-term hazard (chapter 4.1) 1",
+      "statement": "Very toxic to aquatic life with long lasting effects",
+      "category": "1"
+    },
+    "H411": {
+      "type": "hazard",
+      "code": "H411",
+      "hazard_class": "Hazardous to the aquatic environment, long-term hazard (chapter 4.1) 2",
+      "statement": "Toxic to aquatic life with long lasting effects",
+      "category": "2"
+    },
+    "H412": {
+      "type": "hazard",
+      "code": "H412",
+      "hazard_class": "Hazardous to the aquatic environment, long-term hazard (chapter 4.1) 3",
+      "statement": "Harmful to aquatic life with long lasting effects",
+      "category": "3"
+    },
+    "H413": {
+      "type": "hazard",
+      "code": "H413",
+      "hazard_class": "Hazardous to the aquatic environment, long-term hazard (chapter 4.1) 4",
+      "statement": "May cause long lasting harmful effects to aquatic life",
+      "category": "4"
+    },
+    "H420": {
+      "type": "hazard",
+      "code": "H420",
+      "hazard_class": "Hazardous to the ozone layer (chapter 4.2) 1",
+      "statement": "Harms public health and the environment by destroying ozone in the upper atmosphere",
+      "category": "1"
+    },
+    "H421": {
+      "type": "hazard",
+      "code": "H421",
+      "hazard_class": "Hazardous by contributing to global warming (chapter 4.2) 1",
+      "statement": "Harms public health and the environment by contributing to global warming",
+      "category": "1"
+    },
+    "P101": {
+      "type": "precautionary",
+      "code": "P101",
+      "statement": "If medical advice is needed, have product container\nor label at hand.",
+      "conditions": "Consumer products"
+    },
+    "P102": {
+      "type": "precautionary",
+      "code": "P102",
+      "statement": "Keep out of reach of children.",
+      "conditions": "Consumer products"
+    },
+    "P103": {
+      "type": "precautionary",
+      "code": "P103",
+      "statement": "Read carefully and follow all instructions.",
+      "conditions": "Consumer products\n- omit where P203 is used."
+    },
+    "P201": {
+      "type": "precautionary",
+      "code": "P201",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P202": {
+      "type": "precautionary",
+      "code": "P202",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P203": {
+      "type": "precautionary",
+      "code": "P203",
+      "statement": "Obtain, read and follow all safety instructions\nbefore use.",
+      "conditions": ""
+    },
+    "P210": {
+      "type": "precautionary",
+      "code": "P210",
+      "statement": "Keep away from heat, hot surfaces, sparks,\nopen flames and other ignition sources. No\nsmoking.",
+      "conditions": ""
+    },
+    "P211": {
+      "type": "precautionary",
+      "code": "P211",
+      "statement": "Do not spray on an open flame or other ignition\nsource.",
+      "conditions": ""
+    },
+    "P212": {
+      "type": "precautionary",
+      "code": "P212",
+      "statement": "Avoid heating under confinement or reduction\nof the desensitizing agent",
+      "conditions": ""
+    },
+    "P220": {
+      "type": "precautionary",
+      "code": "P220",
+      "statement": "Keep away from clothing and other\ncombustible materials.",
+      "conditions": ""
+    },
+    "P222": {
+      "type": "precautionary",
+      "code": "P222",
+      "statement": "Do not allow contact with air.",
+      "conditions": "\u2013 if emphasis of the hazard statement is deemed\nnecessary."
+    },
+    "P223": {
+      "type": "precautionary",
+      "code": "P223",
+      "statement": "Do not allow contact with water.",
+      "conditions": "\u2013 if emphasis of the hazard statement is deemed\nnecessary."
+    },
+    "P230": {
+      "type": "precautionary",
+      "code": "P230",
+      "statement": "Keep diluted with ...",
+      "conditions": "- for explosive substances and mixtures that are\ndiluted with solids or liquids, or wetted with,\ndissolved or suspended in water or other liquids to\nreduce their explosive properties.\n\u2026Manufacturer/supplier or competent authority to\nspecify appropriate material."
+    },
+    "P231": {
+      "type": "precautionary",
+      "code": "P231",
+      "statement": "Handle and store contents under inert gas/....\nProtect from moisture.",
+      "conditions": "\u2013 if the substance or mixture reacts readily with\nmoisture in air.\n\u2026Manufacturer/supplier or the competent authority\nto specify appropriate liquid or gas if \u201cinert gas\u201d is\nnot appropriate."
+    },
+    "P232": {
+      "type": "precautionary",
+      "code": "P232",
+      "statement": "Handle and store contents under inert gas/....\nProtect from moisture.",
+      "conditions": "\u2013 if the substance or mixture reacts readily with\nmoisture in air.\n\u2026Manufacturer/supplier or the competent authority\nto specify appropriate liquid or gas if \u201cinert gas\u201d is\nnot appropriate."
+    },
+    "P233": {
+      "type": "precautionary",
+      "code": "P233",
+      "statement": "Store in a well-ventilated place. Keep container\ntightly closed.",
+      "conditions": "\u2013 if the chemical is volatile and may\ngenerate a hazardous atmosphere."
+    },
+    "P234": {
+      "type": "precautionary",
+      "code": "P234",
+      "statement": "Keep only in original packaging.",
+      "conditions": "- Omit where P236 is used."
+    },
+    "P235": {
+      "type": "precautionary",
+      "code": "P235",
+      "statement": "Store in a well-ventilated place. Keep cool.",
+      "conditions": "\u2013 for flammable liquids Category 1\nand other flammable liquids that are\nvolatile and may generate an explosive\natmosphere."
+    },
+    "P236": {
+      "type": "precautionary",
+      "code": "P236",
+      "statement": "Keep only in original packaging; Division \u2026 in\nthe transport configuration.",
+      "conditions": "- To be applied for explosives assigned a division\nwithin Class 1 for transport.\n- May be omitted for single packaging where the\ntransport pictogram displaying the division (within\nClass 1) appears.\n- May be omitted where the use of different outer\npackaging results in different divisions for\ntransport.\n\u2026Manufacturer/supplier or competent authority to\nspecify the division for transport."
+    },
+    "P240": {
+      "type": "precautionary",
+      "code": "P240",
+      "statement": "Ground and bond container and receiving\nequipment.",
+      "conditions": "\u2013 if the explosive is electrostatically sensitive."
+    },
+    "P241": {
+      "type": "precautionary",
+      "code": "P241",
+      "statement": "Use explosion-proof\n[electrical/ventilating/lighting/...] equipment.",
+      "conditions": "\u2013 if the liquid is volatile and may generate an\nexplosive atmosphere.\n\u2013 text in square brackets may be used to specify\nspecific electrical, ventilating, lighting or other\nequipment if necessary and as appropriate.\n\u2013 precautionary statement may be omitted where\nlocal or national legislation introduces more\nspecific provisions."
+    },
+    "P242": {
+      "type": "precautionary",
+      "code": "P242",
+      "statement": "Use non-sparking tools.",
+      "conditions": "\u2013 if the liquid is volatile and may generate an\nexplosive atmosphere and if the minimum ignition\nenergy is very low. (This applies to substances and\nmixtures where the minimum ignition energy is\n< 0.1 mJ, e.g. carbon disulphide)."
+    },
+    "P243": {
+      "type": "precautionary",
+      "code": "P243",
+      "statement": "Take action to prevent static discharges.",
+      "conditions": "\u2013 if the liquid is volatile and may generate an\nexplosive atmosphere.\n\u2013 may be omitted where local or national\nlegislation introduces more specific provisions."
+    },
+    "P244": {
+      "type": "precautionary",
+      "code": "P244",
+      "statement": "Keep valves and fittings free from oil and\ngrease.",
+      "conditions": ""
+    },
+    "P250": {
+      "type": "precautionary",
+      "code": "P250",
+      "statement": "Do not subject to grinding/shock/friction/\u2026.",
+      "conditions": "\u2013 if the explosive is mechanically sensitive\n...Manufacturer/supplier or the competent authority\nto specify applicable rough handling."
+    },
+    "P251": {
+      "type": "precautionary",
+      "code": "P251",
+      "statement": "Do not pierce or burn, even after use.",
+      "conditions": ""
+    },
+    "P260": {
+      "type": "precautionary",
+      "code": "P260",
+      "statement": "Do not breathe\ndust/fume/gas/mist/vapours/spray.",
+      "conditions": "Manufacturer/supplier or the competent authority\nto specify applicable physical state(s)."
+    },
+    "P261": {
+      "type": "precautionary",
+      "code": "P261",
+      "statement": "Avoid breathing\ndust/fume/gas/mist/vapours/spray.",
+      "conditions": "\u2013 may be omitted if P260 is given on the label.\nManufacturer/supplier or the competent authority\nto specify applicable physical state(s)."
+    },
+    "P262": {
+      "type": "precautionary",
+      "code": "P262",
+      "statement": "Do not get in eyes, on skin, or on clothing.",
+      "conditions": ""
+    },
+    "P263": {
+      "type": "precautionary",
+      "code": "P263",
+      "statement": "Avoid contact during pregnancy and while\nnursing.",
+      "conditions": ""
+    },
+    "P264": {
+      "type": "precautionary",
+      "code": "P264",
+      "statement": "Wash hands [and\u2026] thoroughly after handling.\nDo not touch eyes.",
+      "conditions": "- text in square brackets to be used when the\nmanufacturer/supplier or the competent authority\nspecify other parts of the hibody to be washed after\nhandling."
+    },
+    "P265": {
+      "type": "precautionary",
+      "code": "P265",
+      "statement": "Wash hands [and\u2026] thoroughly after handling.\nDo not touch eyes.",
+      "conditions": "- text in square brackets to be used when the\nmanufacturer/supplier or the competent authority\nspecify other parts of the hibody to be washed after\nhandling."
+    },
+    "P270": {
+      "type": "precautionary",
+      "code": "P270",
+      "statement": "Do not eat, drink or smoke when using this\nproduct.",
+      "conditions": ""
+    },
+    "P271": {
+      "type": "precautionary",
+      "code": "P271",
+      "statement": "Use only outdoors or with adequate ventilation.",
+      "conditions": "Manufacturer/supplier to specify what type of\nventilation would be adequate for safe use on the\nsafety data sheet and in any supplemental safety\ninstructions provided to consumers."
+    },
+    "P272": {
+      "type": "precautionary",
+      "code": "P272",
+      "statement": "Contaminated work clothing should not be\nallowed out of the workplace.",
+      "conditions": ""
+    },
+    "P273": {
+      "type": "precautionary",
+      "code": "P273",
+      "statement": "Avoid release to the environment.",
+      "conditions": "\u2013 if this is not the intended use."
+    },
+    "P280": {
+      "type": "precautionary",
+      "code": "P280",
+      "statement": "Wear protective gloves/protective clothing/eye\nprotection/face protection/hearing protection/...",
+      "conditions": "- Specify protective gloves and eye/face protection.\nManufacturer/supplier or the competent authority\nmay further specify type of equipment where\nappropriate."
+    },
+    "P282": {
+      "type": "precautionary",
+      "code": "P282",
+      "statement": "Wear cold insulating gloves and either face\nshield or eye protection.",
+      "conditions": ""
+    },
+    "P283": {
+      "type": "precautionary",
+      "code": "P283",
+      "statement": "Wear fire resistant or flame-retardant clothing.",
+      "conditions": ""
+    },
+    "P284": {
+      "type": "precautionary",
+      "code": "P284",
+      "statement": "In case of inadequate ventilation wear\nrespiratory protection.",
+      "conditions": "Manufacturer/supplier to specify on the safety data\nsheet what type of ventilation would be adequate\nfor safe use and provide additional information\nwith the chemical at the point of use that explains\nwhat type of respiratory equipment may also be\nneeded."
+    },
+    "P301": {
+      "type": "precautionary",
+      "code": "P301",
+      "statement": "IF SWALLOWED: Rinse mouth. Do NOT induce\nvomiting.",
+      "conditions": ""
+    },
+    "P302": {
+      "type": "precautionary",
+      "code": "P302",
+      "statement": "IF ON SKIN: Take off immediately all contaminated\nclothing. Immediately rinse with water for several\nminutes.",
+      "conditions": ""
+    },
+    "P303": {
+      "type": "precautionary",
+      "code": "P303",
+      "statement": "IF ON SKIN (or hair): Take off immediately all\ncontaminated clothing. Rinse affected areas with\nwater [or shower].",
+      "conditions": "\u2013 text in square brackets to be included\nwhere the manufacturer/supplier or the\ncompetent authority considers it\nappropriate for the specific chemical."
+    },
+    "P304": {
+      "type": "precautionary",
+      "code": "P304",
+      "statement": "IF INHALED: Remove person to fresh air and keep\ncomfortable for breathing.",
+      "conditions": ""
+    },
+    "P305": {
+      "type": "precautionary",
+      "code": "P305",
+      "statement": "IF IN EYES: Immediately rinse with water for\nseveral minutes. Remove contact lenses, if present\nand easy to do. Continue rinsing.",
+      "conditions": ""
+    },
+    "P306": {
+      "type": "precautionary",
+      "code": "P306",
+      "statement": "IF ON CLOTHING: Rinse immediately\ncontaminated clothing and skin with plenty of water\nbefore removing clothes.",
+      "conditions": ""
+    },
+    "P308": {
+      "type": "precautionary",
+      "code": "P308",
+      "statement": "IF exposed or concerned: Get emergency medical\nhelp immediately.",
+      "conditions": "Competent authority or manufacturer /\nsupplier may add, \u201cCall\u201d followed by the\nappropriate emergency telephone\nnumber, or the appropriate emergency\nmedical help provider, for example, a\npoison centre, emergency centre or\ndoctor."
+    },
+    "P310": {
+      "type": "precautionary",
+      "code": "P310",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P311": {
+      "type": "precautionary",
+      "code": "P311",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P312": {
+      "type": "precautionary",
+      "code": "P312",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P313": {
+      "type": "precautionary",
+      "code": "P313",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P314": {
+      "type": "precautionary",
+      "code": "P314",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P315": {
+      "type": "precautionary",
+      "code": "P315",
+      "statement": "[Deleted]",
+      "conditions": ""
+    },
+    "P316": {
+      "type": "precautionary",
+      "code": "P316",
+      "statement": "If experiencing respiratory symptoms: Get\nemergency medical help immediately.",
+      "conditions": "Competent authority or\nmanufacturer/supplier may add, \u201cCall\u201d\nfollowed by the appropriate emergency\ntelephone number, or the appropriate\nemergency medical help provider, for\nexample, a poison centre, emergency\ncentre or doctor."
+    },
+    "P317": {
+      "type": "precautionary",
+      "code": "P317",
+      "statement": "If eye irritation persists: Get medical help.",
+      "conditions": ""
+    },
+    "P318": {
+      "type": "precautionary",
+      "code": "P318",
+      "statement": "IF exposed or concerned, get medical advice.",
+      "conditions": ""
+    },
+    "P319": {
+      "type": "precautionary",
+      "code": "P319",
+      "statement": "Get medical help if you feel unwell.",
+      "conditions": ""
+    },
+    "P320": {
+      "type": "precautionary",
+      "code": "P320",
+      "statement": "Specific treatment is urgent (see information on this\nlabel and safety data sheet).",
+      "conditions": "- if immediate measures that can be\neasily applied, such as the\nadministration of antidote or other\nspecific treatment are required. These\nmeasures must be specified on the label\nand safety data sheet, recognizing\nadditional detailed instructions,\nincluding any training requirements,\nshould be provided on the safety data\nsheet, if appropriate."
+    },
+    "P321": {
+      "type": "precautionary",
+      "code": "P321",
+      "statement": "Specific treatment (see information on this label and\nsafety data sheet).",
+      "conditions": "- if immediate measures that can be\neasily applied, such as the\nadministration of antidote or other\nspecific treatment are required. These\nmeasures must be specified on the label\nand safety data sheet, recognizing\nadditional detailed instructions,\nincluding any training requirements,\nshould be provided on the safety data\nsheet, if appropriate.\n- may be omitted if P320 is given on the\nlabel."
+    },
+    "P322": {
+      "type": "precautionary",
+      "code": "P322",
+      "statement": "Specific treatment is urgent (see information on the\nsafety data sheet).",
+      "conditions": "Manufacturer/supplier to reference on\nthe safety data sheet detailed\ninstructions, including any training\nrequirements, to administer an antidote\nor other specific treatment.\n- may be omitted if P320 is given on the\nlabel."
+    },
+    "P323": {
+      "type": "precautionary",
+      "code": "P323",
+      "statement": "Specific treatment (see information on the safety data\nsheet).",
+      "conditions": "Manufacturer/supplier to reference on\nthe safety data sheet detailed\ninstructions, including any training\nrequirements, to administer an antidote\nor other specific treatment.\n- may be omitted if P321 or P322 is\ngiven on the label."
+    },
+    "P330": {
+      "type": "precautionary",
+      "code": "P330",
+      "statement": "IF SWALLOWED: Rinse mouth. Do NOT induce\nvomiting.",
+      "conditions": ""
+    },
+    "P331": {
+      "type": "precautionary",
+      "code": "P331",
+      "statement": "IF SWALLOWED: Rinse mouth. Do NOT induce\nvomiting.",
+      "conditions": ""
+    },
+    "P332": {
+      "type": "precautionary",
+      "code": "P332",
+      "statement": "If skin irritation occurs: Get medical help.",
+      "conditions": "\u2013 may be omitted when P333+P317 is\ngiven on the label."
+    },
+    "P333": {
+      "type": "precautionary",
+      "code": "P333",
+      "statement": "If skin irritation or rash occurs: Get medical help.",
+      "conditions": ""
+    },
+    "P334": {
+      "type": "precautionary",
+      "code": "P334",
+      "statement": "IF ON SKIN: Brush off loose particles from skin and\nimmerse in cool water [or wrap in wet bandages].",
+      "conditions": "\u2013 text in square brackets to be used for\npyrophoric solids"
+    },
+    "P335": {
+      "type": "precautionary",
+      "code": "P335",
+      "statement": "IF ON SKIN: Brush off loose particles from skin and\nimmerse in cool water [or wrap in wet bandages].",
+      "conditions": "\u2013 text in square brackets to be used for\npyrophoric solids"
+    },
+    "P336": {
+      "type": "precautionary",
+      "code": "P336",
+      "statement": "Immediately thaw frosted parts with lukewarm\nwater. Do not rub affected area. Get medical help.",
+      "conditions": ""
+    },
+    "P337": {
+      "type": "precautionary",
+      "code": "P337",
+      "statement": "If eye irritation persists: Get medical help.",
+      "conditions": ""
+    },
+    "P338": {
+      "type": "precautionary",
+      "code": "P338",
+      "statement": "IF IN EYES: Immediately rinse with water for\nseveral minutes. Remove contact lenses, if present\nand easy to do. Continue rinsing.",
+      "conditions": ""
+    },
+    "P340": {
+      "type": "precautionary",
+      "code": "P340",
+      "statement": "IF INHALED: Remove person to fresh air and keep\ncomfortable for breathing.",
+      "conditions": ""
+    },
+    "P342": {
+      "type": "precautionary",
+      "code": "P342",
+      "statement": "If experiencing respiratory symptoms: Get\nemergency medical help immediately.",
+      "conditions": "Competent authority or\nmanufacturer/supplier may add, \u201cCall\u201d\nfollowed by the appropriate emergency\ntelephone number, or the appropriate\nemergency medical help provider, for\nexample, a poison centre, emergency\ncentre or doctor."
+    },
+    "P351": {
+      "type": "precautionary",
+      "code": "P351",
+      "statement": "IF IN EYES: Rinse cautiously with water for several\nminutes. Remove contact lenses, if present and easy\nto do. Continue rinsing.",
+      "conditions": ""
+    },
+    "P352": {
+      "type": "precautionary",
+      "code": "P352",
+      "statement": "IF ON SKIN: Wash with plenty of water/...",
+      "conditions": "\u2026Manufacturer/supplier or the\ncompetent authority may specify a\ncleansing agent if appropriate or may\nrecommend an alternative agent in\nexceptional cases if water is clearly\ninappropriate."
+    },
+    "P353": {
+      "type": "precautionary",
+      "code": "P353",
+      "statement": "IF ON SKIN (or hair): Take off immediately all\ncontaminated clothing. Rinse affected areas with\nwater [or shower].",
+      "conditions": "\u2013 text in square brackets to be included\nwhere the manufacturer/supplier or the\ncompetent authority considers it\nappropriate for the specific chemical."
+    },
+    "P354": {
+      "type": "precautionary",
+      "code": "P354",
+      "statement": "IF IN EYES: Immediately rinse with water for\nseveral minutes. Remove contact lenses, if present\nand easy to do. Continue rinsing.",
+      "conditions": ""
+    },
+    "P360": {
+      "type": "precautionary",
+      "code": "P360",
+      "statement": "IF ON CLOTHING: Rinse immediately\ncontaminated clothing and skin with plenty of water\nbefore removing clothes.",
+      "conditions": ""
+    },
+    "P361": {
+      "type": "precautionary",
+      "code": "P361",
+      "statement": "IF ON SKIN (or hair): Take off immediately all\ncontaminated clothing. Rinse affected areas with\nwater [or shower].",
+      "conditions": "\u2013 text in square brackets to be included\nwhere the manufacturer/supplier or the\ncompetent authority considers it\nappropriate for the specific chemical."
+    },
+    "P362": {
+      "type": "precautionary",
+      "code": "P362",
+      "statement": "Take off contaminated clothing and wash it before\nreuse.",
+      "conditions": ""
+    },
+    "P363": {
+      "type": "precautionary",
+      "code": "P363",
+      "statement": "Wash contaminated clothing before reuse.",
+      "conditions": ""
+    },
+    "P364": {
+      "type": "precautionary",
+      "code": "P364",
+      "statement": "Take off contaminated clothing and wash it before\nreuse.",
+      "conditions": ""
+    },
+    "P370": {
+      "type": "precautionary",
+      "code": "P370",
+      "statement": "In case of fire: Evacuate area. Fight fire remotely\ndue to the risk of explosion. [Use\u2026to extinguish].",
+      "conditions": "\u2013 text in square brackets to be used if\nwater increases risk.\n\u2026 Manufacturer/supplier or the\ncompetent authority to specify\nappropriate media."
+    },
+    "P371": {
+      "type": "precautionary",
+      "code": "P371",
+      "statement": "In case of major fire and large quantities: Evacuate\narea. Fight fire remotely due to the risk of explosion.",
+      "conditions": ""
+    },
+    "P372": {
+      "type": "precautionary",
+      "code": "P372",
+      "statement": "In case of fire: Explosion risk. Evacuate area. DO\nNOT fight fire when fire reaches explosives.",
+      "conditions": ""
+    },
+    "P373": {
+      "type": "precautionary",
+      "code": "P373",
+      "statement": "In case of fire: Explosion risk. Evacuate area. DO\nNOT fight fire when fire reaches explosives.",
+      "conditions": ""
+    },
+    "P375": {
+      "type": "precautionary",
+      "code": "P375",
+      "statement": "In case of fire: Evacuate area. Fight fire remotely\ndue to the risk of explosion. [Use\u2026to extinguish].",
+      "conditions": "\u2013 text in square brackets to be used if\nwater increases risk.\n\u2026 Manufacturer/supplier or the\ncompetent authority to specify\nappropriate media."
+    },
+    "P376": {
+      "type": "precautionary",
+      "code": "P376",
+      "statement": "In case of fire: Stop leak if safe to do so.",
+      "conditions": ""
+    },
+    "P377": {
+      "type": "precautionary",
+      "code": "P377",
+      "statement": "Leaking gas fire: Do not extinguish, unless leak can be\nstopped safely.",
+      "conditions": "Flammable gas"
+    },
+    "P378": {
+      "type": "precautionary",
+      "code": "P378",
+      "statement": "In case of fire: Evacuate area. Fight fire remotely\ndue to the risk of explosion. [Use\u2026to extinguish].",
+      "conditions": "\u2013 text in square brackets to be used if\nwater increases risk.\n\u2026 Manufacturer/supplier or the\ncompetent authority to specify\nappropriate media."
+    },
+    "P380": {
+      "type": "precautionary",
+      "code": "P380",
+      "statement": "In case of fire: Evacuate area. Fight fire remotely\ndue to the risk of explosion. [Use\u2026to extinguish].",
+      "conditions": "\u2013 text in square brackets to be used if\nwater increases risk.\n\u2026 Manufacturer/supplier or the\ncompetent authority to specify\nappropriate media."
+    },
+    "P381": {
+      "type": "precautionary",
+      "code": "P381",
+      "statement": "In case of leakage, eliminate all ignition sources.",
+      "conditions": "Flammable gas"
+    },
+    "P390": {
+      "type": "precautionary",
+      "code": "P390",
+      "statement": "Absorb spillage to prevent material damage.",
+      "conditions": ""
+    },
+    "P391": {
+      "type": "precautionary",
+      "code": "P391",
+      "statement": "Collect spillage.",
+      "conditions": ""
+    },
+    "P401": {
+      "type": "precautionary",
+      "code": "P401",
+      "statement": "Store in accordance with\u2026",
+      "conditions": ""
+    },
+    "P402": {
+      "type": "precautionary",
+      "code": "P402",
+      "statement": "Store in a dry place. Store in a closed container.",
+      "conditions": ""
+    },
+    "P403": {
+      "type": "precautionary",
+      "code": "P403",
+      "statement": "Protect from sunlight. Store in a well-ventilated\nplace.",
+      "conditions": "\u2013 P410 may be omitted for chemicals\nunder pressure filled in transportable\ncylinders in accordance with packing\ninstruction P200 or P206 of the UN\nModel Regulations, unless those\nchemicals under pressure are subject\nto (slow) decomposition or\npolymerization, or the competent\nauthority provides otherwise."
+    },
+    "P404": {
+      "type": "precautionary",
+      "code": "P404",
+      "statement": "Store in a dry place. Store in a closed container.",
+      "conditions": ""
+    },
+    "P405": {
+      "type": "precautionary",
+      "code": "P405",
+      "statement": "Store locked up.",
+      "conditions": ""
+    },
+    "P406": {
+      "type": "precautionary",
+      "code": "P406",
+      "statement": "Store in a corrosion resistant/...container with a\nresistant inner liner.",
+      "conditions": "\u2013 may be omitted if P234 is given on\nthe label\n... Manufacturer/supplier or the\ncompetent authority to specify other\ncompatible materials."
+    },
+    "P407": {
+      "type": "precautionary",
+      "code": "P407",
+      "statement": "Maintain air gap between stacks or pallets.",
+      "conditions": ""
+    },
+    "P410": {
+      "type": "precautionary",
+      "code": "P410",
+      "statement": "Protect from sunlight. Do not expose to temperatures\nexceeding 50\u00b0C/122\u00b0F.",
+      "conditions": "Manufacturer/supplier or the\ncompetent authority to use applicable\ntemperature scale."
+    },
+    "P411": {
+      "type": "precautionary",
+      "code": "P411",
+      "statement": "Store at temperatures not exceeding \u2026\u00b0C/\u2026\u00b0F.",
+      "conditions": "\u2013 if temperature control is required\n(according to section 2.8.2.3 or\n2.15.2.3 of the GHS) or if otherwise\ndeemed necessary.\n...Manufacturer/supplier or the\ncompetent authority to specify\ntemperature using applicable\ntemperature scale."
+    },
+    "P412": {
+      "type": "precautionary",
+      "code": "P412",
+      "statement": "Protect from sunlight. Do not expose to temperatures\nexceeding 50\u00b0C/122\u00b0F.",
+      "conditions": "Manufacturer/supplier or the\ncompetent authority to use applicable\ntemperature scale."
+    },
+    "P413": {
+      "type": "precautionary",
+      "code": "P413",
+      "statement": "Store bulk masses greater than \u2026 kg/\u2026lbs at\ntemperatures not exceeding \u2026\u00b0C/\u2026\u00b0F.",
+      "conditions": "...Manufacturer/supplier or the\ncompetent authority to specify mass\nand temperature using applicable scale."
+    },
+    "P420": {
+      "type": "precautionary",
+      "code": "P420",
+      "statement": "Store separately.",
+      "conditions": ""
+    },
+    "P501": {
+      "type": "precautionary",
+      "code": "P501",
+      "statement": "Dispose of contents/container to ...",
+      "conditions": "... in accordance with local/regional/\nnational/international regulation (to be\nspecified).\nManufacturer/supplier or the competent\nauthority to specify whether disposal\nrequirements apply to contents, container or\nboth."
+    },
+    "P502": {
+      "type": "precautionary",
+      "code": "P502",
+      "statement": "Refer to manufacturer or supplier for\ninformation on recovery or recycling.",
+      "conditions": ""
+    },
+    "P503": {
+      "type": "precautionary",
+      "code": "P503",
+      "statement": "Refer to manufacturer/supplier\u2026 for information\non disposal/recovery/recycling.",
+      "conditions": "\u2026 Manufacturer/supplier or the competent\nauthority to specify appropriate source of\ninformation in accordance with\nlocal/regional/national/international\nregulations as applicable"
+    }
+  },
+  "compliance_mapping": [
+    {
+      "hazard_class": "Explosives",
+      "category": "Not\napplicable",
+      "pictogram_code": "GHS01",
+      "h_code": "H209"
+    },
+    {
+      "hazard_class": "Explosives",
+      "category": "1.1",
+      "pictogram_code": "GHS01",
+      "h_code": "H209"
+    },
+    {
+      "hazard_class": "Explosives",
+      "category": "2B",
+      "pictogram_code": "No Symbol",
+      "h_code": "H204"
+    },
+    {
+      "hazard_class": "Explosives",
+      "category": "2C",
+      "pictogram_code": "No Symbol",
+      "h_code": "H204"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "1A",
+      "pictogram_code": "GHS02",
+      "h_code": "H220"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H220"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H232"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H220"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H230"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H220"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H231"
+    },
+    {
+      "hazard_class": "Flammable\ngases",
+      "category": "",
+      "pictogram_code": "GHS02",
+      "h_code": "H221"
+    },
+    {
+      "hazard_class": "Aerosols\n(section\n2.3.1)",
+      "category": "1",
+      "pictogram_code": "GHS02",
+      "h_code": "H222"
+    },
+    {
+      "hazard_class": "Aerosols\n(section\n2.3.1)",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H229"
+    },
+    {
+      "hazard_class": "Aerosols\n(section\n2.3.1)",
+      "category": "2",
+      "pictogram_code": "GHS02",
+      "h_code": "H223"
+    },
+    {
+      "hazard_class": "Aerosols\n(section\n2.3.1)",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H229"
+    },
+    {
+      "hazard_class": "Aerosols\n(section\n2.3.1)",
+      "category": "3",
+      "pictogram_code": "No Symbol",
+      "h_code": "H229"
+    },
+    {
+      "hazard_class": "Chemicals\nunder\npressure\n(section\n2.3.2)",
+      "category": "1",
+      "pictogram_code": "GHS02",
+      "h_code": "H282"
+    },
+    {
+      "hazard_class": "Chemicals\nunder\npressure\n(section\n2.3.2)",
+      "category": "2",
+      "pictogram_code": "GHS02",
+      "h_code": "H283"
+    },
+    {
+      "hazard_class": "Chemicals\nunder\npressure\n(section\n2.3.2)",
+      "category": "3",
+      "pictogram_code": "No Symbol",
+      "h_code": "H284"
+    },
+    {
+      "hazard_class": "Oxidizing\ngases",
+      "category": "1",
+      "pictogram_code": "GHS03",
+      "h_code": "H270"
+    },
+    {
+      "hazard_class": "Gases\nunder\npressure",
+      "category": "Compressed\ngas",
+      "pictogram_code": "No Symbol",
+      "h_code": "H280"
+    },
+    {
+      "hazard_class": "Gases\nunder\npressure",
+      "category": "Liquefied\ngas",
+      "pictogram_code": "No Symbol",
+      "h_code": "H280"
+    },
+    {
+      "hazard_class": "Gases\nunder\npressure",
+      "category": "Refrigerated\nliquefied gas",
+      "pictogram_code": "No Symbol",
+      "h_code": "H281"
+    },
+    {
+      "hazard_class": "Gases\nunder\npressure",
+      "category": "Dissolved\ngas",
+      "pictogram_code": "No Symbol",
+      "h_code": "H280"
+    },
+    {
+      "hazard_class": "Flammable\nliquids",
+      "category": "1",
+      "pictogram_code": "GHS02",
+      "h_code": "H224"
+    },
+    {
+      "hazard_class": "Flammable\nliquids",
+      "category": "2",
+      "pictogram_code": "GHS02",
+      "h_code": "H225"
+    },
+    {
+      "hazard_class": "Flammable\nliquids",
+      "category": "3",
+      "pictogram_code": "GHS02",
+      "h_code": "H226"
+    },
+    {
+      "hazard_class": "Flammable\nliquids",
+      "category": "4",
+      "pictogram_code": "No Symbol",
+      "h_code": "H227"
+    },
+    {
+      "hazard_class": "Flammable\nsolids",
+      "category": "1",
+      "pictogram_code": "GHS02",
+      "h_code": "H228"
+    },
+    {
+      "hazard_class": "Self-\nreactive\nsubstances\nand\nmixtures",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H240"
+    },
+    {
+      "hazard_class": "Self-\nreactive\nsubstances\nand\nmixtures",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H241"
+    },
+    {
+      "hazard_class": "Self-\nreactive\nsubstances\nand\nmixtures",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H242"
+    },
+    {
+      "hazard_class": "Pyrophoric\nliquids",
+      "category": "1",
+      "pictogram_code": "No Symbol",
+      "h_code": "H250"
+    },
+    {
+      "hazard_class": "Pyrophoric\nsolids",
+      "category": "1",
+      "pictogram_code": "No Symbol",
+      "h_code": "H250"
+    },
+    {
+      "hazard_class": "Self-\nheating\nsubstances\nand\nmixtures",
+      "category": "1",
+      "pictogram_code": "No Symbol",
+      "h_code": "H251"
+    },
+    {
+      "hazard_class": "Self-\nheating\nsubstances\nand\nmixtures",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H252"
+    },
+    {
+      "hazard_class": "Substances\nand\nmixtures,\nwhich in\ncontact\nwith water,\nemit\nflammable\ngases",
+      "category": "1",
+      "pictogram_code": "GHS02",
+      "h_code": "H260"
+    },
+    {
+      "hazard_class": "Substances\nand\nmixtures,\nwhich in\ncontact\nwith water,\nemit\nflammable\ngases",
+      "category": "2",
+      "pictogram_code": "GHS02",
+      "h_code": "H261"
+    },
+    {
+      "hazard_class": "Oxidizing\nliquids",
+      "category": "1\n2\n3",
+      "pictogram_code": "GHS03",
+      "h_code": "H271"
+    },
+    {
+      "hazard_class": "Oxidizing\nliquids",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H272"
+    },
+    {
+      "hazard_class": "Oxidizing\nsolids",
+      "category": "1",
+      "pictogram_code": "GHS03",
+      "h_code": "H271"
+    },
+    {
+      "hazard_class": "Oxidizing\nsolids",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H272"
+    },
+    {
+      "hazard_class": "Organic\nperoxides",
+      "category": "5.2\nType A",
+      "pictogram_code": "No Symbol",
+      "h_code": "H240"
+    },
+    {
+      "hazard_class": "Organic\nperoxides",
+      "category": "5.2\nType B",
+      "pictogram_code": "No Symbol",
+      "h_code": "H241"
+    },
+    {
+      "hazard_class": "Organic\nperoxides",
+      "category": "5.2\nTypes C\nand D",
+      "pictogram_code": "No Symbol",
+      "h_code": "H242"
+    },
+    {
+      "hazard_class": "Organic\nperoxides",
+      "category": "5.2\nTypes E\nand F",
+      "pictogram_code": "No Symbol",
+      "h_code": "H242"
+    },
+    {
+      "hazard_class": "Corrosive\nto metals",
+      "category": "8",
+      "pictogram_code": "GHS05",
+      "h_code": "H290"
+    },
+    {
+      "hazard_class": "Desensitized\nexplosives",
+      "category": "1",
+      "pictogram_code": "GHS01",
+      "h_code": "H206"
+    },
+    {
+      "hazard_class": "Desensitized\nexplosives",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H207"
+    },
+    {
+      "hazard_class": "Desensitized\nexplosives",
+      "category": "4",
+      "pictogram_code": "No Symbol",
+      "h_code": "H208"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "1, 2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H300"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H310"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H330"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "3",
+      "pictogram_code": "No Symbol",
+      "h_code": "H301"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H311"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H331"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "4",
+      "pictogram_code": "No Symbol",
+      "h_code": "H302"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H312"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H332"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "5",
+      "pictogram_code": "No Symbol",
+      "h_code": "H303"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H313"
+    },
+    {
+      "hazard_class": "Acute\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H333"
+    },
+    {
+      "hazard_class": "Skin\ncorrosion/irritation",
+      "category": "1\n1A, 1B,\n1C",
+      "pictogram_code": "GHS05",
+      "h_code": "H314"
+    },
+    {
+      "hazard_class": "Skin\ncorrosion/irritation",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H315"
+    },
+    {
+      "hazard_class": "Skin\ncorrosion/irritation",
+      "category": "3",
+      "pictogram_code": "No Symbol",
+      "h_code": "H316"
+    },
+    {
+      "hazard_class": "Serious eye\ndamage/eye\nirritation",
+      "category": "1",
+      "pictogram_code": "No Symbol",
+      "h_code": "H318"
+    },
+    {
+      "hazard_class": "Serious eye\ndamage/eye\nirritation",
+      "category": "2/2A",
+      "pictogram_code": "No Symbol",
+      "h_code": "H319"
+    },
+    {
+      "hazard_class": "Serious eye\ndamage/eye\nirritation",
+      "category": "2B",
+      "pictogram_code": "No Symbol",
+      "h_code": "H320"
+    },
+    {
+      "hazard_class": "Respiratory\nsensitization",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H334"
+    },
+    {
+      "hazard_class": "Skin\nsensitization",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H317"
+    },
+    {
+      "hazard_class": "Germ cell\nmutagenicity",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H340"
+    },
+    {
+      "hazard_class": "Germ cell\nmutagenicity",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H341"
+    },
+    {
+      "hazard_class": "Carcinogenicity",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H350"
+    },
+    {
+      "hazard_class": "Carcinogenicity",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H351"
+    },
+    {
+      "hazard_class": "Reproductive\ntoxicity",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H360"
+    },
+    {
+      "hazard_class": "Reproductive\ntoxicity",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H361"
+    },
+    {
+      "hazard_class": "Reproductive\ntoxicity",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H362"
+    },
+    {
+      "hazard_class": "Specific\ntarget\norgan\ntoxicity \u2013\nsingle\nexposure",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H370"
+    },
+    {
+      "hazard_class": "Specific\ntarget\norgan\ntoxicity \u2013\nsingle\nexposure",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H371"
+    },
+    {
+      "hazard_class": "Specific\ntarget\norgan\ntoxicity \u2013\nsingle\nexposure",
+      "category": "3",
+      "pictogram_code": "No Symbol",
+      "h_code": "H335"
+    },
+    {
+      "hazard_class": "Specific\ntarget\norgan\ntoxicity \u2013\nsingle\nexposure",
+      "category": "",
+      "pictogram_code": "No Symbol",
+      "h_code": "H336"
+    },
+    {
+      "hazard_class": "Specific\ntarget\norgan\ntoxicity \u2013\nrepeated\nexposure",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H372"
+    },
+    {
+      "hazard_class": "Specific\ntarget\norgan\ntoxicity \u2013\nrepeated\nexposure",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H373"
+    },
+    {
+      "hazard_class": "Aspiration\nhazard",
+      "category": "Not\napplicable",
+      "pictogram_code": "No Symbol",
+      "h_code": "H304"
+    },
+    {
+      "hazard_class": "Aspiration\nhazard",
+      "category": "2",
+      "pictogram_code": "No Symbol",
+      "h_code": "H305"
+    },
+    {
+      "hazard_class": "Hazardous to\nthe aquatic\nenvironment,\nshort-term\n(Acute)",
+      "category": "9",
+      "pictogram_code": "GHS09",
+      "h_code": "H400"
+    },
+    {
+      "hazard_class": "Hazardous to\nthe aquatic\nenvironment,\nshort-term\n(Acute)",
+      "category": "Not\napplicable",
+      "pictogram_code": "GHS09",
+      "h_code": "H401"
+    },
+    {
+      "hazard_class": "Hazardous to\nthe aquatic\nenvironment,\nshort-term\n(Acute)",
+      "category": "",
+      "pictogram_code": "GHS09",
+      "h_code": "H402"
+    },
+    {
+      "hazard_class": "Hazardous to\nthe aquatic\nenvironment,\nlong-term\n(Chronic)",
+      "category": "9",
+      "pictogram_code": "GHS09",
+      "h_code": "H410"
+    },
+    {
+      "hazard_class": "Hazardous to\nthe aquatic\nenvironment,\nlong-term\n(Chronic)",
+      "category": "",
+      "pictogram_code": "GHS09",
+      "h_code": "H411"
+    },
+    {
+      "hazard_class": "Hazardous to\nthe aquatic\nenvironment,\nlong-term\n(Chronic)",
+      "category": "Not\napplicable",
+      "pictogram_code": "GHS09",
+      "h_code": "H412"
+    },
+    {
+      "hazard_class": "Hazardous to\nthe aquatic\nenvironment,\nlong-term\n(Chronic)",
+      "category": "",
+      "pictogram_code": "GHS09",
+      "h_code": "H413"
+    },
+    {
+      "hazard_class": "Hazardous\nto the ozone\nlayer",
+      "category": "Not\napplicable",
+      "pictogram_code": "GHS09",
+      "h_code": "H420"
+    },
+    {
+      "hazard_class": "Hazardous\nby\ncontributing\nto global\nwarming",
+      "category": "1",
+      "pictogram_code": "GHS09",
+      "h_code": "H421"
+    }
+  ]
+}
