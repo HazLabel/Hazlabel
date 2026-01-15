@@ -4,29 +4,29 @@ import React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
-  ArrowRight,
-  Sparkles,
+    ArrowRight,
+    Sparkles,
     Shield,
     Zap,
     FileSearch,
-    Printer,
-  Database,
+    Database,
     CheckCircle2,
     Play,
     Linkedin,
-    Twitter
+    Twitter,
+    History
 } from "lucide-react"
 
 export default function LandingPage() {
-  return (
+    return (
         <div className="min-h-screen bg-white text-slate-900">
-      {/* Navigation */}
+            {/* Navigation */}
             <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2.5 group">
                         <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-cyan-600 flex items-center justify-center shadow-md shadow-sky-500/20">
                             <Shield className="h-5 w-5 text-white" />
-          </div>
+                        </div>
                         <span className="text-lg font-bold tracking-tight text-slate-900">HazLabel</span>
                     </Link>
 
@@ -35,25 +35,25 @@ export default function LandingPage() {
                         <NavLink href="#how-it-works">How it Works</NavLink>
                         <NavLink href="#pricing">Pricing</NavLink>
                         <NavLink href="/inventory">Dashboard</NavLink>
-        </div>
+                    </div>
 
-        <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                         <Button variant="ghost" asChild className="text-slate-600 hover:text-slate-900">
                             <Link href="/login">Sign In</Link>
-          </Button>
+                        </Button>
                         <Button asChild className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-5 shadow-md shadow-sky-500/20">
                             <Link href="/login">Get Started</Link>
-          </Button>
+                        </Button>
                     </div>
-        </div>
-      </nav>
+                </div>
+            </nav>
 
-      <main>
+            <main>
                 {/* Hero Section */}
                 <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 hero-pattern">
                     {/* Subtle grid pattern */}
                     <div className="absolute inset-0 grid-pattern opacity-50" />
-                    
+
                     <div className="relative max-w-7xl mx-auto px-6">
                         <div className="max-w-4xl mx-auto text-center space-y-8">
                             {/* Badge */}
@@ -62,42 +62,42 @@ export default function LandingPage() {
                                     <Sparkles className="h-4 w-4" />
                                     Powered by GPT-4o + GHS Rev 11
                                 </span>
-            </div>
+                            </div>
 
                             {/* Headline */}
                             <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] animate-reveal delay-100">
                                 Chemical Safety
                                 <br />
                                 <span className="gradient-text">Automated</span>
-            </h1>
+                            </h1>
 
                             {/* Subheadline */}
                             <p className="text-xl md:text-2xl text-slate-600 max-w-2xl mx-auto leading-relaxed animate-reveal delay-200">
-                                Transform Safety Data Sheets into compliant GHS labels in seconds. 
+                                Transform Safety Data Sheets into compliant GHS labels in seconds.
                                 AI-powered extraction with regulatory precision.
                             </p>
 
                             {/* CTA Buttons */}
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-reveal delay-300">
-                                <Button 
-                                    size="lg" 
-                                    asChild 
+                                <Button
+                                    size="lg"
+                                    asChild
                                     className="h-14 px-8 text-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl shadow-lg shadow-sky-500/25 hover:shadow-sky-500/35 transition-all hover:-translate-y-0.5"
                                 >
                                     <Link href="/login">
                                         Start Free Trial
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Link>
-              </Button>
-                                <Button 
-                                    size="lg" 
-                                    variant="outline" 
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
                                     className="h-14 px-8 text-lg border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl"
                                 >
                                     <Play className="mr-2 h-5 w-5" />
                                     Watch Demo
-              </Button>
-            </div>
+                                </Button>
+                            </div>
 
                             {/* Social Proof */}
                             <div className="flex items-center justify-center gap-8 pt-8 text-sm text-slate-500 animate-reveal delay-400">
@@ -129,7 +129,7 @@ export default function LandingPage() {
                                             <div className="h-3 w-3 rounded-full bg-emerald-400" />
                                         </div>
                                         <span className="text-xs text-slate-500 ml-2 font-mono">hazlabel-console</span>
-                </div>
+                                    </div>
 
                                     {/* Terminal content */}
                                     <div className="p-6 bg-slate-900 font-mono text-sm">
@@ -164,14 +164,14 @@ export default function LandingPage() {
                                                         <p className="text-emerald-400 mt-1">Ready to Print</p>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+                </section>
 
                 {/* Features Section */}
                 <section id="features" className="py-32 bg-slate-50">
@@ -213,9 +213,9 @@ export default function LandingPage() {
                                 color="emerald"
                             />
                             <FeatureCard
-                                icon={<Printer className="h-6 w-6" />}
-                                title="Multi-Format Output"
-                                description="Generate Avery 5163 PDFs for laser printers or ZPL code for Zebra thermal printers. Bulk print support included."
+                                icon={<History className="h-6 w-6" />}
+                                title="Smart Revision Tracking"
+                                description="Automatically detects changes between SDS versions, highlighting updated hazard codes so you never miss a supplier revision."
                                 color="violet"
                             />
                             <FeatureCard
@@ -223,10 +223,10 @@ export default function LandingPage() {
                                 title="P-Code Cross-Validation"
                                 description="Ensures required precautionary codes are present for each hazard. Catches water-reactive chemicals missing P223."
                                 color="sky"
-              />
-            </div>
-          </div>
-        </section>
+                            />
+                        </div>
+                    </div>
+                </section>
 
                 {/* How it Works */}
                 <section id="how-it-works" className="py-32 bg-white">
@@ -236,8 +236,8 @@ export default function LandingPage() {
                                 Three steps to
                                 <br />
                                 <span className="gradient-text">Compliant Labels</span>
-                </h2>
-              </div>
+                            </h2>
+                        </div>
 
                         <div className="grid md:grid-cols-3 gap-8">
                             <StepCard
@@ -255,9 +255,9 @@ export default function LandingPage() {
                                 title="Print Labels"
                                 description="Generate compliant labels for any format. Print directly or download for your thermal printers."
                             />
-            </div>
-          </div>
-        </section>
+                        </div>
+                    </div>
+                </section>
 
                 {/* CTA Section */}
                 <section className="py-32 bg-gradient-to-br from-sky-600 to-cyan-600">
@@ -267,28 +267,28 @@ export default function LandingPage() {
                                 Ready to automate your
                                 <br />
                                 safety compliance?
-              </h2>
+                            </h2>
                             <p className="text-xl text-sky-100 max-w-2xl mx-auto mb-10">
-                                Join hundreds of EHS teams who have eliminated manual data entry errors 
+                                Join hundreds of EHS teams who have eliminated manual data entry errors
                                 and reduced label generation time by 95%.
                             </p>
-                            <Button 
-                                size="lg" 
-                                asChild 
+                            <Button
+                                size="lg"
+                                asChild
                                 className="h-14 px-10 text-lg bg-white text-sky-700 hover:bg-sky-50 font-semibold rounded-xl shadow-lg"
                             >
                                 <Link href="/login">
                                     Start Your Free Trial
                                     <ArrowRight className="ml-2 h-5 w-5" />
                                 </Link>
-                </Button>
+                            </Button>
                             <p className="text-sm text-sky-200 mt-4">
                                 No credit card required • 50 free SDS uploads
                             </p>
-            </div>
-          </div>
-        </section>
-      </main>
+                        </div>
+                    </div>
+                </section>
+            </main>
 
             {/* Footer */}
             <footer className="bg-slate-900 text-white py-16">
@@ -298,11 +298,11 @@ export default function LandingPage() {
                             <div className="flex items-center gap-2.5">
                                 <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center">
                                     <Shield className="h-4 w-4 text-white" />
-              </div>
+                                </div>
                                 <span className="text-lg font-bold">HazLabel</span>
-            </div>
+                            </div>
                             <p className="text-slate-400 text-sm max-w-xs">
-                                The modern compliance platform for industrial chemical safety. 
+                                The modern compliance platform for industrial chemical safety.
                                 Built on precision AI and GHS expertise.
                             </p>
                             <div className="flex gap-4">
@@ -314,48 +314,48 @@ export default function LandingPage() {
                                 </a>
                             </div>
                         </div>
-                        
-                        <FooterLinks 
-                            title="Product" 
-                            links={["Features", "Pricing", "API Docs", "Changelog"]} 
+
+                        <FooterLinks
+                            title="Product"
+                            links={["Features", "Pricing", "API Docs", "Changelog"]}
                         />
-                        <FooterLinks 
-                            title="Company" 
-                            links={["About", "Blog", "Careers", "Contact"]} 
+                        <FooterLinks
+                            title="Company"
+                            links={["About", "Blog", "Careers", "Contact"]}
                         />
-          </div>
-                    
+                    </div>
+
                     <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
                         <p>© 2026 HazLabel. All rights reserved.</p>
                         <div className="flex gap-6">
                             <a href="#" className="hover:text-white transition-colors">Privacy</a>
                             <a href="#" className="hover:text-white transition-colors">Terms</a>
                             <a href="#" className="hover:text-white transition-colors">Security</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
+    )
 }
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-        <a 
-            href={href} 
+    return (
+        <a
+            href={href}
             className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium"
         >
-      {children}
-    </a>
-  )
+            {children}
+        </a>
+    )
 }
 
-function FeatureCard({ 
-    icon, 
-    title, 
-    description, 
-    color 
-}: { 
+function FeatureCard({
+    icon,
+    title,
+    description,
+    color
+}: {
     icon: React.ReactNode
     title: string
     description: string
@@ -368,49 +368,49 @@ function FeatureCard({
         emerald: "bg-emerald-100 text-emerald-600",
         violet: "bg-violet-100 text-violet-600"
     }
-    
-  return (
+
+    return (
         <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
             <div className={`inline-flex p-3 rounded-xl ${colorClasses[color]} mb-5`}>
-        {icon}
-      </div>
+                {icon}
+            </div>
             <h3 className="text-xl font-semibold mb-3 text-slate-900">{title}</h3>
             <p className="text-slate-600 leading-relaxed">{description}</p>
-    </div>
-  )
+        </div>
+    )
 }
 
-function StepCard({ 
-    number, 
-    title, 
-    description 
-}: { 
+function StepCard({
+    number,
+    title,
+    description
+}: {
     number: string
     title: string
     description: string
 }) {
-  return (
+    return (
         <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200">
             <div className="text-5xl font-bold gradient-text mb-4">{number}</div>
             <h3 className="text-xl font-semibold mb-3 text-slate-900">{title}</h3>
             <p className="text-slate-600 leading-relaxed">{description}</p>
-    </div>
-  )
+        </div>
+    )
 }
 
 function FooterLinks({ title, links }: { title: string; links: string[] }) {
-  return (
+    return (
         <div>
             <h4 className="font-semibold text-white mb-4">{title}</h4>
             <ul className="space-y-3">
-        {links.map(link => (
-          <li key={link}>
+                {links.map(link => (
+                    <li key={link}>
                         <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm">
                             {link}
                         </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
 }
