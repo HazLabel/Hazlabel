@@ -1,11 +1,11 @@
 "use client"
 
 import React from "react"
-import { ValidationResponse, ValidationIssueResponse } from "@/lib/types"
-import { 
-    AlertTriangle, 
-    AlertCircle, 
-    Info, 
+import { ValidationResult, ValidationIssue } from "@/lib/types"
+import {
+    AlertTriangle,
+    AlertCircle,
+    Info,
     CheckCircle2,
     XCircle,
     ChevronDown,
@@ -15,7 +15,7 @@ import {
 import { cn } from "@/lib/utils"
 
 interface ValidationPanelProps {
-    validation: ValidationResponse
+    validation: ValidationResult
     compact?: boolean
 }
 
@@ -101,7 +101,7 @@ export function ValidationPanel({ validation, compact = false }: ValidationPanel
                             const config = SEVERITY_CONFIG[severity]
                             const Icon = config.icon
                             return (
-                                <span 
+                                <span
                                     key={severity}
                                     className={cn(
                                         "inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium",
@@ -156,7 +156,7 @@ export function ValidationPanel({ validation, compact = false }: ValidationPanel
                             <p className="font-medium text-red-800">Missing Required P-Codes</p>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {validation.missing_p_codes.map((code) => (
-                                    <span 
+                                    <span
                                         key={code}
                                         className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs font-mono font-bold"
                                     >
@@ -187,7 +187,7 @@ export function ValidationPanel({ validation, compact = false }: ValidationPanel
     )
 }
 
-function IssueCard({ issue }: { issue: ValidationIssueResponse }) {
+function IssueCard({ issue }: { issue: ValidationIssue }) {
     const config = SEVERITY_CONFIG[issue.severity]
     const Icon = config.icon
 
