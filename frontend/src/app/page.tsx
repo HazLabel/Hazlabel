@@ -340,38 +340,40 @@ export default function LandingPage() {
                             </p>
                         </div>
                     </div>
-                    {/* FAQ Section */}
-                    <section className="py-32 bg-white">
-                        <div className="max-w-4xl mx-auto px-6">
-                            <div className="text-center mb-16">
-                                <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4">
-                                    Frequently Asked Questions
-                                </h2>
-                                <p className="text-lg text-slate-600">
-                                    Everything you need to know about HazLabel and GHS compliance.
-                                </p>
-                            </div>
+                </section>
 
-                            <div className="space-y-6">
-                                <FAQItem
-                                    question="Is HazLabel compliant with the latest GHS standards?"
-                                    answer="Yes, HazLabel is fully compliant with the UN GHS Revision 11 (2025). We update our database immediately when new regulatory changes are published."
-                                />
-                                <FAQItem
-                                    question="Can I use HazLabel for my local country standards (e.g., OSHA HCS)?"
-                                    answer="Absolutely. While we follow the UN GHS master database, our extraction engine understands local variations like OSHA HCS 2012 (USA), WHMIS 2015 (Canada), and CLP (EU)."
-                                />
-                                <FAQItem
-                                    question="What file formats are supported for labels?"
-                                    answer="We currently support high-resolution PDF generation for standard laser printers (Avery 5163) and ZPL II code for Zebra thermal printers."
-                                />
-                                <FAQItem
-                                    question="How secure is my chemical data?"
-                                    answer="We use enterprise-grade encryption for all data at rest and in transit. Your SDS documents are processed securely and never shared with third parties."
-                                />
-                            </div>
+                {/* FAQ Section */}
+                <section className="py-32 bg-white">
+                    <div className="max-w-4xl mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4">
+                                Frequently Asked Questions
+                            </h2>
+                            <p className="text-lg text-slate-600">
+                                Everything you need to know about HazLabel and GHS compliance.
+                            </p>
                         </div>
-                    </section>
+
+                        <div className="space-y-6">
+                            <FAQItem
+                                question="Is HazLabel compliant with the latest GHS standards?"
+                                answer="Yes, HazLabel is fully compliant with the UN GHS Revision 11 (2025). We update our database immediately when new regulatory changes are published."
+                            />
+                            <FAQItem
+                                question="Can I use HazLabel for my local country standards (e.g., OSHA HCS)?"
+                                answer="Absolutely. While we follow the UN GHS master database, our extraction engine understands local variations like OSHA HCS 2012 (USA), WHMIS 2015 (Canada), and CLP (EU)."
+                            />
+                            <FAQItem
+                                question="What file formats are supported for labels?"
+                                answer="We currently support high-resolution PDF generation for standard laser printers (Avery 5163) and ZPL II code for Zebra thermal printers."
+                            />
+                            <FAQItem
+                                question="How secure is my chemical data?"
+                                answer="We use enterprise-grade encryption for all data at rest and in transit. Your SDS documents are processed securely and never shared with third parties."
+                            />
+                        </div>
+                    </div>
+                </section>
             </main>
 
             {/* Footer */}
