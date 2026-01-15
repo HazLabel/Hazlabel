@@ -28,11 +28,11 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { 
-    MoreHorizontal, 
-    Printer, 
-    Trash2, 
-    Eye, 
+import {
+    MoreHorizontal,
+    Printer,
+    Trash2,
+    Eye,
     Loader2,
     AlertTriangle,
     CheckCircle2,
@@ -56,7 +56,7 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
 
     const handleDelete = async () => {
         if (!deleteChemical) return
-        
+
         setIsDeleting(true)
         try {
             await api.delete(`/chemicals/${deleteChemical.id}`)
@@ -64,7 +64,7 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
                 description: `${deleteChemical.name} has been removed from your vault.`
             })
             queryClient.invalidateQueries({ queryKey: ["chemicals"] })
-        } catch (error) {
+        } catch {
             toast.error("Delete failed", {
                 description: "Could not delete the chemical. Please try again."
             })
@@ -100,13 +100,13 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
                 </TableHeader>
                 <TableBody>
                     {chemicals.map((chemical) => (
-                        <TableRow 
-                            key={chemical.id} 
+                        <TableRow
+                            key={chemical.id}
                             className="border-slate-100 table-row-hover group"
                         >
                             {/* Chemical Name */}
                             <TableCell>
-                                <Link 
+                                <Link
                                     href={`/inventory/${chemical.id}`}
                                     className="block group/link"
                                 >
@@ -135,8 +135,8 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
                             {/* Pictograms */}
                             <TableCell>
                                 {chemical.status === "completed" && chemical.ghs_data?.pictograms ? (
-                                    <PictogramBadges 
-                                        pictograms={chemical.ghs_data.pictograms} 
+                                    <PictogramBadges
+                                        pictograms={chemical.ghs_data.pictograms}
                                         maxShow={4}
                                     />
                                 ) : chemical.status === "processing" ? (
@@ -148,9 +148,9 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
 
                             {/* Status */}
                             <TableCell>
-                                <StatusBadge 
-                                    status={chemical.status} 
-                                    needsReview={chemical.needs_review} 
+                                <StatusBadge
+                                    status={chemical.status}
+                                    needsReview={chemical.needs_review}
                                 />
                             </TableCell>
 
@@ -158,20 +158,20 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
                             <TableCell className="text-right">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button 
-                                            variant="ghost" 
+                                        <Button
+                                            variant="ghost"
                                             size="icon"
                                             className="h-8 w-8 text-slate-400 hover:text-slate-900 hover:bg-slate-100 opacity-0 group-hover:opacity-100 transition-all"
                                         >
                                             <MoreHorizontal className="h-4 w-4" />
                                         </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent 
-                                        align="end" 
+                                    <DropdownMenuContent
+                                        align="end"
                                         className="w-48 bg-white border-slate-200"
                                     >
                                         <DropdownMenuItem asChild>
-                                            <Link 
+                                            <Link
                                                 href={`/inventory/${chemical.id}`}
                                                 className="flex items-center gap-2 cursor-pointer"
                                             >
@@ -179,10 +179,10 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
                                                 View Details
                                             </Link>
                                         </DropdownMenuItem>
-                                        
+
                                         {chemical.status === "completed" && (
                                             <DropdownMenuItem asChild>
-                                                <Link 
+                                                <Link
                                                     href={`/print?selected=${chemical.id}`}
                                                     className="flex items-center gap-2 cursor-pointer"
                                                 >
@@ -191,10 +191,10 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
                                                 </Link>
                                             </DropdownMenuItem>
                                         )}
-                                        
+
                                         <DropdownMenuSeparator className="bg-slate-100" />
-                                        
-                                        <DropdownMenuItem 
+
+                                        <DropdownMenuItem
                                             onClick={() => setDeleteChemical(chemical)}
                                             className="flex items-center gap-2 text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
                                         >
@@ -218,7 +218,7 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
                             Delete Chemical
                         </DialogTitle>
                         <DialogDescription className="text-slate-600">
-                            Are you sure you want to delete <strong className="text-slate-900">{deleteChemical?.name}</strong>? 
+                            Are you sure you want to delete <strong className="text-slate-900">{deleteChemical?.name}</strong>?
                             This action cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
@@ -258,7 +258,7 @@ export function ChemicalTable({ chemicals, isLoading }: ChemicalTableProps) {
 
 function SignalWordBadge({ signalWord }: { signalWord: string }) {
     const isDanger = signalWord === "Danger"
-    
+
     return (
         <span className={cn(
             "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider",
@@ -279,7 +279,7 @@ function StatusBadge({ status, needsReview }: { status: string; needsReview?: bo
             </span>
         )
     }
-    
+
     if (status === "failed") {
         return (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-50 text-red-700 text-xs font-medium border border-red-200">
@@ -288,7 +288,7 @@ function StatusBadge({ status, needsReview }: { status: string; needsReview?: bo
             </span>
         )
     }
-    
+
     if (needsReview) {
         return (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 text-xs font-medium border border-amber-200">
@@ -297,9 +297,9 @@ function StatusBadge({ status, needsReview }: { status: string; needsReview?: bo
             </span>
         )
     }
-    
+
     return (
-        <span 
+        <span
             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-200"
             title="Hazards reproduced from manufacturer SDS Section 2. Not a certification."
         >
@@ -313,8 +313,8 @@ function TableSkeleton() {
     return (
         <div className="p-4 space-y-4">
             {[...Array(5)].map((_, i) => (
-                <div 
-                    key={i} 
+                <div
+                    key={i}
                     className="flex items-center gap-4 animate-pulse"
                     style={{ animationDelay: `${i * 100}ms` }}
                 >

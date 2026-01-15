@@ -22,9 +22,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { 
-    FileDown, 
-    CheckCircle2, 
+import {
+    FileDown,
+    CheckCircle2,
     AlertTriangle,
     Search,
     FileText,
@@ -80,7 +80,7 @@ export default function PrintPage() {
     const printableChemicals = useMemo(() => {
         const completed = chemicals.filter(c => c.status === "completed" && c.ghs_data)
         if (!searchQuery) return completed
-        
+
         const query = searchQuery.toLowerCase()
         return completed.filter(c =>
             c.name.toLowerCase().includes(query) ||
@@ -115,11 +115,11 @@ export default function PrintPage() {
         try {
             const ids = Array.from(selectedIds)
             const sizeConfig = LABEL_SIZE_OPTIONS[labelSize]
-            
+
             // Get PDF blob with label size parameters
             const response = await api.post(
                 "/print/pdf",
-                { 
+                {
                     chemical_ids: ids,
                     label_size: labelSize,
                     label_width: sizeConfig.width,
@@ -128,7 +128,7 @@ export default function PrintPage() {
                 },
                 { responseType: "blob" }
             )
-            
+
             // Create download link
             const blob = new Blob([response.data], { type: "application/pdf" })
             const url = window.URL.createObjectURL(blob)
@@ -137,11 +137,11 @@ export default function PrintPage() {
             a.download = `ghs_labels_${labelSize}_${Date.now()}.pdf`
             a.click()
             window.URL.revokeObjectURL(url)
-            
+
             toast.success("PDF Generated", {
                 description: `${ids.length} label(s) ready for printing on ${sizeConfig.name} (${sizeConfig.size}).`
             })
-        } catch (error) {
+        } catch {
             toast.error("Print Failed", {
                 description: "Could not generate labels. Please try again."
             })
@@ -158,7 +158,7 @@ export default function PrintPage() {
             <div className="space-y-2 animate-reveal">
                 <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
                     Print Queue
-                    </h1>
+                </h1>
                 <p className="text-slate-600 text-lg">
                     Select chemicals and generate GHS labels in bulk.
                 </p>
@@ -341,23 +341,23 @@ export default function PrintPage() {
                 ) : printableChemicals.length === 0 ? (
                     <EmptyState />
                 ) : (
-                            <Table>
+                    <Table>
                         <TableHeader>
                             <TableRow className="bg-slate-50 hover:bg-slate-50">
                                 <TableHead className="w-12">
-                                            <Checkbox
+                                    <Checkbox
                                         checked={selectedIds.size === printableChemicals.length && printableChemicals.length > 0}
                                         onCheckedChange={toggleSelectAll}
                                         className="border-slate-300"
-                                            />
-                                        </TableHead>
+                                    />
+                                </TableHead>
                                 <TableHead className="text-slate-600 font-semibold">Chemical</TableHead>
                                 <TableHead className="text-slate-600 font-semibold">Signal Word</TableHead>
                                 <TableHead className="text-slate-600 font-semibold">Pictograms</TableHead>
                                 <TableHead className="text-slate-600 font-semibold">H-Codes</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {printableChemicals.map((chemical) => (
                                 <PrintRow
                                     key={chemical.id}
@@ -387,21 +387,21 @@ function PrintRow({
     const isDanger = signalWord === "Danger"
 
     return (
-                                            <TableRow
+        <TableRow
             className={cn(
                 "border-slate-100 cursor-pointer transition-colors",
                 selected ? "bg-sky-50" : "hover:bg-slate-50"
             )}
             onClick={onToggle}
-                                            >
-                                                <TableCell onClick={(e) => e.stopPropagation()}>
-                                                    <Checkbox
+        >
+            <TableCell onClick={(e) => e.stopPropagation()}>
+                <Checkbox
                     checked={selected}
                     onCheckedChange={onToggle}
                     className="border-slate-300"
-                                                    />
-                                                </TableCell>
-                                                <TableCell>
+                />
+            </TableCell>
+            <TableCell>
                 <div>
                     <p className="font-medium text-slate-900">{chemical.name}</p>
                     {chemical.ghs_data?.product_identifier && chemical.ghs_data.product_identifier !== chemical.name && (
@@ -409,9 +409,9 @@ function PrintRow({
                             {chemical.ghs_data.product_identifier}
                         </p>
                     )}
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
+                </div>
+            </TableCell>
+            <TableCell>
                 {signalWord && (
                     <span className={cn(
                         "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider",
@@ -419,7 +419,7 @@ function PrintRow({
                     )}>
                         <AlertTriangle className="h-3 w-3" />
                         {signalWord}
-                                                    </span>
+                    </span>
                 )}
             </TableCell>
             <TableCell>
@@ -431,8 +431,8 @@ function PrintRow({
                 <p className="text-sm text-slate-600 truncate max-w-[200px]">
                     {chemical.ghs_data?.hazard_statements?.slice(0, 3).join(", ")}
                 </p>
-                                                </TableCell>
-                                            </TableRow>
+            </TableCell>
+        </TableRow>
     )
 }
 
@@ -441,14 +441,14 @@ function EmptyState() {
         <div className="text-center py-16">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-100 mb-4">
                 <FileText className="h-8 w-8 text-slate-400" />
-                            </div>
+            </div>
             <h3 className="text-lg font-semibold text-slate-900 mb-2">
                 No chemicals to print
             </h3>
             <p className="text-slate-500 max-w-sm mx-auto">
                 Upload and process SDS files first to generate labels.
             </p>
-                            </div>
+        </div>
     )
 }
 
@@ -461,7 +461,7 @@ function LoadingSkeleton() {
                     <div className="flex-1 space-y-2">
                         <div className="h-4 bg-slate-200 rounded w-1/3" />
                         <div className="h-3 bg-slate-100 rounded w-1/4" />
-                            </div>
+                    </div>
                     <div className="h-6 w-16 bg-slate-200 rounded" />
                     <div className="flex gap-1">
                         {[...Array(3)].map((_, j) => (

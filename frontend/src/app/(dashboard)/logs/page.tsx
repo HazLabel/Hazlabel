@@ -4,17 +4,15 @@ import React, { useState, useMemo } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useUser } from "@/hooks/use-user"
 import api from "@/lib/api"
-import { 
-    FileText, 
-    Printer, 
-    Upload, 
-    Trash2, 
+import {
+    FileText,
+    Printer,
+    Upload,
+    Trash2,
     Eye,
     Calendar,
     Clock,
-    User,
     Search,
-    Filter,
     List,
     LayoutGrid
 } from "lucide-react"
@@ -47,35 +45,35 @@ type AuditLog = {
 }
 
 const ACTION_CONFIG: Record<string, { icon: React.ReactNode; label: string; color: string; description: (log: AuditLog) => string }> = {
-    "chemical.created": { 
-        icon: <Upload className="h-4 w-4" />, 
-        label: "Uploaded", 
+    "chemical.created": {
+        icon: <Upload className="h-4 w-4" />,
+        label: "Uploaded",
         color: "sky",
         description: (log) => `Added "${log.details?.name || 'chemical'}" to vault`
     },
-    "chemical.updated": { 
-        icon: <FileText className="h-4 w-4" />, 
-        label: "Updated", 
+    "chemical.updated": {
+        icon: <FileText className="h-4 w-4" />,
+        label: "Updated",
         color: "violet",
         description: (log) => `Updated "${log.details?.name || 'chemical'}"`
     },
-    "chemical.deleted": { 
-        icon: <Trash2 className="h-4 w-4" />, 
-        label: "Deleted", 
+    "chemical.deleted": {
+        icon: <Trash2 className="h-4 w-4" />,
+        label: "Deleted",
         color: "red",
         description: (log) => `Removed "${log.details?.name || 'chemical'}" from vault`
     },
-    "chemical.viewed": { 
-        icon: <Eye className="h-4 w-4" />, 
-        label: "Viewed", 
+    "chemical.viewed": {
+        icon: <Eye className="h-4 w-4" />,
+        label: "Viewed",
         color: "slate",
         description: (log) => `Viewed "${log.details?.name || 'chemical'}"`
     },
-    "label.printed": { 
-        icon: <Printer className="h-4 w-4" />, 
-        label: "Printed", 
+    "label.printed": {
+        icon: <Printer className="h-4 w-4" />,
+        label: "Printed",
         color: "emerald",
-        description: (log) => log.details?.count 
+        description: (log) => log.details?.count
             ? `Printed ${log.details.count} label${log.details.count > 1 ? 's' : ''}`
             : `Printed label for "${log.details?.name || 'chemical'}"`
     },
@@ -154,8 +152,8 @@ export default function LogsPage() {
                         onClick={() => setViewMode("timeline")}
                         className={cn(
                             "gap-2 h-9",
-                            viewMode === "timeline" 
-                                ? "bg-white text-slate-900 shadow-sm" 
+                            viewMode === "timeline"
+                                ? "bg-white text-slate-900 shadow-sm"
                                 : "text-slate-500 hover:text-slate-900"
                         )}
                     >
@@ -168,8 +166,8 @@ export default function LogsPage() {
                         onClick={() => setViewMode("table")}
                         className={cn(
                             "gap-2 h-9",
-                            viewMode === "table" 
-                                ? "bg-white text-slate-900 shadow-sm" 
+                            viewMode === "table"
+                                ? "bg-white text-slate-900 shadow-sm"
                                 : "text-slate-500 hover:text-slate-900"
                         )}
                     >
@@ -265,7 +263,7 @@ function LogCard({ log }: { log: AuditLog }) {
                             </>
                         )}
                     </div>
-                    
+
                     <p className="text-sm text-slate-600 mb-2">
                         {config.description(log)}
                     </p>
