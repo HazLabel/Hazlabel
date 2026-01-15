@@ -299,7 +299,7 @@ export default function PrintPage() {
                         <div className="bg-white rounded-lg border border-slate-200 p-3">
                             <p className="text-xs text-slate-500 mb-1">Dimensions</p>
                             <p className="font-medium text-slate-900">
-                                {LABEL_SIZE_OPTIONS[labelSize].width}" × {LABEL_SIZE_OPTIONS[labelSize].height}"
+                                {`${LABEL_SIZE_OPTIONS[labelSize].width}" × ${LABEL_SIZE_OPTIONS[labelSize].height}"`}
                             </p>
                             <p className="text-xs text-slate-500 mt-0.5">
                                 Width × Height
