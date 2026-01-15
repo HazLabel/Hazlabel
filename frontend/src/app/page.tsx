@@ -279,9 +279,9 @@ export default function LandingPage() {
                                 price="0"
                                 description="Perfect for small labs and trial runs."
                                 features={[
-                                    "50 SDS Uploads / Month",
+                                    "2 SDS Uploads / Month",
+                                    "2 PDF Downloads / Month",
                                     "Standard GHS Pictograms",
-                                    "PDF Export Only",
                                     "Community Support"
                                 ]}
                             />
@@ -291,7 +291,7 @@ export default function LandingPage() {
                                 description="For active manufacturing facilities."
                                 features={[
                                     "1,000 SDS Uploads / Month",
-                                    "ZPL Support (Coming Soon)",
+                                    "Unlimited PDF Downloads",
                                     "Revision Tracking",
                                     "Priority Email Support"
                                 ]}
@@ -336,7 +336,7 @@ export default function LandingPage() {
                                 </Link>
                             </Button>
                             <p className="text-sm text-sky-200 mt-4">
-                                No credit card required • 50 free SDS uploads
+                                No credit card required • 2 free SDS uploads
                             </p>
                         </div>
                     </div>
