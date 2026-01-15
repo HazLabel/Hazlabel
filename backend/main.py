@@ -578,7 +578,7 @@ async def bulk_print_pdf(request: BulkPrintRequest, user: User = Depends(verify_
     
     # ABSOLUTE path to pictogram images
     BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
-    PICTOGRAM_DIR = os.path.normpath(os.path.join(BACKEND_DIR, "..", "frontend", "public", "pictograms"))
+    PICTOGRAM_DIR = os.path.join(BACKEND_DIR, "static", "pictograms")
     
     buffer = io.BytesIO()
     
