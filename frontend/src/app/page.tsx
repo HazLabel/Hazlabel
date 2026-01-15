@@ -291,7 +291,7 @@ export default function LandingPage() {
                                 description="For active manufacturing facilities."
                                 features={[
                                     "1,000 SDS Uploads / Month",
-                                    "ZPL & Thermal Support",
+                                    "ZPL Support (Coming Soon)",
                                     "Revision Tracking",
                                     "Priority Email Support"
                                 ]}
@@ -365,7 +365,7 @@ export default function LandingPage() {
                             />
                             <FAQItem
                                 question="What file formats are supported for labels?"
-                                answer="We currently support high-resolution PDF generation for standard laser printers (Avery 5163) and ZPL II code for Zebra thermal printers."
+                                answer="We currently support high-resolution PDF generation for standard laser printers (Avery 5163). Logic for Zebra printers is coming soon."
                             />
                             <FAQItem
                                 question="How secure is my chemical data?"
