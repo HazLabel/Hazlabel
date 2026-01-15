@@ -259,6 +259,59 @@ export default function LandingPage() {
                     </div>
                 </section>
 
+                {/* Pricing Section */}
+                <section id="pricing" className="py-32 bg-slate-50 border-y border-slate-200">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="text-center max-w-3xl mx-auto mb-20">
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
+                                Simple, Transparent
+                                <br />
+                                <span className="gradient-text">Pricing</span>
+                            </h2>
+                            <p className="text-xl text-slate-600">
+                                Choose the plan that fits your facility's compliance needs.
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <PricingCard
+                                title="Starter"
+                                price="0"
+                                description="Perfect for small labs and trial runs."
+                                features={[
+                                    "50 SDS Uploads / Month",
+                                    "Standard GHS Pictograms",
+                                    "PDF Export Only",
+                                    "Community Support"
+                                ]}
+                            />
+                            <PricingCard
+                                title="Professional"
+                                price="149"
+                                description="For active manufacturing facilities."
+                                features={[
+                                    "1,000 SDS Uploads / Month",
+                                    "ZPL & Thermal Support",
+                                    "Revision Tracking",
+                                    "Priority Email Support"
+                                ]}
+                                highlighted={true}
+                            />
+                            <PricingCard
+                                title="Enterprise"
+                                price="Custom"
+                                description="Global compliance for large organizations."
+                                features={[
+                                    "Unlimited SDS Processing",
+                                    "Custom Label Templates",
+                                    "SSO & Role Management",
+                                    "Dedicated Account Manager"
+                                ]}
+                            />
+                        </div>
+                    </div>
+                </section>
+
                 {/* CTA Section */}
                 <section className="py-32 bg-gradient-to-br from-sky-600 to-cyan-600">
                     <div className="max-w-7xl mx-auto px-6">
@@ -287,7 +340,38 @@ export default function LandingPage() {
                             </p>
                         </div>
                     </div>
-                </section>
+                    {/* FAQ Section */}
+                    <section className="py-32 bg-white">
+                        <div className="max-w-4xl mx-auto px-6">
+                            <div className="text-center mb-16">
+                                <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4">
+                                    Frequently Asked Questions
+                                </h2>
+                                <p className="text-lg text-slate-600">
+                                    Everything you need to know about HazLabel and GHS compliance.
+                                </p>
+                            </div>
+
+                            <div className="space-y-6">
+                                <FAQItem
+                                    question="Is HazLabel compliant with the latest GHS standards?"
+                                    answer="Yes, HazLabel is fully compliant with the UN GHS Revision 11 (2025). We update our database immediately when new regulatory changes are published."
+                                />
+                                <FAQItem
+                                    question="Can I use HazLabel for my local country standards (e.g., OSHA HCS)?"
+                                    answer="Absolutely. While we follow the UN GHS master database, our extraction engine understands local variations like OSHA HCS 2012 (USA), WHMIS 2015 (Canada), and CLP (EU)."
+                                />
+                                <FAQItem
+                                    question="What file formats are supported for labels?"
+                                    answer="We currently support high-resolution PDF generation for standard laser printers (Avery 5163) and ZPL II code for Zebra thermal printers."
+                                />
+                                <FAQItem
+                                    question="How secure is my chemical data?"
+                                    answer="We use enterprise-grade encryption for all data at rest and in transit. Your SDS documents are processed securely and never shared with third parties."
+                                />
+                            </div>
+                        </div>
+                    </section>
             </main>
 
             {/* Footer */}
@@ -411,6 +495,59 @@ function FooterLinks({ title, links }: { title: string; links: string[] }) {
                     </li>
                 ))}
             </ul>
+        </div>
+    )
+}
+
+function PricingCard({
+    title,
+    price,
+    description,
+    features,
+    highlighted = false
+}: {
+    title: string
+    price: string
+    description: string
+    features: string[]
+    highlighted?: boolean
+}) {
+    return (
+        <div className={`p-8 rounded-3xl border ${highlighted ? 'bg-white border-sky-500 shadow-xl shadow-sky-500/10 scale-105 z-10' : 'bg-white border-slate-200'} flex flex-col`}>
+            <div className="mb-8">
+                <h3 className="text-xl font-bold text-slate-900 mb-2">{title}</h3>
+                <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-bold text-slate-900">{price === "Custom" ? "" : "$"}</span>
+                    <span className="text-5xl font-bold text-slate-900">{price}</span>
+                    {price !== "Custom" && <span className="text-slate-500 font-medium">/mo</span>}
+                </div>
+                <p className="text-slate-500 mt-4 text-sm">{description}</p>
+            </div>
+
+            <ul className="space-y-4 mb-8 flex-1">
+                {features.map(feature => (
+                    <li key={feature} className="flex items-center gap-3 text-sm text-slate-600">
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0" />
+                        {feature}
+                    </li>
+                ))}
+            </ul>
+
+            <Button
+                variant={highlighted ? "default" : "outline"}
+                className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
+            >
+                {price === "Custom" ? "Contact Sales" : "Get Started"}
+            </Button>
+        </div>
+    )
+}
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+    return (
+        <div className="p-6 rounded-2xl border border-slate-100 bg-slate-50/50">
+            <h3 className="text-lg font-bold text-slate-900 mb-2">{question}</h3>
+            <p className="text-slate-600 leading-relaxed text-sm">{answer}</p>
         </div>
     )
 }
