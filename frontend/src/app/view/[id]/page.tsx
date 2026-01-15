@@ -76,7 +76,7 @@ export default function MobileSafetyView() {
                 {/* Large Pictograms */}
                 <div className="flex flex-wrap justify-center gap-8 py-4">
                     {ghs_data?.pictograms.map((pic) => (
-                        <GHSPictogram key={pic} name={pic} size={120} className="border-red-600 border-4 shadow-xl" />
+                        <GHSPictogram key={pic} code={pic} size={120} className="border-red-600 border-4 shadow-xl" />
                     ))}
                     {(!ghs_data?.pictograms || ghs_data.pictograms.length === 0) && (
                         <p className="text-slate-400 italic">No specific pictograms required</p>
