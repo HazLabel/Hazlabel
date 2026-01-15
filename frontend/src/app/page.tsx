@@ -2,132 +2,125 @@
 
 import React from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import {
-    ArrowRight,
-    Sparkles,
+  ArrowRight,
+  Sparkles,
     Shield,
+    Zap,
+    FileSearch,
+    Printer,
+  Database,
+    CheckCircle2,
+    Play,
     Linkedin,
-    Twitter,
-    ChevronRight
+    Twitter
 } from "lucide-react"
-import { LabelPreviewWidget } from "@/components/landing/label-preview-widget"
-import { BentoFeatures } from "@/components/landing/bento-features"
-import { MeshBackground } from "@/components/landing/mesh-background"
 
 export default function LandingPage() {
-    return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-sky-100 selection:text-sky-900">
-            {/* Navigation */}
-            <nav className="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl border-b border-slate-200/50">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+  return (
+        <div className="min-h-screen bg-white text-slate-900">
+      {/* Navigation */}
+            <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+                <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2.5 group">
-                        <motion.div
-                            whileHover={{ rotate: 5, scale: 1.1 }}
-                            className="h-10 w-10 rounded-2xl bg-gradient-to-br from-sky-600 to-sky-400 flex items-center justify-center shadow-lg shadow-sky-500/20"
-                        >
+                        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-cyan-600 flex items-center justify-center shadow-md shadow-sky-500/20">
                             <Shield className="h-5 w-5 text-white" />
-                        </motion.div>
-                        <span className="text-xl font-black tracking-tight text-slate-900">HazLabel</span>
+          </div>
+                        <span className="text-lg font-bold tracking-tight text-slate-900">HazLabel</span>
                     </Link>
 
-                    <div className="hidden md:flex items-center gap-10">
-                        <NavLink href="#features">Capabilities</NavLink>
-                        <NavLink href="#how-it-works">Technology</NavLink>
+                    <div className="hidden md:flex items-center gap-8">
+                        <NavLink href="#features">Features</NavLink>
+                        <NavLink href="#how-it-works">How it Works</NavLink>
+                        <NavLink href="#pricing">Pricing</NavLink>
                         <NavLink href="/inventory">Dashboard</NavLink>
-                    </div>
+        </div>
 
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" asChild className="hidden sm:flex text-slate-600 hover:text-sky-600 font-semibold px-6">
+        <div className="flex items-center gap-3">
+                        <Button variant="ghost" asChild className="text-slate-600 hover:text-slate-900">
                             <Link href="/login">Sign In</Link>
-                        </Button>
-                        <Button asChild className="bg-slate-900 hover:bg-sky-600 text-white font-bold h-11 px-6 rounded-full shadow-lg transition-all duration-300">
-                            <Link href="/login" className="flex items-center gap-2">
-                                Get Started
-                                <ChevronRight className="h-4 w-4" />
-                            </Link>
-                        </Button>
+          </Button>
+                        <Button asChild className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-5 shadow-md shadow-sky-500/20">
+                            <Link href="/login">Get Started</Link>
+          </Button>
                     </div>
-                </div>
-            </nav>
+        </div>
+      </nav>
 
-            <main>
+      <main>
                 {/* Hero Section */}
-                <section className="relative pt-44 pb-32 overflow-hidden">
-                    <MeshBackground />
-
+                <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 hero-pattern">
+                    {/* Subtle grid pattern */}
+                    <div className="absolute inset-0 grid-pattern opacity-50" />
+                    
                     <div className="relative max-w-7xl mx-auto px-6">
-                        <div className="flex flex-col items-center text-center space-y-10">
+                        <div className="max-w-4xl mx-auto text-center space-y-8">
                             {/* Badge */}
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/80 border border-sky-100 shadow-sm backdrop-blur-sm"
-                            >
-                                <Sparkles className="h-4 w-4 text-sky-500 fill-sky-500/20" />
-                                <span className="text-sm font-bold text-sky-900">UN GHS Revision 11 (2025) Compliant</span>
-                            </motion.div>
+                            <div className="animate-reveal">
+                                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sm font-medium text-sky-700">
+                                    <Sparkles className="h-4 w-4" />
+                                    Powered by GPT-4o + GHS Rev 11
+                                </span>
+            </div>
 
                             {/* Headline */}
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9] text-slate-900"
-                            >
-                                Industrial Safety
+                            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] animate-reveal delay-100">
+                                Chemical Safety
                                 <br />
-                                <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-cyan-500">Accelerated by AI</span>
-                            </motion.h1>
+                                <span className="gradient-text">Automated</span>
+            </h1>
 
                             {/* Subheadline */}
-                            <motion.p
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-xl md:text-2xl text-slate-500 max-w-3xl leading-relaxed font-normal"
-                            >
-                                The intelligence engine for chemical compliance. Transform raw SDS data into
-                                regulatory-perfect GHS labels in under 3 seconds.
-                            </motion.p>
+                            <p className="text-xl md:text-2xl text-slate-600 max-w-2xl mx-auto leading-relaxed animate-reveal delay-200">
+                                Transform Safety Data Sheets into compliant GHS labels in seconds. 
+                                AI-powered extraction with regulatory precision.
+                            </p>
 
                             {/* CTA Buttons */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                                className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4 w-full"
-                            >
-                                <Button
-                                    size="lg"
-                                    asChild
-                                    className="h-16 px-10 text-xl bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-2xl shadow-2xl shadow-sky-500/20 transition-all hover:-translate-y-1"
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-reveal delay-300">
+                                <Button 
+                                    size="lg" 
+                                    asChild 
+                                    className="h-14 px-8 text-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl shadow-lg shadow-sky-500/25 hover:shadow-sky-500/35 transition-all hover:-translate-y-0.5"
                                 >
-                                    <Link href="/login" className="flex items-center gap-3">
-                                        Deploy GHS Engine
-                                        <ArrowRight className="h-6 w-6" />
+                                    <Link href="/login">
+                                        Start Free Trial
+                                        <ArrowRight className="ml-2 h-5 w-5" />
                                     </Link>
-                                </Button>
-                                <Button
-                                    size="lg"
-                                    variant="outline"
-                                    className="h-16 px-10 text-xl border-slate-200 bg-white/50 backdrop-blur-sm hover:bg-slate-50 text-slate-700 font-semibold rounded-2xl"
+              </Button>
+                                <Button 
+                                    size="lg" 
+                                    variant="outline" 
+                                    className="h-14 px-8 text-lg border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl"
                                 >
-                                    <Link href="#" className="flex items-center gap-3">
-                                        Watch Demo
-                                    </Link>
-                                </Button>
-                            </motion.div>
+                                    <Play className="mr-2 h-5 w-5" />
+                                    Watch Demo
+              </Button>
+            </div>
 
-                            {/* Terminal Mockup - Restored */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
-                                className="mt-20 w-full max-w-4xl mx-auto"
-                            >
-                                <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-200/40 overflow-hidden text-left font-sans">
+                            {/* Social Proof */}
+                            <div className="flex items-center justify-center gap-8 pt-8 text-sm text-slate-500 animate-reveal delay-400">
+                                <div className="flex items-center gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                    <span>14M+ Labels Generated</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                    <span>99.9% Accuracy</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                    <span>GHS Rev 11 Compliant</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Hero Visual */}
+                        <div className="mt-20 animate-reveal delay-500">
+                            <div className="relative max-w-5xl mx-auto">
+                                {/* Main card */}
+                                <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden">
                                     {/* Window header */}
                                     <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 border-b border-slate-200">
                                         <div className="flex gap-1.5">
@@ -135,247 +128,289 @@ export default function LandingPage() {
                                             <div className="h-3 w-3 rounded-full bg-amber-400" />
                                             <div className="h-3 w-3 rounded-full bg-emerald-400" />
                                         </div>
-                                        <span className="text-[10px] text-slate-400 ml-2 font-mono uppercase tracking-widest font-bold">compliance-console-v2</span>
-                                    </div>
+                                        <span className="text-xs text-slate-500 ml-2 font-mono">hazlabel-console</span>
+                </div>
 
                                     {/* Terminal content */}
-                                    <div className="p-8 bg-slate-900 font-mono text-sm leading-relaxed">
-                                        <div className="space-y-4">
-                                            <div className="flex items-start gap-3">
-                                                <span className="text-emerald-400 shrink-0">$</span>
-                                                <span className="text-white">hazlabel parse document_export_44.pdf</span>
+                                    <div className="p-6 bg-slate-900 font-mono text-sm">
+                                        <div className="space-y-3">
+                                            <div className="flex items-start gap-2">
+                                                <span className="text-emerald-400">$</span>
+                                                <span className="text-white">hazlabel parse acetone_sds.pdf</span>
                                             </div>
-                                            <div className="pl-6 space-y-2 text-slate-400">
-                                                <p className="flex items-center gap-2">
-                                                    <span className="text-sky-400 font-bold">[SCAN]</span>
-                                                    <span>Extracting text from PDF (7 pages)...</span>
-                                                </p>
-                                                <p className="flex items-center gap-2">
-                                                    <span className="text-sky-400 font-bold">[AI]</span>
-                                                    <span>Analyzing GHS Rev 11 criteria...</span>
-                                                </p>
-                                                <p className="flex items-center gap-2">
-                                                    <span className="text-cyan-400 font-bold">[VALID]</span>
-                                                    <span className="text-slate-300">Signal word elevated to <span className="text-red-400">DANGER</span> based on H314</span>
-                                                </p>
+                                            <div className="pl-4 space-y-1 text-slate-400">
+                                                <p><span className="text-sky-400">[SCAN]</span> Extracting text from PDF...</p>
+                                                <p><span className="text-sky-400">[AI]</span> Identifying GHS classification...</p>
+                                                <p><span className="text-cyan-400">[VALID]</span> H225, H319, H336 verified against Rev 11</p>
                                             </div>
-                                            <div className="pt-4 border-t border-slate-800">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                                                    <span className="text-emerald-400 font-bold">READY</span>
-                                                    <span className="text-slate-500">—</span>
-                                                    <span className="text-slate-300">Label generated in 1.4s</span>
+                                            <div className="pt-2 border-t border-slate-700">
+                                                <div className="flex items-center gap-4">
+                                                    <span className="text-emerald-400">✓</span>
+                                                    <span className="text-white">Label generated in <span className="text-sky-400">2.4s</span></span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-
-                            {/* Demo Widget */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 40 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5, type: "spring" }}
-                                className="w-full pt-20"
-                            >
-                                <LabelPreviewWidget />
-                            </motion.div>
-                        </div>
+                                            <div className="bg-slate-800 rounded-lg p-4 mt-4">
+                                                <div className="flex items-start justify-between">
+                                                    <div className="space-y-2">
+                                                        <p className="text-white font-semibold">Acetone (Technical Grade)</p>
+                                                        <p className="text-red-400 font-bold text-xs uppercase tracking-wider">⚠ DANGER</p>
+                                                        <div className="flex gap-2">
+                                                            <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-xs">GHS02</span>
+                                                            <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-400 text-xs">GHS07</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right text-xs text-slate-400">
+                                                        <p>H225 • H319 • H336</p>
+                                                        <p className="text-emerald-400 mt-1">Ready to Print</p>
+                                                    </div>
+                                                </div>
                     </div>
-                </section>
-
-                {/* Feature Bento Section */}
-                <BentoFeatures />
-
-                {/* Step-by-Step Tech Section */}
-                <section id="how-it-works" className="py-32 bg-slate-900 text-white relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500 rounded-full blur-[160px]" />
-                        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-[160px]" />
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-                    <div className="max-w-7xl mx-auto px-6 relative z-10">
-                        <div className="grid lg:grid-cols-2 gap-20 items-center">
-                            <div>
-                                <h2 className="text-4xl md:text-5xl font-black mb-12 leading-tight">
-                                    Three Layers of
-                                    <br />
-                                    <span className="text-sky-400">Compliance Assurance</span>
-                                </h2>
-
-                                <div className="space-y-12">
-                                    <TechStep
-                                        number="01"
-                                        title="Neural SDS Ingestion"
-                                        description="Our proprietary pipeline parses multi-lingual SDS documents, normalizing varying standards into a consistent, machine-readable format."
-                                    />
-                                    <TechStep
-                                        number="02"
-                                        title="GHS Rev 11 Logic Gate"
-                                        description="Every extraction is cross-referenced against the current UN GHS v11 master database, ensuring outdated or deleted codes never reach your labels."
-                                    />
-                                    <TechStep
-                                        number="03"
-                                        title="The Final Output"
-                                        description="High-precision PDF and ZPL generation for thermal printers, pre-configured for industrial label dimensions and durability."
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="hidden lg:block">
-                                <div className="bg-sky-500/10 border border-sky-400/20 rounded-3xl p-1 w-full aspect-square relative group overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 to-transparent" />
-                                    <div className="h-full w-full rounded-[20px] bg-slate-950 flex items-center justify-center relative overflow-hidden">
-                                        <motion.div
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                                            className="absolute w-[150%] h-[150%] opacity-20"
-                                            style={{ border: '1px dashed rgba(56, 189, 248, 0.4)', borderRadius: '100%' }}
-                                        />
-                                        <Shield className="h-32 w-32 text-sky-400 animate-pulse" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Final CTA */}
-                <section className="py-44">
+                {/* Features Section */}
+                <section id="features" className="py-32 bg-slate-50">
                     <div className="max-w-7xl mx-auto px-6">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="bg-sky-600 rounded-[3rem] p-12 md:p-24 text-center text-white relative overflow-hidden shadow-3xl shadow-sky-500/30"
-                        >
-                            {/* Background decoration */}
-                            <div className="absolute top-0 right-0 h-64 w-64 bg-white/10 blur-3xl -translate-y-1/2 translate-x-1/2" />
-                            <div className="absolute bottom-0 left-0 h-64 w-64 bg-sky-400/20 blur-3xl translate-y-1/2 -translate-x-1/2" />
-
-                            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 leading-none">
-                                Ready to modernize
+                        <div className="text-center max-w-3xl mx-auto mb-20">
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
+                                Everything you need for
                                 <br />
-                                your safety workflow?
+                                <span className="gradient-text">GHS Compliance</span>
                             </h2>
-                            <p className="text-xl md:text-2xl text-sky-50 max-w-2xl mx-auto mb-12 font-medium opacity-90">
-                                Join enterprise EHS teams who have eliminated compliance errors and reduced processing time by 95%.
+                            <p className="text-xl text-slate-600">
+                                From PDF upload to thermal printer output, we handle the entire compliance workflow.
                             </p>
+                        </div>
 
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                                <Button
-                                    size="lg"
-                                    asChild
-                                    className="h-16 px-12 text-xl bg-white text-sky-600 hover:bg-sky-50 font-black rounded-2xl shadow-2xl"
-                                >
-                                    <Link href="/login">Create Free Account</Link>
-                                </Button>
-                                <span className="text-sky-100 font-bold">No credit card required • 50 free uploads</span>
-                            </div>
-                        </motion.div>
-                    </div>
-                </section>
-            </main>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <FeatureCard
+                                icon={<FileSearch className="h-6 w-6" />}
+                                title="AI-Powered Extraction"
+                                description="GPT-4o analyzes SDS documents with 99.9% accuracy, extracting hazard codes, precautionary statements, and pictograms."
+                                color="sky"
+                            />
+                            <FeatureCard
+                                icon={<Shield className="h-6 w-6" />}
+                                title="GHS Rev 11 Validation"
+                                description="Every code is validated against the UN GHS Revision 11 master database. Deleted codes and mismatches are flagged instantly."
+                                color="cyan"
+                            />
+                            <FeatureCard
+                                icon={<Zap className="h-6 w-6" />}
+                                title="Signal Word Logic"
+                                description="Automatic enforcement of Danger vs Warning signal words based on hazard severity. Prevents fatal classification errors."
+                                color="amber"
+                            />
+                            <FeatureCard
+                                icon={<Database className="h-6 w-6" />}
+                                title="Chemical Vault"
+                                description="Secure cloud storage for all your chemical records with full audit history, search, and compliance tracking."
+                                color="emerald"
+                            />
+                            <FeatureCard
+                                icon={<Printer className="h-6 w-6" />}
+                                title="Multi-Format Output"
+                                description="Generate Avery 5163 PDFs for laser printers or ZPL code for Zebra thermal printers. Bulk print support included."
+                                color="violet"
+                            />
+                            <FeatureCard
+                                icon={<CheckCircle2 className="h-6 w-6" />}
+                                title="P-Code Cross-Validation"
+                                description="Ensures required precautionary codes are present for each hazard. Catches water-reactive chemicals missing P223."
+                                color="sky"
+              />
+            </div>
+          </div>
+        </section>
+
+                {/* How it Works */}
+                <section id="how-it-works" className="py-32 bg-white">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="text-center max-w-3xl mx-auto mb-20">
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
+                                Three steps to
+                                <br />
+                                <span className="gradient-text">Compliant Labels</span>
+                </h2>
+              </div>
+
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <StepCard
+                                number="01"
+                                title="Upload SDS"
+                                description="Drop your Safety Data Sheet PDF. Supports multi-page documents from any manufacturer."
+                            />
+                            <StepCard
+                                number="02"
+                                title="AI Extraction"
+                                description="Our engine extracts and validates all GHS data against Revision 11 standards in seconds."
+                            />
+                            <StepCard
+                                number="03"
+                                title="Print Labels"
+                                description="Generate compliant labels for any format. Print directly or download for your thermal printers."
+                            />
+            </div>
+          </div>
+        </section>
+
+                {/* CTA Section */}
+                <section className="py-32 bg-gradient-to-br from-sky-600 to-cyan-600">
+                    <div className="max-w-7xl mx-auto px-6">
+                        <div className="text-center">
+                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-white">
+                                Ready to automate your
+                                <br />
+                                safety compliance?
+              </h2>
+                            <p className="text-xl text-sky-100 max-w-2xl mx-auto mb-10">
+                                Join hundreds of EHS teams who have eliminated manual data entry errors 
+                                and reduced label generation time by 95%.
+                            </p>
+                            <Button 
+                                size="lg" 
+                                asChild 
+                                className="h-14 px-10 text-lg bg-white text-sky-700 hover:bg-sky-50 font-semibold rounded-xl shadow-lg"
+                            >
+                                <Link href="/login">
+                                    Start Your Free Trial
+                                    <ArrowRight className="ml-2 h-5 w-5" />
+                                </Link>
+                </Button>
+                            <p className="text-sm text-sky-200 mt-4">
+                                No credit card required • 50 free SDS uploads
+                            </p>
+            </div>
+          </div>
+        </section>
+      </main>
 
             {/* Footer */}
-            <footer className="bg-slate-950 text-white py-24 border-t border-slate-900">
+            <footer className="bg-slate-900 text-white py-16">
                 <div className="max-w-7xl mx-auto px-6">
-                    <div className="grid md:grid-cols-4 gap-20">
-                        <div className="md:col-span-2 space-y-8">
+                    <div className="grid md:grid-cols-4 gap-12">
+                        <div className="md:col-span-2 space-y-4">
                             <div className="flex items-center gap-2.5">
-                                <div className="h-10 w-10 rounded-xl bg-sky-600 flex items-center justify-center">
-                                    <Shield className="h-5 w-5 text-white" />
-                                </div>
-                                <span className="text-2xl font-black tracking-tight">HazLabel</span>
-                            </div>
-                            <p className="text-slate-500 text-lg max-w-sm font-medium">
-                                The intelligence engine for modern industrial safety compliance.
-                                Built for the 2025 regulatory landscape.
+                                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center">
+                                    <Shield className="h-4 w-4 text-white" />
+              </div>
+                                <span className="text-lg font-bold">HazLabel</span>
+            </div>
+                            <p className="text-slate-400 text-sm max-w-xs">
+                                The modern compliance platform for industrial chemical safety. 
+                                Built on precision AI and GHS expertise.
                             </p>
                             <div className="flex gap-4">
-                                <SocialLink icon={<Twitter className="h-5 w-5" />} />
-                                <SocialLink icon={<Linkedin className="h-5 w-5" />} />
+                                <a href="#" className="text-slate-400 hover:text-white transition-colors">
+                                    <Twitter className="h-5 w-5" />
+                                </a>
+                                <a href="#" className="text-slate-400 hover:text-white transition-colors">
+                                    <Linkedin className="h-5 w-5" />
+                                </a>
                             </div>
                         </div>
-
-                        <FooterColumn
-                            title="Product"
-                            links={["GHS Rev 11", "AI Extraction", "Chemical Vault", "ZPL Generation"]}
+                        
+                        <FooterLinks 
+                            title="Product" 
+                            links={["Features", "Pricing", "API Docs", "Changelog"]} 
                         />
-                        <FooterColumn
-                            title="Company"
-                            links={["Documentation", "Release Notes", "Privacy Policy", "Contact Sales"]}
+                        <FooterLinks 
+                            title="Company" 
+                            links={["About", "Blog", "Careers", "Contact"]} 
                         />
-                    </div>
-
-                    <div className="border-t border-slate-900 mt-20 pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500 font-medium">
-                        <p>© 2026 HazLabel AI. All systems operational.</p>
-                        <div className="flex gap-10">
-                            <Link href="#" className="hover:text-white transition-colors">Safety Standard</Link>
-                            <Link href="#" className="hover:text-white transition-colors">API Status</Link>
-                            <Link href="#" className="hover:text-white transition-colors">Security</Link>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+          </div>
+                    
+                    <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+                        <p>© 2026 HazLabel. All rights reserved.</p>
+                        <div className="flex gap-6">
+                            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+                            <a href="#" className="hover:text-white transition-colors">Terms</a>
+                            <a href="#" className="hover:text-white transition-colors">Security</a>
         </div>
-    )
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
 }
 
 function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-    return (
-        <Link
-            href={href}
-            className="text-sm font-bold text-slate-500 hover:text-sky-600 transition-colors uppercase tracking-widest px-2"
+  return (
+        <a 
+            href={href} 
+            className="text-sm text-slate-600 hover:text-slate-900 transition-colors font-medium"
         >
-            {children}
-        </Link>
-    )
+      {children}
+    </a>
+  )
 }
 
-function TechStep({ number, title, description }: { number: string; title: string; description: string }) {
-    return (
-        <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex gap-8 group"
-        >
-            <div className="text-4xl font-black text-slate-800 group-hover:text-sky-500 transition-colors duration-500">
-                {number}
-            </div>
-            <div>
-                <h3 className="text-2xl font-black mb-3 text-white">{title}</h3>
-                <p className="text-slate-400 text-lg font-medium leading-relaxed">
-                    {description}
-                </p>
-            </div>
-        </motion.div>
-    )
+function FeatureCard({ 
+    icon, 
+    title, 
+    description, 
+    color 
+}: { 
+    icon: React.ReactNode
+    title: string
+    description: string
+    color: "sky" | "cyan" | "amber" | "emerald" | "violet"
+}) {
+    const colorClasses = {
+        sky: "bg-sky-100 text-sky-600",
+        cyan: "bg-cyan-100 text-cyan-600",
+        amber: "bg-amber-100 text-amber-600",
+        emerald: "bg-emerald-100 text-emerald-600",
+        violet: "bg-violet-100 text-violet-600"
+    }
+    
+  return (
+        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className={`inline-flex p-3 rounded-xl ${colorClasses[color]} mb-5`}>
+        {icon}
+      </div>
+            <h3 className="text-xl font-semibold mb-3 text-slate-900">{title}</h3>
+            <p className="text-slate-600 leading-relaxed">{description}</p>
+    </div>
+  )
 }
 
-function SocialLink({ icon }: { icon: React.ReactNode }) {
-    return (
-        <Link href="#" className="h-11 w-11 rounded-full border border-slate-800 flex items-center justify-center text-slate-500 hover:text-white hover:border-sky-500 hover:bg-sky-500/10 transition-all">
-            {icon}
-        </Link>
-    )
+function StepCard({ 
+    number, 
+    title, 
+    description 
+}: { 
+    number: string
+    title: string
+    description: string
+}) {
+  return (
+        <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+            <div className="text-5xl font-bold gradient-text mb-4">{number}</div>
+            <h3 className="text-xl font-semibold mb-3 text-slate-900">{title}</h3>
+            <p className="text-slate-600 leading-relaxed">{description}</p>
+    </div>
+  )
 }
 
-function FooterColumn({ title, links }: { title: string; links: string[] }) {
-    return (
-        <div className="space-y-6">
-            <h4 className="text-sm font-black text-white uppercase tracking-widest">{title}</h4>
-            <ul className="space-y-4">
-                {links.map(link => (
-                    <li key={link}>
-                        <Link href="#" className="text-slate-500 hover:text-sky-500 transition-colors font-medium">
+function FooterLinks({ title, links }: { title: string; links: string[] }) {
+  return (
+        <div>
+            <h4 className="font-semibold text-white mb-4">{title}</h4>
+            <ul className="space-y-3">
+        {links.map(link => (
+          <li key={link}>
+                        <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm">
                             {link}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
+                        </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
