@@ -74,7 +74,7 @@ export default function LandingPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.1 }}
-                                className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-slate-900"
+                                className="text-6xl md:text-8xl font-bold tracking-tighter leading-[0.9] text-slate-900"
                             >
                                 Industrial Safety
                                 <br />
@@ -86,7 +86,7 @@ export default function LandingPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="text-xl md:text-2xl text-slate-500 max-w-3xl leading-relaxed font-medium"
+                                className="text-xl md:text-2xl text-slate-500 max-w-3xl leading-relaxed font-normal"
                             >
                                 The intelligence engine for chemical compliance. Transform raw SDS data into
                                 regulatory-perfect GHS labels in under 3 seconds.
@@ -102,7 +102,7 @@ export default function LandingPage() {
                                 <Button
                                     size="lg"
                                     asChild
-                                    className="h-16 px-10 text-xl bg-sky-600 hover:bg-sky-500 text-white font-black rounded-2xl shadow-2xl shadow-sky-500/20 transition-all hover:-translate-y-1"
+                                    className="h-16 px-10 text-xl bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-2xl shadow-2xl shadow-sky-500/20 transition-all hover:-translate-y-1"
                                 >
                                     <Link href="/login" className="flex items-center gap-3">
                                         Deploy GHS Engine
@@ -112,12 +112,64 @@ export default function LandingPage() {
                                 <Button
                                     size="lg"
                                     variant="outline"
-                                    className="h-16 px-10 text-xl border-slate-200 bg-white/50 backdrop-blur-sm hover:bg-slate-50 text-slate-800 font-bold rounded-2xl"
+                                    className="h-16 px-10 text-xl border-slate-200 bg-white/50 backdrop-blur-sm hover:bg-slate-50 text-slate-700 font-semibold rounded-2xl"
                                 >
                                     <Link href="#" className="flex items-center gap-3">
                                         Watch Demo
                                     </Link>
                                 </Button>
+                            </motion.div>
+
+                            {/* Terminal Mockup - Restored */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="mt-20 w-full max-w-4xl mx-auto"
+                            >
+                                <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-200/40 overflow-hidden text-left font-sans">
+                                    {/* Window header */}
+                                    <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 border-b border-slate-200">
+                                        <div className="flex gap-1.5">
+                                            <div className="h-3 w-3 rounded-full bg-red-400" />
+                                            <div className="h-3 w-3 rounded-full bg-amber-400" />
+                                            <div className="h-3 w-3 rounded-full bg-emerald-400" />
+                                        </div>
+                                        <span className="text-[10px] text-slate-400 ml-2 font-mono uppercase tracking-widest font-bold">compliance-console-v2</span>
+                                    </div>
+
+                                    {/* Terminal content */}
+                                    <div className="p-8 bg-slate-900 font-mono text-sm leading-relaxed">
+                                        <div className="space-y-4">
+                                            <div className="flex items-start gap-3">
+                                                <span className="text-emerald-400 shrink-0">$</span>
+                                                <span className="text-white">hazlabel parse document_export_44.pdf</span>
+                                            </div>
+                                            <div className="pl-6 space-y-2 text-slate-400">
+                                                <p className="flex items-center gap-2">
+                                                    <span className="text-sky-400 font-bold">[SCAN]</span>
+                                                    <span>Extracting text from PDF (7 pages)...</span>
+                                                </p>
+                                                <p className="flex items-center gap-2">
+                                                    <span className="text-sky-400 font-bold">[AI]</span>
+                                                    <span>Analyzing GHS Rev 11 criteria...</span>
+                                                </p>
+                                                <p className="flex items-center gap-2">
+                                                    <span className="text-cyan-400 font-bold">[VALID]</span>
+                                                    <span className="text-slate-300">Signal word elevated to <span className="text-red-400">DANGER</span> based on H314</span>
+                                                </p>
+                                            </div>
+                                            <div className="pt-4 border-t border-slate-800">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                                                    <span className="text-emerald-400 font-bold">READY</span>
+                                                    <span className="text-slate-500">—</span>
+                                                    <span className="text-slate-300">Label generated in 1.4s</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </motion.div>
 
                             {/* Demo Widget */}
