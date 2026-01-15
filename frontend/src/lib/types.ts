@@ -14,6 +14,9 @@ export type ValidationIssue = {
     severity: ValidationSeverity;
     message: string;
     suggestion?: string | null;
+    h_code?: string;
+    p_code?: string;
+    field?: string;
 };
 
 export type ValidationResult = {
