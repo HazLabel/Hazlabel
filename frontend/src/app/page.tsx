@@ -19,6 +19,7 @@ import {
 import Image from "next/image"
 
 export default function LandingPage() {
+    const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
     return (
         <div className="min-h-screen bg-white text-slate-900">
             {/* Navigation */}
@@ -264,20 +265,37 @@ export default function LandingPage() {
                 </section>
 
                 {/* Pricing Section */}
-                <section id="pricing" className="py-32 bg-slate-50 border-y border-slate-200">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="text-center max-w-3xl mx-auto mb-20">
-                            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
-                                Simple, Transparent
-                                <br />
-                                <span className="gradient-text">Pricing</span>
+                <section id="pricing" className="py-32 bg-slate-50 relative overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-6 relative">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4 animate-reveal">
+                                Simple, Transparent Pricing
                             </h2>
-                            <p className="text-xl text-slate-600">
-                                Choose the plan that fits your facility's compliance needs.
+                            <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10 animate-reveal">
+                                Everything you need for industrial compliance in one membership.
                             </p>
+
+                            {/* Billing Toggle */}
+                            <div className="flex items-center justify-center gap-4 mb-12 animate-reveal delay-100">
+                                <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-slate-900' : 'text-slate-500'}`}>
+                                    Monthly
+                                </span>
+                                <button
+                                    onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
+                                    className="relative w-14 h-7 bg-slate-200 rounded-full p-1 transition-colors hover:bg-slate-300"
+                                >
+                                    <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${billingCycle === 'annual' ? 'translate-x-7' : ''}`} />
+                                </button>
+                                <span className={`text-sm font-medium ${billingCycle === 'annual' ? 'text-slate-900' : 'text-slate-500'}`}>
+                                    Annual
+                                    <span className="ml-2 inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                                        Save 20%
+                                    </span>
+                                </span>
+                            </div>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
                             <PricingCard
                                 title="Starter"
                                 price="0"
@@ -291,25 +309,29 @@ export default function LandingPage() {
                             />
                             <PricingCard
                                 title="Professional"
-                                price="149"
-                                description="For active manufacturing facilities."
+                                price={billingCycle === 'monthly' ? "99" : "79"}
+                                interval={billingCycle === 'monthly' ? "mo" : "mo"}
+                                description="Comprehensive compliance for active facilities."
                                 features={[
-                                    "1,000 SDS Uploads / Month",
-                                    "Unlimited PDF Downloads",
+                                    "Unlimited SDS Processing",
+                                    "GHS Revision 11 Validation",
+                                    "Zebra & Laser Printing",
+                                    "Custom Label Sizes",
                                     "Revision Tracking",
                                     "Priority Email Support"
                                 ]}
                                 highlighted={true}
+                                billingCycle={billingCycle}
                             />
                             <PricingCard
                                 title="Enterprise"
                                 price="Custom"
-                                description="Global compliance for large organizations."
+                                description="Custom solutions for global organizations."
                                 features={[
-                                    "Unlimited SDS Processing",
-                                    "Custom Label Templates",
-                                    "SSO & Role Management",
-                                    "Dedicated Account Manager"
+                                    "Multi-site Management",
+                                    "SSO & Role Control",
+                                    "Custom Template Design",
+                                    "Dedicated Compliance Expert"
                                 ]}
                             />
                         </div>
@@ -513,13 +535,17 @@ function PricingCard({
     price,
     description,
     features,
-    highlighted = false
+    highlighted = false,
+    interval = "mo",
+    billingCycle = "monthly"
 }: {
     title: string
     price: string
     description: string
     features: string[]
     highlighted?: boolean
+    interval?: string
+    billingCycle?: 'monthly' | 'annual'
 }) {
     return (
         <div className={`p-8 rounded-3xl border ${highlighted ? 'bg-white border-sky-500 shadow-xl shadow-sky-500/10 scale-105 z-10' : 'bg-white border-slate-200'} flex flex-col`}>
@@ -528,9 +554,18 @@ function PricingCard({
                 <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold text-slate-900">{price === "Custom" ? "" : "$"}</span>
                     <span className="text-5xl font-bold text-slate-900">{price}</span>
-                    {price !== "Custom" && <span className="text-slate-500 font-medium">/mo</span>}
+                    {price !== "Custom" && price !== "0" && (
+                        <div className="flex flex-col ml-2">
+                            <span className="text-slate-500 font-medium leading-none">/{interval}</span>
+                            {billingCycle === 'annual' && title === "Professional" && (
+                                <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-tight mt-1">
+                                    Billed annually
+                                </span>
+                            )}
+                        </div>
+                    )}
                 </div>
-                <p className="text-slate-500 mt-4 text-sm">{description}</p>
+                <p className="text-slate-500 mt-4 text-sm leading-relaxed">{description}</p>
             </div>
 
             <ul className="space-y-4 mb-8 flex-1">
