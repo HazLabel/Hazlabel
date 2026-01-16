@@ -3,6 +3,8 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "HazLabel | AI-Driven Industrial Compliance",
@@ -30,6 +32,8 @@ export default function RootLayout({
         <Providers>
           {children}
           <Toaster position="top-right" richColors />
+          <SpeedInsights />
+          <Analytics />
         </Providers>
 
         {/* SEO Fixer */}
