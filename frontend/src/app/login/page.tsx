@@ -109,34 +109,33 @@ function LoginForm() {
             <div className="absolute inset-0 grid-pattern opacity-30" />
 
             <div className="relative w-full max-w-md">
-                {/* Logo */}
-                <div className="flex justify-center mb-8 animate-reveal">
-                    <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="flex items-center justify-center p-2 rounded-xl bg-slate-900 shadow-xl group-hover:scale-105 transition-all">
+
+
+                {/* Card */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 p-10 animate-reveal delay-100">
+                    {/* Header */}
+                    <div className="text-center mb-8 space-y-4">
+                        <Link href="/" className="inline-block group mx-auto">
                             <Image
                                 src="/logo.png"
                                 alt="HazLabel"
                                 width={160}
                                 height={40}
-                                className="h-10 w-auto"
+                                className="h-10 w-auto group-hover:scale-105 transition-all"
                             />
-                        </div>
-                    </Link>
-                </div>
+                        </Link>
 
-                {/* Card */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 p-8 animate-reveal delay-100">
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-2xl font-bold text-slate-900 mb-2">
-                            {isSignUp ? "Create your account" : "Welcome back"}
-                        </h1>
-                        <p className="text-slate-500 text-sm">
-                            {isSignUp
-                                ? "Start automating GHS compliance today"
-                                : "Sign in to access your chemical vault"
-                            }
-                        </p>
+                        <div>
+                            <h1 className="text-2xl font-bold text-slate-900 mb-2">
+                                {isSignUp ? "Create your account" : "Welcome back"}
+                            </h1>
+                            <p className="text-slate-500 text-sm">
+                                {isSignUp
+                                    ? "Start automating GHS compliance today"
+                                    : "Sign in to access your chemical vault"
+                                }
+                            </p>
+                        </div>
                     </div>
 
                     {/* OAuth Buttons */}
