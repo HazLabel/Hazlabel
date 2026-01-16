@@ -13,12 +13,13 @@ import { toast } from "sonner"
 function LoginForm() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [loading, setLoading] = useState(false)
     const [isSignUp, setIsSignUp] = useState(false)
     const supabase = createClient()
     const searchParams = useSearchParams()
     const router = useRouter()
-    
+
     // Get redirect URL from query params (default to /inventory)
     const redirectTo = searchParams.get('redirect') || '/inventory'
 
@@ -28,6 +29,14 @@ function LoginForm() {
 
         try {
             if (isSignUp) {
+                if (password !== confirmPassword) {
+                    toast.error("Passwords do not match", {
+                        description: "Please make sure both passwords are the same."
+                    })
+                    setLoading(false)
+                    return
+                }
+
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
@@ -38,8 +47,8 @@ function LoginForm() {
                 if (error) throw error
 
                 if (data.session) {
-                    toast.success("Welcome to HazLabel!", { 
-                        description: "Your account has been created." 
+                    toast.success("Welcome to HazLabel!", {
+                        description: "Your account has been created."
                     })
                     // Use router.push with a small delay to ensure session is set
                     setTimeout(() => {
@@ -47,8 +56,8 @@ function LoginForm() {
                         router.refresh()
                     }, 100)
                 } else {
-                    toast.success("Check your email", { 
-                        description: "We sent you a verification link." 
+                    toast.success("Check your email", {
+                        description: "We sent you a verification link."
                     })
                     setLoading(false)
                 }
@@ -58,8 +67,8 @@ function LoginForm() {
                     password,
                 })
                 if (error) throw error
-                toast.success("Welcome back!", { 
-                    description: "Redirecting to your vault..." 
+                toast.success("Welcome back!", {
+                    description: "Redirecting to your vault..."
                 })
                 // Use router.push with a small delay to ensure session cookies are set
                 setTimeout(() => {
@@ -80,7 +89,7 @@ function LoginForm() {
         // Include the redirect path in the callback URL
         const callbackUrl = new URL('/auth/callback', window.location.origin)
         callbackUrl.searchParams.set('redirect', redirectTo)
-        
+
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "github",
             options: {
@@ -116,8 +125,8 @@ function LoginForm() {
                             {isSignUp ? "Create your account" : "Welcome back"}
                         </h1>
                         <p className="text-slate-500 text-sm">
-                            {isSignUp 
-                                ? "Start automating GHS compliance today" 
+                            {isSignUp
+                                ? "Start automating GHS compliance today"
                                 : "Sign in to access your chemical vault"
                             }
                         </p>
@@ -125,8 +134,8 @@ function LoginForm() {
 
                     {/* OAuth Buttons */}
                     <div className="space-y-3 mb-6">
-                        <Button 
-                            variant="outline" 
+                        <Button
+                            variant="outline"
                             className="w-full h-12 border-slate-200 hover:bg-slate-50 text-slate-700 font-medium"
                             onClick={handleGithubAuth}
                         >
@@ -171,8 +180,8 @@ function LoginForm() {
                                     Password
                                 </Label>
                                 {!isSignUp && (
-                                    <Link 
-                                        href="#" 
+                                    <Link
+                                        href="#"
                                         className="text-sm text-sky-600 hover:text-sky-700 transition-colors"
                                     >
                                         Forgot password?
@@ -182,12 +191,30 @@ function LoginForm() {
                             <Input
                                 id="password"
                                 type="password"
+                                placeholder="••••••••"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 className="h-12 border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
                             />
                         </div>
+
+                        {isSignUp && (
+                            <div className="space-y-2 animate-reveal">
+                                <Label htmlFor="confirmPassword" className="text-slate-700 text-sm font-medium">
+                                    Confirm Password
+                                </Label>
+                                <Input
+                                    id="confirmPassword"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                    className="h-12 border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
+                                />
+                            </div>
+                        )}
 
                         <Button
                             type="submit"
