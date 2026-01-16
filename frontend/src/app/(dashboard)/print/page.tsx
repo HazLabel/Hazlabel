@@ -36,6 +36,7 @@ import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import api from "@/lib/api"
 import { toast } from "sonner"
+import { SafetyWarning } from "@/components/ui/safety-warning"
 
 // PDF Label Size Options (matches settings page)
 const LABEL_SIZE_OPTIONS = {
@@ -162,6 +163,8 @@ export default function PrintPage() {
                 <p className="text-slate-600 text-lg">
                     Select chemicals and generate GHS labels in bulk.
                 </p>
+
+                <SafetyWarning className="mt-8" />
             </div>
 
             {/* Toolbar */}

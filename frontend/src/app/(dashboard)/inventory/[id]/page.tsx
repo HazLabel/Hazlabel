@@ -26,6 +26,7 @@ import {
     Trash2
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { SafetyWarning } from "@/components/ui/safety-warning"
 
 // P-code categories per GHS Annex 3
 type PCodeCategory = "prevention" | "response" | "storage" | "disposal"
@@ -59,21 +60,21 @@ function groupPCodes(statements: string[]): Record<PCodeCategory, GroupedPCode[]
         storage: [],
         disposal: []
     }
-    
+
     statements.forEach(statement => {
         const code = statement.split(":")[0]?.trim() || statement.split(" ")[0]
-        const text = statement.includes(":") 
-            ? statement.split(":").slice(1).join(":").trim() 
+        const text = statement.includes(":")
+            ? statement.split(":").slice(1).join(":").trim()
             : statement
         const category = categorizePCode(code)
-        
+
         groups[category].push({
             code,
             statement: fixIncompleteStatement(code, text),
             category
         })
     })
-    
+
     return groups
 }
 
@@ -115,13 +116,13 @@ export default function ChemicalDetailPage() {
         <div className="space-y-8">
             {/* Back Button & Header */}
             <div className="space-y-4 animate-reveal">
-                <Link 
+                <Link
                     href="/inventory"
                     className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     Back to Vault
-                    </Link>
+                </Link>
 
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                     <div className="flex-1">
@@ -147,7 +148,7 @@ export default function ChemicalDetailPage() {
                                     Needs Review
                                 </span>
                             ) : (
-                                <span 
+                                <span
                                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-medium cursor-help"
                                     title="Hazards reproduced from manufacturer SDS Section 2. Not a certification."
                                 >
@@ -168,7 +169,7 @@ export default function ChemicalDetailPage() {
                         </div>
                     </div>
 
-                <div className="flex gap-3">
+                    <div className="flex gap-3">
                         {chemical.source_pdf_url && (
                             <Button
                                 variant="outline"
@@ -187,9 +188,11 @@ export default function ChemicalDetailPage() {
                                 <Printer className="h-4 w-4 mr-2" />
                                 Print Label
                             </Link>
-                                </Button>
+                        </Button>
                     </div>
                 </div>
+
+                <SafetyWarning />
             </div>
 
             {/* Main Content Grid */}
@@ -198,8 +201,8 @@ export default function ChemicalDetailPage() {
                 <div className="lg:col-span-2 space-y-6">
                     {/* Product Identifier - Required on GHS Labels */}
                     <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal">
-                            <div className="flex items-center justify-between">
-                                <div>
+                        <div className="flex items-center justify-between">
+                            <div>
                                 <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
                                     Product Identifier
                                 </p>
@@ -231,14 +234,14 @@ export default function ChemicalDetailPage() {
                                     <AlertTriangle className="h-5 w-5 text-amber-500" />
                                     Hazard Pictograms
                                 </h2>
-                                    </div>
+                            </div>
                             <div className="bg-gradient-to-br from-slate-50 to-white p-6">
-                                <PictogramGrid 
-                                    pictograms={ghs.pictograms} 
+                                <PictogramGrid
+                                    pictograms={ghs.pictograms}
                                     size="lg"
                                     showLabels
                                 />
-                                </div>
+                            </div>
                         </section>
                     )}
 
@@ -250,7 +253,7 @@ export default function ChemicalDetailPage() {
                             </h2>
                             <div className="space-y-2">
                                 {ghs.hazard_statements.map((statement, i) => (
-                                    <div 
+                                    <div
                                         key={i}
                                         className="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-lg"
                                     >
@@ -284,7 +287,7 @@ export default function ChemicalDetailPage() {
                                                 if (items.length === 0) return null
                                                 const config = CATEGORY_CONFIG[category]
                                                 const Icon = config.icon
-                                                
+
                                                 return (
                                                     <div key={category}>
                                                         <div className="flex items-center gap-2 mb-3">
@@ -301,7 +304,7 @@ export default function ChemicalDetailPage() {
                                                         </div>
                                                         <div className="space-y-2">
                                                             {items.map((item, i) => (
-                                                                <div 
+                                                                <div
                                                                     key={i}
                                                                     className={cn(
                                                                         "flex items-start gap-3 p-3 rounded-lg border",
@@ -323,9 +326,9 @@ export default function ChemicalDetailPage() {
                                                                     <span className="text-slate-700 text-sm">
                                                                         {item.statement}
                                                                     </span>
-                                        </div>
-                                    ))}
-                                </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
                                                 )
                                             })}
@@ -342,9 +345,9 @@ export default function ChemicalDetailPage() {
                     {/* Validation Panel */}
                     {chemical.validation_results && (
                         <div className="animate-reveal delay-100">
-                            <ValidationPanel 
-                                validation={chemical.validation_results} 
-                                compact 
+                            <ValidationPanel
+                                validation={chemical.validation_results}
+                                compact
                             />
                         </div>
                     )}
@@ -386,7 +389,7 @@ export default function ChemicalDetailPage() {
                                     {chemical.id}
                                 </p>
                             </div>
-                            </div>
+                        </div>
                     </section>
                 </div>
             </div>
@@ -395,7 +398,7 @@ export default function ChemicalDetailPage() {
 }
 
 function LoadingSkeleton() {
-            return (
+    return (
         <div className="space-y-8 animate-pulse">
             <div className="space-y-4">
                 <div className="h-4 w-24 bg-slate-200 rounded" />
@@ -420,7 +423,7 @@ function LoadingSkeleton() {
 }
 
 function ErrorState() {
-            return (
+    return (
         <div className="flex flex-col items-center justify-center py-20">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-red-100 mb-4">
                 <AlertTriangle className="h-8 w-8 text-red-600" />
