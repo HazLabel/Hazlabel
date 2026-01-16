@@ -13,16 +13,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { 
-    User, 
-    Printer, 
-    Bell, 
+import {
+    User,
+    Printer,
+    Bell,
     Shield,
     Save,
     Loader2,
     CheckCircle2,
     Mail,
-    Building
+    Building,
+    Eye,
+    EyeOff,
+    Key,
+    X
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -67,6 +71,22 @@ export default function SettingsPage() {
     const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS)
     const [isSaving, setIsSaving] = useState(false)
     const [hasChanges, setHasChanges] = useState(false)
+
+    // Email change state
+    const [showEmailModal, setShowEmailModal] = useState(false)
+    const [newEmail, setNewEmail] = useState("")
+    const [emailLoading, setEmailLoading] = useState(false)
+
+    // Password change state
+    const [showPasswordModal, setShowPasswordModal] = useState(false)
+    const [currentPassword, setCurrentPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("")
+    const [confirmNewPassword, setConfirmNewPassword] = useState("")
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+    const [showNewPassword, setShowNewPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [passwordLoading, setPasswordLoading] = useState(false)
+
     const supabase = createClient()
 
     // Load settings from user metadata
@@ -118,6 +138,82 @@ export default function SettingsPage() {
         }
     }
 
+    const handleEmailChange = async () => {
+        if (!newEmail || !user) return
+
+        setEmailLoading(true)
+        try {
+            const { error } = await supabase.auth.updateUser({
+                email: newEmail
+            })
+
+            if (error) throw error
+
+            toast.success("Verification email sent", {
+                description: `Check ${newEmail} to confirm the change.`
+            })
+            setShowEmailModal(false)
+            setNewEmail("")
+        } catch (error) {
+            toast.error("Failed to change email", {
+                description: error instanceof Error ? error.message : "Please try again."
+            })
+        } finally {
+            setEmailLoading(false)
+        }
+    }
+
+    const handlePasswordChange = async () => {
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
+            toast.error("All fields are required")
+            return
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            toast.error("Passwords don't match")
+            return
+        }
+
+        if (newPassword.length < 8) {
+            toast.error("Password must be at least 8 characters")
+            return
+        }
+
+        setPasswordLoading(true)
+        try {
+            // First, reauthenticate with current password
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+                email: user!.email!,
+                password: currentPassword
+            })
+
+            if (signInError) {
+                throw new Error("Current password is incorrect")
+            }
+
+            // Then update to new password
+            const { error } = await supabase.auth.updateUser({
+                password: newPassword
+            })
+
+            if (error) throw error
+
+            toast.success("Password updated", {
+                description: "Your password has been changed successfully."
+            })
+            setShowPasswordModal(false)
+            setCurrentPassword("")
+            setNewPassword("")
+            setConfirmNewPassword("")
+        } catch (error) {
+            toast.error("Failed to change password", {
+                description: error instanceof Error ? error.message : "Please try again."
+            })
+        } finally {
+            setPasswordLoading(false)
+        }
+    }
+
     if (userLoading) {
         return <LoadingSkeleton />
     }
@@ -129,7 +225,7 @@ export default function SettingsPage() {
                 <div>
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
                         Settings
-                </h1>
+                    </h1>
                     <p className="text-slate-600 text-lg mt-1">
                         Manage your account and preferences.
                     </p>
@@ -169,8 +265,8 @@ export default function SettingsPage() {
                 <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 rounded-lg bg-sky-50">
                         <User className="h-5 w-5 text-sky-600" />
-                            </div>
-                            <div>
+                    </div>
+                    <div>
                         <h2 className="text-lg font-semibold text-slate-900">Profile</h2>
                         <p className="text-sm text-slate-500">Your personal information</p>
                     </div>
@@ -211,7 +307,7 @@ export default function SettingsPage() {
                         </div>
                     </div>
 
-                        <div className="space-y-2">
+                    <div className="space-y-2">
                         <Label className="text-slate-700">Email Address</Label>
                         <div className="relative">
                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -399,38 +495,51 @@ export default function SettingsPage() {
                     <div className="p-2 rounded-lg bg-red-50">
                         <Shield className="h-5 w-5 text-red-600" />
                     </div>
-                            <div>
+                    <div>
                         <h2 className="text-lg font-semibold text-slate-900">Security</h2>
                         <p className="text-sm text-slate-500">Protect your account</p>
-                            </div>
-                            </div>
+                    </div>
+                </div>
 
                 <div className="space-y-4">
-                    <div className="flex items-center justify-between py-2">
+                    {/* Change Email */}
+                    <div className="flex items-center justify-between py-3 border-b border-slate-100">
+                        <div>
+                            <p className="font-medium text-slate-900">Change Email</p>
+                            <p className="text-sm text-slate-500">
+                                Update your email address
+                            </p>
+                        </div>
+                        <Button
+                            variant="outline"
+                            className="border-slate-200 hover:bg-slate-50 gap-2"
+                            onClick={() => setShowEmailModal(true)}
+                        >
+                            <Mail className="h-4 w-4" />
+                            Change Email
+                        </Button>
+                    </div>
+
+                    {/* Change Password */}
+                    <div className="flex items-center justify-between py-3 border-b border-slate-100">
                         <div>
                             <p className="font-medium text-slate-900">Change Password</p>
                             <p className="text-sm text-slate-500">
                                 Update your account password
                             </p>
                         </div>
-                        <Button 
-                            variant="outline" 
-                            className="border-slate-200 hover:bg-slate-50"
-                            onClick={async () => {
-                                if (!user?.email) return
-                                const { error } = await supabase.auth.resetPasswordForEmail(user.email)
-                                if (error) {
-                                    toast.error("Failed to send reset email")
-                                } else {
-                                    toast.success("Password reset email sent")
-                                }
-                            }}
+                        <Button
+                            variant="outline"
+                            className="border-slate-200 hover:bg-slate-50 gap-2"
+                            onClick={() => setShowPasswordModal(true)}
                         >
-                            Reset Password
+                            <Key className="h-4 w-4" />
+                            Change Password
                         </Button>
                     </div>
 
-                    <div className="pt-4 border-t border-slate-100">
+                    {/* Delete Account */}
+                    <div className="pt-2">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="font-medium text-red-600">Delete Account</p>
@@ -438,16 +547,216 @@ export default function SettingsPage() {
                                     Permanently remove your account and all data
                                 </p>
                             </div>
-                            <Button 
-                                variant="outline" 
+                            <Button
+                                variant="outline"
                                 className="border-red-200 text-red-600 hover:bg-red-50"
                             >
                                 Delete Account
                             </Button>
                         </div>
-                        </div>
-            </div>
+                    </div>
+                </div>
             </section>
+
+            {/* Email Change Modal */}
+            {showEmailModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
+                    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-slate-900">Change Email Address</h3>
+                            <button
+                                onClick={() => {
+                                    setShowEmailModal(false)
+                                    setNewEmail("")
+                                }}
+                                className="text-slate-400 hover:text-slate-600"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div>
+                                <Label className="text-slate-700">Current Email</Label>
+                                <Input
+                                    value={user?.email || ""}
+                                    disabled
+                                    className="bg-slate-50 text-slate-500"
+                                />
+                            </div>
+
+                            <div>
+                                <Label htmlFor="newEmail" className="text-slate-700">New Email</Label>
+                                <Input
+                                    id="newEmail"
+                                    type="email"
+                                    value={newEmail}
+                                    onChange={(e) => setNewEmail(e.target.value)}
+                                    placeholder="new.email@example.com"
+                                    className="border-slate-200"
+                                />
+                            </div>
+
+                            <div className="bg-sky-50 border border-sky-200 rounded-lg p-3">
+                                <p className="text-xs text-slate-700">
+                                    We'll send a verification link to your new email. You'll need to confirm before the change takes effect.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 pt-2">
+                            <Button
+                                variant="outline"
+                                onClick={() => {
+                                    setShowEmailModal(false)
+                                    setNewEmail("")
+                                }}
+                                className="flex-1"
+                                disabled={emailLoading}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleEmailChange}
+                                disabled={!newEmail || emailLoading}
+                                className="flex-1 bg-sky-600 hover:bg-sky-700"
+                            >
+                                {emailLoading ? (
+                                    <>
+                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        Sending...
+                                    </>
+                                ) : (
+                                    "Send Verification"
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Password Change Modal */}
+            {showPasswordModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
+                    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-lg font-semibold text-slate-900">Change Password</h3>
+                            <button
+                                onClick={() => {
+                                    setShowPasswordModal(false)
+                                    setCurrentPassword("")
+                                    setNewPassword("")
+                                    setConfirmNewPassword("")
+                                }}
+                                className="text-slate-400 hover:text-slate-600"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div>
+                                <Label htmlFor="currentPassword" className="text-slate-700">Current Password</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="currentPassword"
+                                        type={showCurrentPassword ? "text" : "password"}
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                        placeholder="Enter current password"
+                                        className="pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                    >
+                                        {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <Label htmlFor="newPassword" className="text-slate-700">New Password</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="newPassword"
+                                        type={showNewPassword ? "text" : "password"}
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        placeholder="Enter new password"
+                                        className="pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                    >
+                                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <Label htmlFor="confirmNewPassword" className="text-slate-700">Confirm New Password</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="confirmNewPassword"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        value={confirmNewPassword}
+                                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                        placeholder="Confirm new password"
+                                        className="pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                    >
+                                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                                <p className="text-xs text-slate-700">
+                                    Password must be at least 8 characters. Use a mix of uppercase, lowercase, numbers, and symbols.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 pt-2">
+                            <Button
+                                variant="outline"
+                                onClick={() => {
+                                    setShowPasswordModal(false)
+                                    setCurrentPassword("")
+                                    setNewPassword("")
+                                    setConfirmNewPassword("")
+                                }}
+                                className="flex-1"
+                                disabled={passwordLoading}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handlePasswordChange}
+                                disabled={!currentPassword || !newPassword || !confirmNewPassword || passwordLoading}
+                                className="flex-1 bg-sky-600 hover:bg-sky-700"
+                            >
+                                {passwordLoading ? (
+                                    <>
+                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        Updating...
+                                    </>
+                                ) : (
+                                    "Change Password"
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
@@ -462,7 +771,7 @@ function LoadingSkeleton() {
                 </div>
                 <div className="h-10 w-32 bg-slate-200 rounded" />
             </div>
-            
+
             {[...Array(4)].map((_, i) => (
                 <div key={i} className="h-48 bg-slate-100 rounded-xl" />
             ))}
