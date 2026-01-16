@@ -73,7 +73,7 @@ export function AppSidebar() {
             className="border-r border-slate-200 bg-white"
         >
             {/* Header */}
-            <SidebarHeader className="p-4 border-b border-slate-100">
+            <SidebarHeader className="p-4 border-b border-slate-100 group-data-[collapsible=icon]:hidden">
                 <Link href="/inventory" className="flex items-center group">
                     <Image
                         src="/logo.png"
