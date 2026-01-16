@@ -303,12 +303,12 @@ function LoginForm() {
                                     onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
                                     className="border-slate-300 data-[state=checked]:bg-sky-600 data-[state=checked]:border-sky-600"
                                 />
-                                <Label
+                                <label
                                     htmlFor="terms"
                                     className="text-sm text-slate-500 font-normal cursor-pointer select-none leading-relaxed"
                                 >
-                                    I agree to the <Link href="/terms" className="text-sky-600 hover:text-sky-700 font-medium inline">Terms of Service</Link>, <Link href="/privacy" className="text-sky-600 hover:text-sky-700 font-medium inline">Privacy Policy</Link>, and have read the <Link href="/disclaimer" className="text-sky-600 hover:text-sky-700 font-medium inline">Safety Disclaimer</Link>.
-                                </Label>
+                                    By signing up, you agree to the <Link href="/terms" className="text-sky-600 hover:underline">Terms of Service</Link>, <Link href="/privacy" className="text-sky-600 hover:underline">Privacy Policy</Link>, and <Link href="/disclaimer" className="text-sky-600 hover:underline">Safety Disclaimer</Link>.*
+                                </label>
                             </div>
                         )}
 
