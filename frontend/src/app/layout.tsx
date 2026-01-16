@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "HazLabel | AI-Driven Industrial Compliance",
@@ -30,6 +31,25 @@ export default function RootLayout({
           {children}
           <Toaster position="top-right" richColors />
         </Providers>
+
+        {/* SEO Fixer */}
+        <Script
+          src="https://seo-fixer.writesonic.com/site-audit/fixer-script/index.js"
+          id="wsAiSeoMb"
+          strategy="afterInteractive"
+        />
+        <Script id="wsAiSeoInitScript" strategy="afterInteractive">
+          {`
+            window.addEventListener('load', function() {
+              if (window.wsSEOfixer) {
+                window.wsSEOfixer.configure({
+                  hostURL: 'https://seo-fixer.writesonic.com',
+                  siteID: '6969e4ae5086433123ff411a'
+                });
+              }
+            });
+          `}
+        </Script>
       </body>
     </html>
   );
