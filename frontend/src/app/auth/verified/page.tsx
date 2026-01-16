@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function VerifiedPage() {
     const router = useRouter()
@@ -23,6 +24,19 @@ export default function VerifiedPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-cyan-50 px-6">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-slate-200 p-10 text-center space-y-6">
+                {/* Logo */}
+                <div className="flex justify-center">
+                    <Link href="/" className="inline-block">
+                        <Image
+                            src="/logo.png"
+                            alt="HazLabel"
+                            width={140}
+                            height={35}
+                            className="h-9 w-auto hover:scale-105 transition-all"
+                        />
+                    </Link>
+                </div>
+
                 {/* Success Icon */}
                 <div className="flex justify-center">
                     <div className="h-20 w-20 rounded-full bg-emerald-100 flex items-center justify-center">
