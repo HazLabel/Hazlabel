@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2, ArrowRight, Github, Mail } from "lucide-react"
+import { Loader2, ArrowRight, Mail, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import Image from "next/image"
@@ -15,6 +15,9 @@ function LoginForm() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [passwordStrength, setPasswordStrength] = useState("")
     const [loading, setLoading] = useState(false)
     const [isSignUp, setIsSignUp] = useState(false)
     const supabase = createClient()
@@ -23,6 +26,39 @@ function LoginForm() {
 
     // Get redirect URL from query params (default to /inventory)
     const redirectTo = searchParams.get('redirect') || '/inventory'
+
+    // Password strength checker
+    const checkPasswordStrength = (pwd: string) => {
+        if (pwd.length === 0) {
+            setPasswordStrength("")
+            return
+        }
+        if (pwd.length < 8) {
+            setPasswordStrength("weak")
+            return
+        }
+        const hasUpper = /[A-Z]/.test(pwd)
+        const hasLower = /[a-z]/.test(pwd)
+        const hasNumber = /[0-9]/.test(pwd)
+        const hasSpecial = /[!@#$%^&*]/.test(pwd)
+
+        const strengthScore = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length
+
+        if (strengthScore === 4 && pwd.length >= 12) {
+            setPasswordStrength("strong")
+        } else if (strengthScore >= 3 && pwd.length >= 8) {
+            setPasswordStrength("medium")
+        } else {
+            setPasswordStrength("weak")
+        }
+    }
+
+    const handlePasswordChange = (value: string) => {
+        setPassword(value)
+        if (isSignUp) {
+            checkPasswordStrength(value)
+        }
+    }
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -48,28 +84,38 @@ function LoginForm() {
                 if (error) throw error
 
                 if (data.session) {
-                    // If a session is returned, it might be a partial session or auto-confirmed.
-                    // However, to enforce the "Check email" flow, we should sign them out or just NOT redirect
-                    // if they need to verify.
-                    // For now, let's toast success but stay on page if we want them to verify.
-                    // If they are auto-confirmed, they can log in.
+                    // If a session is returned, enforce email verification
                     toast.success("Registration successful!", {
                         description: "Please check your email to verify your account before logging in."
                     })
                     setLoading(false)
-                    setIsSignUp(false) // Switch to login view so they can sign in after verifying
+                    // Auto-switch to login view and pre-fill email
+                    setIsSignUp(false)
                 } else {
                     toast.success("Check your email", {
                         description: "We sent you a verification link."
                     })
                     setLoading(false)
+                    // Auto-switch to login view and pre-fill email
+                    setIsSignUp(false)
                 }
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
                     password,
                 })
-                if (error) throw error
+                if (error) {
+                    // Check if error is due to unverified email
+                    if (error.message.includes("Email not confirmed") || error.message.includes("verify")) {
+                        toast.error("Email not verified", {
+                            description: "Please verify your email before signing in. Check your inbox for the verification link."
+                        })
+                    } else {
+                        throw error
+                    }
+                    setLoading(false)
+                    return
+                }
                 toast.success("Welcome back!", {
                     description: "Redirecting to your vault..."
                 })
@@ -88,21 +134,7 @@ function LoginForm() {
         }
     }
 
-    const handleGithubAuth = async () => {
-        // Include the redirect path in the callback URL
-        const callbackUrl = new URL('/auth/callback', window.location.origin)
-        callbackUrl.searchParams.set('redirect', redirectTo)
 
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: "github",
-            options: {
-                redirectTo: callbackUrl.toString(),
-            },
-        })
-        if (error) {
-            toast.error("GitHub login failed", { description: error.message })
-        }
-    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50 relative px-6">
@@ -140,27 +172,7 @@ function LoginForm() {
                         </div>
                     </div>
 
-                    {/* OAuth Buttons */}
-                    <div className="space-y-3 mb-6">
-                        <Button
-                            variant="outline"
-                            className="w-full h-12 border-slate-200 hover:bg-slate-50 text-slate-700 font-medium"
-                            onClick={handleGithubAuth}
-                        >
-                            <Github className="h-5 w-5 mr-3" />
-                            Continue with GitHub
-                        </Button>
-                    </div>
 
-                    {/* Divider */}
-                    <div className="relative my-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-200" />
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-white text-slate-500">or continue with email</span>
-                        </div>
-                    </div>
 
                     {/* Form */}
                     <form onSubmit={handleAuth} className="space-y-4">
@@ -196,15 +208,55 @@ function LoginForm() {
                                     </Link>
                                 )}
                             </div>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                className="h-12 border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => handlePasswordChange(e.target.value)}
+                                    required
+                                    className="h-12 pr-12 border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                                >
+                                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
+                            </div>
+                            {isSignUp && passwordStrength && (
+                                <div className="flex items-center gap-2 text-xs">
+                                    <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full transition-all ${passwordStrength === "weak"
+                                                ? "w-1/3 bg-red-500"
+                                                : passwordStrength === "medium"
+                                                    ? "w-2/3 bg-amber-500"
+                                                    : "w-full bg-emerald-500"
+                                                }`}
+                                        />
+                                    </div>
+                                    <span
+                                        className={`font-medium ${passwordStrength === "weak"
+                                            ? "text-red-600"
+                                            : passwordStrength === "medium"
+                                                ? "text-amber-600"
+                                                : "text-emerald-600"
+                                            }`}
+                                    >
+                                        {passwordStrength === "weak" && "Weak"}
+                                        {passwordStrength === "medium" && "Medium"}
+                                        {passwordStrength === "strong" && "Strong"}
+                                    </span>
+                                </div>
+                            )}
+                            {isSignUp && password.length > 0 && passwordStrength === "weak" && (
+                                <p className="text-xs text-slate-500">
+                                    Use 8+ characters with uppercase, lowercase, numbers & symbols
+                                </p>
+                            )}
                         </div>
 
                         {isSignUp && (
@@ -212,15 +264,24 @@ function LoginForm() {
                                 <Label htmlFor="confirmPassword" className="text-slate-700 text-sm font-medium">
                                     Confirm Password
                                 </Label>
-                                <Input
-                                    id="confirmPassword"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                    className="h-12 border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
-                                />
+                                <div className="relative">
+                                    <Input
+                                        id="confirmPassword"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        required
+                                        className="h-12 pr-12 border-slate-200 focus:border-sky-500 focus:ring-sky-500/20"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                                    >
+                                        {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                    </button>
+                                </div>
                             </div>
                         )}
 
