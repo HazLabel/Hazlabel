@@ -443,9 +443,9 @@ export default function LandingPage() {
                     <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
                         <p>© 2026 HazLabel. All rights reserved.</p>
                         <div className="flex gap-6">
-                            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-                            <a href="#" className="hover:text-white transition-colors">Terms</a>
-                            <a href="#" className="hover:text-white transition-colors">Security</a>
+                            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+                            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+                            <Link href="/disclaimer" className="hover:text-white transition-colors">Safety Disclaimer</Link>
                         </div>
                     </div>
                 </div>

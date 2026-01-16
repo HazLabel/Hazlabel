@@ -317,9 +317,9 @@ function LoginForm() {
                 {/* Footer */}
                 <p className="text-center text-xs text-slate-500 mt-6 animate-reveal delay-200">
                     By continuing, you agree to our{" "}
-                    <a href="#" className="text-slate-600 hover:text-slate-900 transition-colors">Terms</a>
+                    <Link href="/terms" className="text-slate-600 hover:text-slate-900 transition-colors">Terms</Link>
                     {" "}and{" "}
-                    <a href="#" className="text-slate-600 hover:text-slate-900 transition-colors">Privacy Policy</a>
+                    <Link href="/privacy" className="text-slate-600 hover:text-slate-900 transition-colors">Privacy Policy</Link>
                 </p>
             </div>
         </div>
