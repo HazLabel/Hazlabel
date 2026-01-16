@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
     const { supabaseResponse, user } = await updateSession(request)
 
     // Define protected dashboard routes
-    const isProtectedRoute = 
+    const isProtectedRoute =
         nextUrl.pathname.startsWith('/inventory') ||
         nextUrl.pathname.startsWith('/logs') ||
         nextUrl.pathname.startsWith('/print') ||
@@ -24,12 +24,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/inventory', request.url))
     }
 
-    // Redirect root to inventory if authenticated, login if not
-    if (nextUrl.pathname === '/') {
-        if (user) {
-            return NextResponse.redirect(new URL('/inventory', request.url))
-        }
-    }
 
     return supabaseResponse
 }
