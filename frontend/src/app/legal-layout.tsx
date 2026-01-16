@@ -1,11 +1,9 @@
-"use client"
-
 import React from "react"
 import Link from "next/link"
-import { ArrowLeft, ShieldAlert, Scale, ShieldCheck } from "lucide-react"
+import { ArrowLeft, LucideIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-export default function LegalLayout({ children, title, icon: Icon }: { children: React.ReactNode, title: string, icon: any }) {
+export default function LegalLayout({ children, title, icon: Icon }: { children: React.ReactNode, title: string, icon: LucideIcon }) {
     return (
         <div className="min-h-screen bg-slate-50 py-20 px-6">
             <div className="max-w-4xl mx-auto">
