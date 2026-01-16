@@ -10,6 +10,7 @@ import { Loader2, ArrowRight, Mail, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import Image from "next/image"
+import { Checkbox } from "@/components/ui/checkbox"
 
 function LoginForm() {
     const [email, setEmail] = useState("")
@@ -20,6 +21,7 @@ function LoginForm() {
     const [passwordStrength, setPasswordStrength] = useState("")
     const [loading, setLoading] = useState(false)
     const [isSignUp, setIsSignUp] = useState(false)
+    const [agreedToTerms, setAgreedToTerms] = useState(false)
     const supabase = createClient()
     const searchParams = useSearchParams()
     const router = useRouter()
@@ -69,6 +71,14 @@ function LoginForm() {
                 if (password !== confirmPassword) {
                     toast.error("Passwords do not match", {
                         description: "Please make sure both passwords are the same."
+                    })
+                    setLoading(false)
+                    return
+                }
+
+                if (!agreedToTerms) {
+                    toast.error("Terms of Service", {
+                        description: "Please agree to the Terms, Privacy Policy, and Safety Disclaimer to continue."
                     })
                     setLoading(false)
                     return
@@ -285,6 +295,26 @@ function LoginForm() {
                             </div>
                         )}
 
+                        {isSignUp && (
+                            <div className="flex items-start space-x-3 py-2 animate-reveal">
+                                <Checkbox
+                                    id="terms"
+                                    checked={agreedToTerms}
+                                    onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                                    className="mt-1 border-slate-300 data-[state=checked]:bg-sky-600 data-[state=checked]:border-sky-600"
+                                />
+                                <Label
+                                    htmlFor="terms"
+                                    className="text-xs text-slate-500 leading-normal font-normal cursor-pointer select-none"
+                                >
+                                    I agree to the{" "}
+                                    <Link href="/terms" className="text-sky-600 hover:text-sky-700 font-medium transition-colors">Terms of Service</Link>,{" "}
+                                    <Link href="/privacy" className="text-sky-600 hover:text-sky-700 font-medium transition-colors">Privacy Policy</Link>, and have read the{" "}
+                                    <Link href="/disclaimer" className="text-sky-600 hover:text-sky-700 font-medium transition-colors">Safety Disclaimer</Link>.
+                                </Label>
+                            </div>
+                        )}
+
                         <Button
                             type="submit"
                             className="w-full h-12 bg-sky-600 hover:bg-sky-700 text-white font-semibold mt-2 shadow-md shadow-sky-500/20"
@@ -314,12 +344,10 @@ function LoginForm() {
                     </p>
                 </div>
 
-                {/* Footer */}
-                <p className="text-center text-xs text-slate-500 mt-6 animate-reveal delay-200">
-                    By continuing, you agree to our{" "}
-                    <Link href="/terms" className="text-slate-600 hover:text-slate-900 transition-colors">Terms</Link>
-                    {" "}and{" "}
-                    <Link href="/privacy" className="text-slate-600 hover:text-slate-900 transition-colors">Privacy Policy</Link>
+
+                {/* Footer Credits */}
+                <p className="text-center text-xs text-slate-400 mt-8 animate-reveal delay-200">
+                    © 2026 HazLabel. Built for safety professionals.
                 </p>
             </div>
         </div>

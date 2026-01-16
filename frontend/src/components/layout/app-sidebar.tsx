@@ -147,32 +147,6 @@ export function AppSidebar() {
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
-                {/* Legal */}
-                <SidebarGroup>
-                    <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 px-3 pt-4 pb-2 group-data-[collapsible=icon]:hidden">
-                        Resources
-                    </SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip="Safety Disclaimer" className="text-slate-500 hover:text-amber-600 hover:bg-amber-50">
-                                    <Link href="/disclaimer" className="flex items-center gap-3">
-                                        <ShieldAlert className="h-5 w-5" />
-                                        <span className="font-medium group-data-[collapsible=icon]:hidden">Safety Disclaimer</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip="Terms & Privacy" className="text-slate-500 hover:text-slate-900 hover:bg-slate-50">
-                                    <Link href="/terms" className="flex items-center gap-3">
-                                        <Scale className="h-5 w-5" />
-                                        <span className="font-medium group-data-[collapsible=icon]:hidden">Legal Terms</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
             </SidebarContent>
 
             {/* Footer */}
