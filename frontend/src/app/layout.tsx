@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "HazLabel | AI-Driven Industrial Compliance",
   description: "Automate GHS compliance with agentic AI. Parse SDS, generate ZPL labels, and manage industrial chemical safety in one futuristic platform.",
   keywords: ["GHS Compliance", "SDS Parsing", "AI Chemical Safety", "ZPL Label Generator", "Industrial Safety Dashboard"],
+  icons: {
+    icon: "/icon-logo.png",
+  },
 };
 
 export default function RootLayout({
