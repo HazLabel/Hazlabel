@@ -8,7 +8,13 @@ export const metadata: Metadata = {
   description: "Automate GHS compliance with agentic AI. Parse SDS, generate ZPL labels, and manage industrial chemical safety in one futuristic platform.",
   keywords: ["GHS Compliance", "SDS Parsing", "AI Chemical Safety", "ZPL Label Generator", "Industrial Safety Dashboard"],
   icons: {
-    icon: "/icon-logo.png",
+    icon: [
+      { url: "/icon-logo.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [
+      { url: "/icon-logo.png", sizes: "180x180", type: "image/png" },
+    ],
   },
 };
 

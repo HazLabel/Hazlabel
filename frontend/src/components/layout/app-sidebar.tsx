@@ -3,17 +3,17 @@
 import * as React from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { 
-    Printer, 
-    FileText, 
-    Settings, 
-    Database, 
-    LogOut, 
-    Shield,
+import {
+    Printer,
+    FileText,
+    Settings,
+    Database,
+    LogOut,
     ChevronRight,
     Search,
     Command
 } from "lucide-react"
+import Image from "next/image"
 import { createClient } from "@/utils/supabase/client"
 import { useUser } from "@/hooks/use-user"
 import { cn } from "@/lib/utils"
@@ -60,23 +60,29 @@ const navItems = [
 export function AppSidebar() {
     const pathname = usePathname()
     const { user } = useUser()
-    
+
     const handleSignOut = async () => {
         const supabase = createClient()
         await supabase.auth.signOut()
         window.location.href = "/"
     }
-    
+
     return (
-        <Sidebar 
-            collapsible="icon" 
+        <Sidebar
+            collapsible="icon"
             className="border-r border-slate-200 bg-white"
         >
             {/* Header */}
             <SidebarHeader className="p-4 border-b border-slate-100">
                 <Link href="/inventory" className="flex items-center gap-3 group">
-                    <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-cyan-600 flex items-center justify-center shadow-md shadow-sky-500/20">
-                        <Shield className="h-5 w-5 text-white" />
+                    <div className="flex items-center justify-center p-1.5 rounded-xl bg-slate-900 shadow-md group-hover:scale-105 transition-all">
+                        <Image
+                            src="/icon-logo.png"
+                            alt="HazLabel"
+                            width={24}
+                            height={24}
+                            className="h-6 w-6"
+                        />
                     </div>
                     <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                         <span className="text-base font-bold text-slate-900 tracking-tight">HazLabel</span>
@@ -106,16 +112,16 @@ export function AppSidebar() {
                         <SidebarMenu>
                             {navItems.map((item) => {
                                 const isActive = pathname === item.url || pathname.startsWith(`${item.url}/`)
-                                
+
                                 return (
                                     <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton 
-                                            asChild 
+                                        <SidebarMenuButton
+                                            asChild
                                             tooltip={item.title}
                                             className={cn(
                                                 "relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group/item",
-                                                isActive 
-                                                    ? "bg-sky-50 text-sky-700" 
+                                                isActive
+                                                    ? "bg-sky-50 text-sky-700"
                                                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                                             )}
                                         >
@@ -124,16 +130,16 @@ export function AppSidebar() {
                                                 {isActive && (
                                                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-sky-600" />
                                                 )}
-                                                
+
                                                 <item.icon className={cn(
                                                     "h-5 w-5 shrink-0 transition-colors",
                                                     isActive ? "text-sky-600" : "text-slate-400 group-hover/item:text-slate-600"
                                                 )} />
-                                                
+
                                                 <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
                                                     <span className="font-medium">{item.title}</span>
                                                 </div>
-                                                
+
                                                 {isActive && (
                                                     <ChevronRight className="h-4 w-4 text-sky-600 group-data-[collapsible=icon]:hidden" />
                                                 )}

@@ -6,9 +6,10 @@ import { createClient } from "@/utils/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Shield, Loader2, ArrowRight, Github, Mail } from "lucide-react"
+import { Loader2, ArrowRight, Github, Mail } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import Image from "next/image"
 
 function LoginForm() {
     const [email, setEmail] = useState("")
@@ -111,8 +112,14 @@ function LoginForm() {
                 {/* Logo */}
                 <div className="flex justify-center mb-8 animate-reveal">
                     <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-sky-600 to-cyan-600 flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover:shadow-sky-500/30 transition-all group-hover:scale-105">
-                            <Shield className="h-6 w-6 text-white" />
+                        <div className="flex items-center justify-center p-2 rounded-xl bg-slate-900 shadow-xl group-hover:scale-105 transition-all">
+                            <Image
+                                src="/logo.png"
+                                alt="HazLabel"
+                                width={160}
+                                height={40}
+                                className="h-10 w-auto"
+                            />
                         </div>
                     </Link>
                 </div>

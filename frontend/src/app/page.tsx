@@ -16,6 +16,7 @@ import {
     Twitter,
     History
 } from "lucide-react"
+import Image from "next/image"
 
 export default function LandingPage() {
     return (
@@ -24,8 +25,14 @@ export default function LandingPage() {
             <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-sky-600 to-cyan-600 flex items-center justify-center shadow-md shadow-sky-500/20">
-                            <Shield className="h-5 w-5 text-white" />
+                        <div className="flex items-center justify-center p-1.5 rounded-xl bg-slate-900 shadow-md group-hover:scale-105 transition-all">
+                            <Image
+                                src="/icon-logo.png"
+                                alt="HazLabel"
+                                width={32}
+                                height={32}
+                                className="h-8 w-8"
+                            />
                         </div>
                         <span className="text-lg font-bold tracking-tight text-slate-900">HazLabel</span>
                     </Link>
@@ -382,10 +389,16 @@ export default function LandingPage() {
                     <div className="grid md:grid-cols-4 gap-12">
                         <div className="md:col-span-2 space-y-4">
                             <div className="flex items-center gap-2.5">
-                                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-500 flex items-center justify-center">
-                                    <Shield className="h-4 w-4 text-white" />
+                                <div className="flex items-center justify-center p-1.5 rounded-lg bg-white shadow-md">
+                                    <Image
+                                        src="/icon-logo.png"
+                                        alt="HazLabel"
+                                        width={24}
+                                        height={24}
+                                        className="h-6 w-6"
+                                    />
                                 </div>
-                                <span className="text-lg font-bold">HazLabel</span>
+                                <span className="text-lg font-bold text-white">HazLabel</span>
                             </div>
                             <p className="text-slate-400 text-sm max-w-xs">
                                 The modern compliance platform for industrial chemical safety.
