@@ -74,20 +74,14 @@ export function AppSidebar() {
         >
             {/* Header */}
             <SidebarHeader className="p-4 border-b border-slate-100">
-                <Link href="/inventory" className="flex items-center gap-3 group">
-                    <div className="flex items-center justify-center p-1.5 rounded-xl bg-slate-900 shadow-md group-hover:scale-105 transition-all">
-                        <Image
-                            src="/icon-logo.png"
-                            alt="HazLabel"
-                            width={24}
-                            height={24}
-                            className="h-6 w-6"
-                        />
-                    </div>
-                    <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-                        <span className="text-base font-bold text-slate-900 tracking-tight">HazLabel</span>
-                        <span className="text-[10px] text-slate-500 font-medium">GHS Compliance</span>
-                    </div>
+                <Link href="/inventory" className="flex items-center group">
+                    <Image
+                        src="/logo.png"
+                        alt="HazLabel"
+                        width={120}
+                        height={30}
+                        className="h-8 w-auto hover:scale-105 transition-all"
+                    />
                 </Link>
             </SidebarHeader>
 

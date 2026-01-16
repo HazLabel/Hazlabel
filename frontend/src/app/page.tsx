@@ -24,17 +24,14 @@ export default function LandingPage() {
             {/* Navigation */}
             <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="flex items-center justify-center p-1.5 rounded-xl bg-slate-900 shadow-md group-hover:scale-105 transition-all">
-                            <Image
-                                src="/icon-logo.png"
-                                alt="HazLabel"
-                                width={32}
-                                height={32}
-                                className="h-8 w-8"
-                            />
-                        </div>
-                        <span className="text-lg font-bold tracking-tight text-slate-900">HazLabel</span>
+                    <Link href="/" className="flex items-center group">
+                        <Image
+                            src="/logo.png"
+                            alt="HazLabel"
+                            width={140}
+                            height={35}
+                            className="h-9 w-auto hover:scale-105 transition-all"
+                        />
                     </Link>
 
                     <div className="hidden md:flex items-center gap-8">
@@ -388,17 +385,14 @@ export default function LandingPage() {
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid md:grid-cols-4 gap-12">
                         <div className="md:col-span-2 space-y-4">
-                            <div className="flex items-center gap-2.5">
-                                <div className="flex items-center justify-center p-1.5 rounded-lg bg-white shadow-md">
-                                    <Image
-                                        src="/icon-logo.png"
-                                        alt="HazLabel"
-                                        width={24}
-                                        height={24}
-                                        className="h-6 w-6"
-                                    />
-                                </div>
-                                <span className="text-lg font-bold text-white">HazLabel</span>
+                            <div className="flex items-center">
+                                <Image
+                                    src="/logo.png"
+                                    alt="HazLabel"
+                                    width={140}
+                                    height={35}
+                                    className="h-10 w-auto brightness-0 invert"
+                                />
                             </div>
                             <p className="text-slate-400 text-sm max-w-xs">
                                 The modern compliance platform for industrial chemical safety.
