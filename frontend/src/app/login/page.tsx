@@ -48,14 +48,16 @@ function LoginForm() {
                 if (error) throw error
 
                 if (data.session) {
-                    toast.success("Welcome to HazLabel!", {
-                        description: "Your account has been created."
+                    // If a session is returned, it might be a partial session or auto-confirmed.
+                    // However, to enforce the "Check email" flow, we should sign them out or just NOT redirect
+                    // if they need to verify.
+                    // For now, let's toast success but stay on page if we want them to verify.
+                    // If they are auto-confirmed, they can log in.
+                    toast.success("Registration successful!", {
+                        description: "Please check your email to verify your account before logging in."
                     })
-                    // Use router.push with a small delay to ensure session is set
-                    setTimeout(() => {
-                        router.push(redirectTo)
-                        router.refresh()
-                    }, 100)
+                    setLoading(false)
+                    setIsSignUp(false) // Switch to login view so they can sign in after verifying
                 } else {
                     toast.success("Check your email", {
                         description: "We sent you a verification link."
