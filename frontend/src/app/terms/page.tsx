@@ -27,7 +27,17 @@ export default function TermsOfService() {
                 </section>
 
                 <section>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">4. Usage Responsibilities & AI Accuracy</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">4. Subscriptions and Refunds</h3>
+                    <p>
+                        Our Professional plan is billed on a subscription basis. You will be billed in advance on a recurring and periodic basis.
+                    </p>
+                    <p className="mt-2">
+                        <strong>Refund Policy:</strong> We offer a 14-day money-back guarantee for first-time Professional plan subscribers. If you are unsatisfied with the Service, you may request a full refund within 14 days of your initial purchase. After 14 days, all payments are non-refundable. To request a refund, please contact us at support@hazlabel.co.
+                    </p>
+                </section>
+
+                <section>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">5. Usage Responsibilities & AI Accuracy</h3>
                     <p>
                         HazLabel uses automated systems to process safety information. You acknowledge that:
                     </p>
@@ -39,35 +49,35 @@ export default function TermsOfService() {
                 </section>
 
                 <section>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">5. Intellectual Property</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">6. Intellectual Property</h3>
                     <p>
                         The Service and its original content, features, and functionality are and will remain the exclusive property of HazLabel and its licensors.
                     </p>
                 </section>
 
                 <section>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">6. Termination</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">7. Termination</h3>
                     <p>
                         We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
                     </p>
                 </section>
 
                 <section>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">7. Indemnification</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">8. Indemnification</h3>
                     <p>
                         You agree to defend, indemnify, and hold harmless HazLabel and its licensee and licensors, and their employees, contractors, agents, officers, and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses resulting from or arising out of your use of the Service or breach of these Terms.
                     </p>
                 </section>
 
                 <section>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">8. Limitation of Liability</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">9. Limitation of Liability</h3>
                     <p>
                         In no event shall HazLabel, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
                     </p>
                 </section>
 
                 <section>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4">9. Changes</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-4">10. Changes</h3>
                     <p>
                         We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.
                     </p>
