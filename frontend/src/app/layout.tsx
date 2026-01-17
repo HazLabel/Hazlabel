@@ -7,9 +7,35 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "HazLabel | AI-Driven Industrial Compliance",
+  metadataBase: new URL("https://www.hazlabel.co"),
+  title: "HazLabel | AI-Driven Industrial Chemical Safety & GHS Compliance",
   description: "Automate GHS compliance with agentic AI. Parse SDS, generate ZPL labels, and manage industrial chemical safety in one futuristic platform.",
   keywords: ["GHS Compliance", "SDS Parsing", "AI Chemical Safety", "ZPL Label Generator", "Industrial Safety Dashboard"],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "HazLabel | AI-Driven Industrial Chemical Safety",
+    description: "Automate GHS compliance with agentic AI. Parse SDS and generate ZPL labels.",
+    url: "https://www.hazlabel.co",
+    siteName: "HazLabel",
+    images: [
+      {
+        url: "/logo.png",
+        width: 1200,
+        height: 630,
+        alt: "HazLabel Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HazLabel | AI-Driven Industrial Chemical Safety",
+    description: "Automate GHS compliance with agentic AI. Parse SDS and generate ZPL labels.",
+    images: ["/logo.png"],
+  },
   icons: {
     icon: [
       { url: "/icon-logo.png", sizes: "32x32", type: "image/png" },

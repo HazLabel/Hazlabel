@@ -38,7 +38,7 @@ export default function LandingPage() {
                     <div className="hidden md:flex items-center gap-8">
                         <NavLink href="#features">Features</NavLink>
                         <NavLink href="#how-it-works">How it Works</NavLink>
-                        <NavLink href="#pricing">Pricing</NavLink>
+                        <NavLink href="/pricing">Pricing</NavLink>
                         <NavLink href="/inventory">Dashboard</NavLink>
                     </div>
 
@@ -313,12 +313,12 @@ export default function LandingPage() {
                                 interval={billingCycle === 'monthly' ? "mo" : "mo"}
                                 description="Comprehensive compliance for active facilities."
                                 features={[
-                                    "Unlimited SDS Processing",
+                                    "2000 SDS Parsing / Year",
+                                    "Unlimited Downloads",
                                     "GHS Revision 11 Validation",
-                                    "Zebra & Laser Printing",
-                                    "Custom Label Sizes",
                                     "Revision Tracking",
-                                    "Priority Email Support"
+                                    "Priority Email Support",
+                                    "Team Workspace (up to 5 users)"
                                 ]}
                                 highlighted={true}
                                 billingCycle={billingCycle}
@@ -432,7 +432,12 @@ export default function LandingPage() {
 
                         <FooterLinks
                             title="Product"
-                            links={["Features", "Pricing", "API Docs", "Changelog"]}
+                            links={[
+                                { label: "Features", href: "/#features" },
+                                { label: "Pricing", href: "/pricing" },
+                                { label: "API Docs", href: "#" },
+                                { label: "Changelog", href: "#" }
+                            ]}
                         />
                         <FooterLinks
                             title="Company"
@@ -513,18 +518,22 @@ function StepCard({
     )
 }
 
-function FooterLinks({ title, links }: { title: string; links: string[] }) {
+function FooterLinks({ title, links }: { title: string; links: { label: string; href: string }[] | string[] }) {
     return (
         <div>
             <h4 className="font-semibold text-white mb-4">{title}</h4>
             <ul className="space-y-3">
-                {links.map(link => (
-                    <li key={link}>
-                        <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm">
-                            {link}
-                        </a>
-                    </li>
-                ))}
+                {links.map(link => {
+                    const label = typeof link === 'string' ? link : link.label
+                    const href = typeof link === 'string' ? "#" : link.href
+                    return (
+                        <li key={label}>
+                            <a href={href} className="text-slate-400 hover:text-white transition-colors text-sm">
+                                {label}
+                            </a>
+                        </li>
+                    )
+                })}
             </ul>
         </div>
     )
