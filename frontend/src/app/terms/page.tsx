@@ -32,7 +32,7 @@ export default function TermsOfService() {
                         Our Professional plan is billed on a subscription basis. You will be billed in advance on a recurring and periodic basis.
                     </p>
                     <p className="mt-2">
-                        <strong>Refund Policy:</strong> We offer a 14-day money-back guarantee for first-time Professional plan subscribers. If you are unsatisfied with the Service, you may request a full refund within 14 days of your initial purchase. After 14 days, all payments are non-refundable. To request a refund, please contact us at support@hazlabel.co.
+                        <strong>Refund Policy:</strong> All payments are generally non-refundable. However, refunds may be considered on a case-by-case basis at our sole discretion. To request a refund, you must contact us directly at support@hazlabel.co with your account details and reason for the request. Each refund request will be reviewed individually, and approval is not guaranteed.
                     </p>
                 </section>
 
