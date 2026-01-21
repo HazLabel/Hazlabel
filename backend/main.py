@@ -4,7 +4,7 @@ HazLabel API - GHS Compliance Platform
 Endpoints for parsing Safety Data Sheets, managing chemical inventory,
 and generating compliant GHS labels for industrial use.
 """
-
+import env_utils
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, Query
 from fastapi.responses import StreamingResponse, Response
 from parser import extract_text_from_pdf, parse_sds_with_ai, parse_sds_with_validation
@@ -13,8 +13,7 @@ from database import save_chemical, get_chemicals, get_chemical_by_id, delete_ch
 from jobs import inngest_client, parse_sds_job
 from printer import generate_avery_5163_pdf
 from dependencies import verify_user
-# Load and sanitize environment variables
-import env_utils
+# Already imported at top
 
 from validation import (
     validate_ghs_label,
@@ -353,7 +352,9 @@ async def suggest_pictograms(h_codes: str = Query(..., description="Comma-separa
 async def list_chemicals(user: User = Depends(verify_user)):
     """List all chemicals in user's vault."""
     try:
+        print(f"DEBUG: Listing chemicals for user {user.id}")
         chemicals = await get_chemicals(user.id)
+        print(f"DEBUG: Found {len(chemicals)} chemicals for user {user.id}")
         return chemicals
     except Exception as e:
         import traceback

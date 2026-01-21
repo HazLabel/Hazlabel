@@ -55,8 +55,15 @@ def load_and_sanitize_env():
                 val = val.replace(f"{var}=", "", 1).strip()
             # Ensure it's only one line
             if "\n" in val:
+                print(f"DEBUG: Sanitizing {var} (removed newline)")
                 val = val.split("\n")[0].strip()
-            os.environ[var] = val
+            
+            if val.strip() != os.environ.get(var):
+                print(f"DEBUG: Updating {var} in os.environ")
+                os.environ[var] = val.strip()
+
+    print(f"DEBUG: Environment sanitized. OPENAI_API_KEY set: {bool(os.environ.get('OPENAI_API_KEY'))}")
+    print(f"DEBUG: SUPABASE_URL: {os.environ.get('SUPABASE_URL')}")
 
 # Execute on import
 load_and_sanitize_env()
