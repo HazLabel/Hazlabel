@@ -1,10 +1,8 @@
 from supabase import create_client, Client
 import os
-from dotenv import load_dotenv
+import env_utils
 from models import GHSLabel
 from typing import List, Dict, Any
-
-load_dotenv()
 
 url: str = os.environ.get("SUPABASE_URL", "")
 key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")

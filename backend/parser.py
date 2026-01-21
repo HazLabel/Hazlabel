@@ -20,12 +20,10 @@ from validation import (
     ValidationSeverity
 )
 import os
-from dotenv import load_dotenv
+import env_utils
 from typing import Tuple
 
-load_dotenv()
-
-client = instructor.patch(OpenAI(api_key=os.getenv("OPENAI_API_KEY")))
+client = instructor.patch(OpenAI(api_key=os.environ.get("OPENAI_API_KEY")))
 
 # Enhanced system prompt for better GHS code extraction with STRICT SECTION 2 ISOLATION
 SDS_EXTRACTION_PROMPT = """You are a professional chemical safety expert specializing in GHS (Globally Harmonized System) compliance.

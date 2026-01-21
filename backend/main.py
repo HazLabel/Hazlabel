@@ -13,10 +13,8 @@ from database import save_chemical, get_chemicals, get_chemical_by_id, delete_ch
 from jobs import inngest_client, parse_sds_job
 from printer import generate_avery_5163_pdf
 from dependencies import verify_user
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
+# Load and sanitize environment variables
+import env_utils
 
 from validation import (
     validate_ghs_label,
