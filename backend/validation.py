@@ -20,15 +20,28 @@ from datetime import datetime
 # ============================================================================
 
 class ValidationSeverity(str, Enum):
-    ERROR = "error"
-    WARNING = "warning"
     INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+
+@dataclass
+class ValidationIssue:
+    code: str
+    severity: ValidationSeverity
+    message: str
+    suggestion: Optional[str] = None
 
 @dataclass
 class ValidationResult:
     is_valid: bool
-    issues: List[Dict[str, Any]]
-    corrected_data: Optional[Dict[str, Any]] = None
+    needs_review: bool
+    issues: List[ValidationIssue]
+    validated_hazard_statements: List[str]
+    validated_precautionary_statements: List[str]
+    missing_p_codes: List[str]
+    signal_word_valid: bool
+    suggested_signal_word: Optional[str]
 
 # ============================================================================
 # OFFICIAL GHS CODE DATABASES (UN GHS Rev 11)
@@ -347,50 +360,70 @@ def validate_hazard_statements(statements: List[str]) -> Tuple[List[str], bool]:
     return validated, needs_review
 
 
-def validate_ghs_label(ghs_data: Dict[str, Any]) -> ValidationResult:
+def validate_ghs_label(
+    signal_word: str,
+    hazard_statements: List[str],
+    precautionary_statements: List[str],
+    pictograms: List[str]
+) -> ValidationResult:
     """
-    Comprehensive validation of a GHS label.
-    Returns ValidationResult with issues and corrected data.
+    Comprehensive validation of a GHS label against official rules.
     """
     issues = []
-    corrected_data = dict(ghs_data)
+    needs_review = False
     
-    # Validate H-codes
-    h_statements = ghs_data.get("hazard_statements", [])
-    validated_h, h_needs_review = validate_hazard_statements(h_statements)
-    corrected_data["hazard_statements"] = validated_h
-    
+    # 1. Validate H-codes
+    validated_h, h_needs_review = validate_hazard_statements(hazard_statements)
     if h_needs_review:
-        issues.append({
-            "severity": ValidationSeverity.WARNING,
-            "field": "hazard_statements",
-            "message": "Some hazard statements may need review"
-        })
+        needs_review = True
+        issues.append(ValidationIssue(
+            code="HAZARD_STATEMENTS",
+            severity=ValidationSeverity.WARNING,
+            message="Some hazard statements might be non-standard or misspelled",
+            suggestion="Verify against GHS Rev 11"
+        ))
+        
+    # 2. Extract clean codes for rule processing
+    clean_h = []
+    for stmt in validated_h:
+        match = re.match(r'^(H\d{3})', stmt.upper())
+        if match: clean_h.append(match.group(1))
+
+    # 3. Signal Word Validation
+    suggested_sw = "Warning"
+    critical_h = ["H300", "H310", "H330", "H314", "H318", "H340", "H350", "H360", "H370"]
+    if any(h in critical_h for h in clean_h):
+        suggested_sw = "Danger"
     
-    # Validate signal word
-    signal_word = ghs_data.get("signal_word", "")
-    if signal_word not in ["Danger", "Warning", ""]:
-        issues.append({
-            "severity": ValidationSeverity.ERROR,
-            "field": "signal_word",
-            "message": f"Invalid signal word: {signal_word}. Must be 'Danger' or 'Warning'"
-        })
-    
-    # Validate pictograms
-    pictograms = ghs_data.get("pictograms", [])
-    valid_pictograms = [p for p in pictograms if p in PICTOGRAM_H_CODE_MAP]
-    if len(valid_pictograms) != len(pictograms):
-        issues.append({
-            "severity": ValidationSeverity.WARNING,
-            "field": "pictograms",
-            "message": "Some pictogram codes are not valid GHS codes"
-        })
-        corrected_data["pictograms"] = valid_pictograms
-    
+    sw_valid = signal_word == suggested_sw
+    if not sw_valid:
+        issues.append(ValidationIssue(
+            code="SIGNAL_WORD",
+            severity=ValidationSeverity.ERROR,
+            message=f"Signal word should be '{suggested_sw}' based on hazards, found '{signal_word}'",
+            suggestion=f"Change signal word to {suggested_sw}"
+        ))
+
+    # 4. Missing P-codes (Simplified logic for now)
+    missing_p = []
+    if "H314" in clean_h and not any("P280" in p for p in precautionary_statements):
+        missing_p.append("P280")
+        issues.append(ValidationIssue(
+            code="H314",
+            severity=ValidationSeverity.ERROR,
+            message="Corrosive hazard H314 requires P280 (protective equipment)",
+            suggestion="Add P280"
+        ))
+
     return ValidationResult(
-        is_valid=len([i for i in issues if i["severity"] == ValidationSeverity.ERROR]) == 0,
+        is_valid=not any(i.severity == ValidationSeverity.ERROR for i in issues),
+        needs_review=needs_review or len(issues) > 0,
         issues=issues,
-        corrected_data=corrected_data
+        validated_hazard_statements=validated_h,
+        validated_precautionary_statements=precautionary_statements,
+        missing_p_codes=missing_p,
+        signal_word_valid=sw_valid,
+        suggested_signal_word=suggested_sw
     )
 
 
@@ -544,38 +577,43 @@ def get_all_valid_p_codes() -> List[Dict[str, str]]:
     return [{"code": code, "text": text} for code, text in sorted(GHS_P_CODES.items())]
 
 
-def hazlabel_guard(ghs_data: Dict[str, Any], sds_date: str = None) -> Dict[str, Any]:
+def hazlabel_guard(
+    product_name: str,
+    hazard_statements: List[str],
+    precautionary_statements: List[str],
+    pictograms: List[str],
+    sds_date: str = None
+) -> Dict[str, Any]:
     """
     Comprehensive HazLabel guard that orchestrates all validation and correction.
-    
-    Returns:
-        Dict with:
-        - validated_data: Corrected GHS data
-        - suggested_pictograms: Deterministically calculated pictograms
-        - supplemental_hazards: EUH codes to add
-        - sds_age_warning: Warning if SDS is outdated
-        - issues: List of validation issues
     """
-    # Validate the label
-    validation_result = validate_ghs_label(ghs_data)
+    # 1. Validate the label
+    validation_result = validate_ghs_label(
+        signal_word="Danger",  # Temporary placeholder logic
+        hazard_statements=hazard_statements,
+        precautionary_statements=precautionary_statements,
+        pictograms=pictograms
+    )
     
-    # Get H-codes for pictogram suggestion
-    h_codes = ghs_data.get("hazard_statements", [])
-    suggested_pictograms = suggest_pictograms_for_codes(h_codes)
+    # 2. Get supplemental hazards
+    supplemental_hazards = get_supplemental_hazards(product_name, hazard_statements)
     
-    # Get supplemental hazards
-    product_name = ghs_data.get("product_identifier", "")
-    supplemental_hazards = get_supplemental_hazards(product_name, h_codes)
-    
-    # Validate SDS age
+    # 3. Validate SDS age
     sds_age_result = validate_sds_age(sds_date)
     
     return {
-        "validated_data": validation_result.corrected_data,
-        "suggested_pictograms": suggested_pictograms,
+        "validated_data": {
+            "hazard_statements": validation_result.validated_hazard_statements,
+            "precautionary_statements": validation_result.validated_precautionary_statements,
+            "pictograms": suggest_pictograms_for_codes(hazard_statements)
+        },
+        "suggested_pictograms": suggest_pictograms_for_codes(hazard_statements),
         "supplemental_hazards": supplemental_hazards,
         "sds_age_warning": sds_age_result.get("warning"),
         "sds_years_old": sds_age_result.get("years_old"),
-        "issues": validation_result.issues,
+        "issues": [
+            {"code": i.code, "severity": i.severity.value, "message": i.message}
+            for i in validation_result.issues
+        ],
         "is_valid": validation_result.is_valid
     }
