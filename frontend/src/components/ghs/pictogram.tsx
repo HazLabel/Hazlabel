@@ -25,8 +25,8 @@ const GHS_PICTOGRAM_LABELS: Record<string, string> = {
     GHS04: "Gas Under Pressure",
     GHS05: "Corrosive",
     GHS06: "Toxic",
-    GHS07: "Health Hazard",
-    GHS08: "Serious Health Hazard",
+    GHS07: "Exclamation Mark",
+    GHS08: "Health Hazard",
     GHS09: "Environmental Hazard"
 }
 
@@ -72,16 +72,16 @@ function isValidGHSCode(code: string): boolean {
     return VALID_GHS_CODES.includes(code)
 }
 
-export function GHSPictogram({ 
-    code, 
-    size = 48, 
+export function GHSPictogram({
+    code,
+    size = 48,
     className,
-    showLabel = false 
+    showLabel = false
 }: GHSPictogramProps) {
     const normalizedCode = normalizeCode(code)
     const isValid = isValidGHSCode(normalizedCode)
     const label = GHS_PICTOGRAM_LABELS[normalizedCode]
-    
+
     if (!isValid) {
         // Unknown pictogram - show placeholder
         return (
@@ -90,8 +90,8 @@ export function GHSPictogram({
                     "relative flex items-center justify-center bg-slate-100 border-2 border-slate-300 rounded",
                     className
                 )}
-                style={{ 
-                    width: size, 
+                style={{
+                    width: size,
                     height: size
                 }}
                 title={`Unknown pictogram: ${code}`}
@@ -100,10 +100,10 @@ export function GHSPictogram({
             </div>
         )
     }
-    
+
     // Container needs to be larger to fit the rotated diamond
     const containerSize = Math.ceil(size * 1.45)
-    
+
     return (
         <div className={cn("flex flex-col items-center gap-2", className)}>
             <div
@@ -121,7 +121,7 @@ export function GHSPictogram({
                     unoptimized
                 />
             </div>
-            
+
             {showLabel && (
                 <span className="text-xs font-medium text-slate-600 text-center">
                     {label}
@@ -139,12 +139,12 @@ const SIZE_PRESETS: Record<string, number> = {
     xl: 100
 }
 
-export function PictogramGrid({ 
-    pictograms, 
+export function PictogramGrid({
+    pictograms,
     size = "md",
     showLabels = false,
-    className 
-}: { 
+    className
+}: {
     pictograms: string[]
     size?: number | "sm" | "md" | "lg" | "xl"
     showLabels?: boolean
@@ -157,14 +157,14 @@ export function PictogramGrid({
             </div>
         )
     }
-    
+
     // Resolve size - handle both number and preset string
     const resolvedSize = typeof size === "string" ? (SIZE_PRESETS[size] || 56) : size
-    
+
     // Deduplicate and normalize pictograms
     const normalizedPictograms = [...new Set(pictograms.map(p => normalizeCode(p)))]
         .filter(isValidGHSCode)
-    
+
     if (normalizedPictograms.length === 0) {
         return (
             <div className="text-slate-400 text-sm italic">
@@ -172,16 +172,16 @@ export function PictogramGrid({
             </div>
         )
     }
-    
+
     return (
         <div className={cn(
             "flex flex-wrap items-center justify-center gap-6",
             className
         )}>
             {normalizedPictograms.map((pic) => (
-                <GHSPictogram 
-                    key={pic} 
-                    code={pic} 
+                <GHSPictogram
+                    key={pic}
+                    code={pic}
                     size={resolvedSize}
                     showLabel={showLabels}
                 />
@@ -191,34 +191,34 @@ export function PictogramGrid({
 }
 
 // Compact version for table cells
-export function PictogramBadges({ 
-    pictograms, 
-    maxShow = 4 
-}: { 
+export function PictogramBadges({
+    pictograms,
+    maxShow = 4
+}: {
     pictograms: string[]
-    maxShow?: number 
+    maxShow?: number
 }) {
     if (!pictograms || pictograms.length === 0) {
         return <span className="text-slate-400 text-xs">—</span>
     }
-    
+
     // Deduplicate and normalize
     const normalizedPictograms = [...new Set(pictograms.map(p => normalizeCode(p)))]
         .filter(isValidGHSCode)
-    
+
     if (normalizedPictograms.length === 0) {
         return <span className="text-slate-400 text-xs">—</span>
     }
-    
+
     const visible = normalizedPictograms.slice(0, maxShow)
     const remaining = normalizedPictograms.length - maxShow
-    
+
     return (
         <div className="flex items-center gap-2">
             {visible.map((pic) => (
-                <GHSPictogram 
-                    key={pic} 
-                    code={pic} 
+                <GHSPictogram
+                    key={pic}
+                    code={pic}
                     size={36}
                 />
             ))}
@@ -235,9 +235,9 @@ export function PictogramBadges({
 export function getPictogramInfo(code: string): { code: string; label: string } | null {
     const normalizedCode = normalizeCode(code)
     const label = GHS_PICTOGRAM_LABELS[normalizedCode]
-    
+
     if (!label) return null
-    
+
     return {
         code: normalizedCode,
         label
