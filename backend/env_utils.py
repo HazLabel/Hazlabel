@@ -47,7 +47,7 @@ def load_and_sanitize_env():
                             os.environ[key] = value
 
     # Final cleanup for critical variables
-    for var in ["OPENAI_API_KEY", "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"]:
+    for var in ["OPENAI_API_KEY", "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "INNGEST_SIGNING_KEY"]:
         val = os.getenv(var, "")
         if val:
             # Remove any residual key name if it was pasted as "KEY=VALUE"
@@ -59,11 +59,11 @@ def load_and_sanitize_env():
                 val = val.split("\n")[0].strip()
             
             if val.strip() != os.environ.get(var):
-                print(f"DEBUG: Updating {var} in os.environ")
                 os.environ[var] = val.strip()
 
-    print(f"DEBUG: Environment sanitized. OPENAI_API_KEY set: {bool(os.environ.get('OPENAI_API_KEY'))}")
-    print(f"DEBUG: SUPABASE_URL: {os.environ.get('SUPABASE_URL')}")
+    # Success indicators for logs
+    # print(f"DEBUG: Environment sanitized. OPENAI_API_KEY set: {bool(os.environ.get('OPENAI_API_KEY'))}")
+    # print(f"DEBUG: SUPABASE_URL: {os.environ.get('SUPABASE_URL')}")
 
 # Execute on import
 load_and_sanitize_env()
