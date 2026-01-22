@@ -209,191 +209,199 @@ export default function ChemicalDetailPage() {
                                 <h2 className="text-2xl font-bold text-slate-900">
                                     {ghs?.product_identifier || chemical.name}
                                 </h2>
-                                {ghs?.supplier_info && (
-                                    <p className="text-slate-500 mt-1">
-                                        Supplier: {ghs.supplier_info}
-                                    </p>
-                                )}
-                            </div>
-                            {signalWord && (
-                                <div className={cn(
-                                    "px-4 py-2 rounded-lg text-lg font-bold uppercase tracking-wider",
-                                    isDanger ? "signal-danger" : "signal-warning"
-                                )}>
-                                    {signalWord}
-                                </div>
-                            )}
-                        </div>
-                    </section>
-
-                    {/* Pictograms */}
-                    {ghs?.pictograms && ghs.pictograms.length > 0 && (
-                        <section className="bg-white rounded-xl border border-slate-200 shadow-sm animate-reveal delay-100 overflow-hidden">
-                            <div className="p-4 border-b border-slate-100">
-                                <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                                    <AlertTriangle className="h-5 w-5 text-amber-500" />
-                                    Hazard Pictograms
-                                </h2>
-                            </div>
-                            <div className="bg-gradient-to-br from-slate-50 to-white p-6">
-                                <PictogramGrid
-                                    pictograms={ghs.pictograms}
-                                    size="lg"
-                                    showLabels
-                                />
-                            </div>
-                        </section>
-                    )}
-
-                    {/* Hazard Statements */}
-                    {ghs?.hazard_statements && ghs.hazard_statements.length > 0 && (
-                        <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal delay-200">
-                            <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                                Hazard Statements (H-Codes)
                             </h2>
-                            <div className="space-y-2">
-                                {ghs.hazard_statements.map((statement, i) => (
-                                    <div
-                                        key={i}
-                                        className="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-lg"
-                                    >
-                                        <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs font-mono font-bold">
-                                            {statement.split(":")[0] || `H${i + 1}`}
-                                        </span>
-                                        <span className="text-slate-700 text-sm">
-                                            {statement.includes(":") ? statement.split(":").slice(1).join(":").trim() : statement}
-                                        </span>
-                                    </div>
-                                ))}
+                            {/* Redundant supplier info removed - already in Record Details */}
+                        </div>
+                        {signalWord && (
+                            <div className={cn(
+                                "px-4 py-2 rounded-lg text-lg font-bold uppercase tracking-wider",
+                                isDanger ? "signal-danger" : "signal-warning"
+                            )}>
+                                {signalWord}
                             </div>
-                        </section>
-                    )}
-
-                    {/* Precautionary Statements - Grouped by Category */}
-                    {ghs?.precautionary_statements && ghs.precautionary_statements.length > 0 && (
-                        <section className="bg-white rounded-xl border border-slate-200 shadow-sm animate-reveal delay-300 overflow-hidden">
-                            <div className="p-4 border-b border-slate-100">
-                                <h2 className="text-lg font-semibold text-slate-900">
-                                    Precautionary Statements (P-Codes)
-                                </h2>
-                            </div>
-                            <div className="p-4 space-y-6">
-                                {(() => {
-                                    const grouped = groupPCodes(ghs.precautionary_statements)
-                                    return (
-                                        <>
-                                            {(["prevention", "response", "storage", "disposal"] as PCodeCategory[]).map(category => {
-                                                const items = grouped[category]
-                                                if (items.length === 0) return null
-                                                const config = CATEGORY_CONFIG[category]
-                                                const Icon = config.icon
-
-                                                return (
-                                                    <div key={category}>
-                                                        <div className="flex items-center gap-2 mb-3">
-                                                            <Icon className={cn(
-                                                                "h-4 w-4",
-                                                                config.color === "sky" && "text-sky-600",
-                                                                config.color === "amber" && "text-amber-600",
-                                                                config.color === "violet" && "text-violet-600",
-                                                                config.color === "slate" && "text-slate-600"
-                                                            )} />
-                                                            <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
-                                                                {config.label}
-                                                            </h3>
-                                                        </div>
-                                                        <div className="space-y-2">
-                                                            {items.map((item, i) => (
-                                                                <div
-                                                                    key={i}
-                                                                    className={cn(
-                                                                        "flex items-start gap-3 p-3 rounded-lg border",
-                                                                        config.color === "sky" && "bg-sky-50 border-sky-100",
-                                                                        config.color === "amber" && "bg-amber-50 border-amber-100",
-                                                                        config.color === "violet" && "bg-violet-50 border-violet-100",
-                                                                        config.color === "slate" && "bg-slate-50 border-slate-200"
-                                                                    )}
-                                                                >
-                                                                    <span className={cn(
-                                                                        "px-2 py-0.5 rounded text-xs font-mono font-bold shrink-0",
-                                                                        config.color === "sky" && "bg-sky-100 text-sky-700",
-                                                                        config.color === "amber" && "bg-amber-100 text-amber-700",
-                                                                        config.color === "violet" && "bg-violet-100 text-violet-700",
-                                                                        config.color === "slate" && "bg-slate-200 text-slate-700"
-                                                                    )}>
-                                                                        {item.code}
-                                                                    </span>
-                                                                    <span className="text-slate-700 text-sm">
-                                                                        {item.statement}
-                                                                    </span>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
-                                        </>
-                                    )
-                                })()}
-                            </div>
-                        </section>
-                    )}
+                        )}
                 </div>
+            </section>
 
-                {/* Sidebar */}
-                <div className="space-y-6">
-                    {/* Validation Panel */}
-                    {chemical.validation_results && (
-                        <div className="animate-reveal delay-100">
-                            <ValidationPanel
-                                validation={chemical.validation_results}
-                                compact
-                            />
-                        </div>
-                    )}
-
-                    {/* Metadata */}
-                    <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal delay-200">
-                        <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                            Record Details
+            {/* Pictograms */}
+            {ghs?.pictograms && ghs.pictograms.length > 0 && (
+                <section className="bg-white rounded-xl border border-slate-200 shadow-sm animate-reveal delay-100 overflow-hidden">
+                    <div className="p-4 border-b border-slate-100">
+                        <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                            <AlertTriangle className="h-5 w-5 text-amber-500" />
+                            Hazard Pictograms
                         </h2>
-                        <div className="space-y-4">
-                            {ghs?.supplier_info && (
-                                <div>
-                                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
-                                        Supplier
-                                    </p>
-                                    <p className="text-slate-900 font-medium">
-                                        {ghs.supplier_info}
-                                    </p>
-                                </div>
-                            )}
-                            <div>
-                                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
-                                    Added
-                                </p>
-                                <p className="text-slate-900 font-medium flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-slate-400" />
-                                    {new Date(chemical.created_at).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
+                    </div>
+                    <div className="bg-gradient-to-br from-slate-50 to-white p-6">
+                        <PictogramGrid
+                            pictograms={ghs.pictograms}
+                            size="lg"
+                            showLabels
+                        />
+                    </div>
+                </section>
+            )}
+
+            {/* Hazard Statements */}
+            {ghs?.hazard_statements && ghs.hazard_statements.length > 0 && (
+                <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal delay-200">
+                    <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                        Hazard Statements (H-Codes)
+                    </h2>
+                    <div className="space-y-2">
+                        {ghs.hazard_statements.map((statement, i) => (
+                            <div
+                                key={i}
+                                className="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-lg"
+                            >
+                                <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs font-mono font-bold">
+                                    {statement.split(":")[0] || `H${i + 1}`}
+                                </span>
+                                <span className="text-slate-700 text-sm">
+                                    {statement.includes(":") ? statement.split(":").slice(1).join(":").trim() : statement}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {/* Precautionary Statements - Grouped by Category */}
+            {ghs?.precautionary_statements && ghs.precautionary_statements.length > 0 && (
+                <section className="bg-white rounded-xl border border-slate-200 shadow-sm animate-reveal delay-300 overflow-hidden">
+                    <div className="p-4 border-b border-slate-100">
+                        <h2 className="text-lg font-semibold text-slate-900">
+                            Precautionary Statements (P-Codes)
+                        </h2>
+                    </div>
+                    <div className="p-4 space-y-6">
+                        {(() => {
+                            const grouped = groupPCodes(ghs.precautionary_statements)
+                            return (
+                                <>
+                                    {(["prevention", "response", "storage", "disposal"] as PCodeCategory[]).map(category => {
+                                        const items = grouped[category]
+                                        if (items.length === 0) return null
+                                        const config = CATEGORY_CONFIG[category]
+                                        const Icon = config.icon
+
+                                        return (
+                                            <div key={category}>
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <Icon className={cn(
+                                                        "h-4 w-4",
+                                                        config.color === "sky" && "text-sky-600",
+                                                        config.color === "amber" && "text-amber-600",
+                                                        config.color === "violet" && "text-violet-600",
+                                                        config.color === "slate" && "text-slate-600"
+                                                    )} />
+                                                    <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
+                                                        {config.label}
+                                                    </h3>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    {items.map((item, i) => (
+                                                        <div
+                                                            key={i}
+                                                            className={cn(
+                                                                "flex items-start gap-3 p-3 rounded-lg border",
+                                                                config.color === "sky" && "bg-sky-50 border-sky-100",
+                                                                config.color === "amber" && "bg-amber-50 border-amber-100",
+                                                                config.color === "violet" && "bg-violet-50 border-violet-100",
+                                                                config.color === "slate" && "bg-slate-50 border-slate-200"
+                                                            )}
+                                                        >
+                                                            <span className={cn(
+                                                                "px-2 py-0.5 rounded text-xs font-mono font-bold shrink-0",
+                                                                config.color === "sky" && "bg-sky-100 text-sky-700",
+                                                                config.color === "amber" && "bg-amber-100 text-amber-700",
+                                                                config.color === "violet" && "bg-violet-100 text-violet-700",
+                                                                config.color === "slate" && "bg-slate-200 text-slate-700"
+                                                            )}>
+                                                                {item.code}
+                                                            </span>
+                                                            <span className="text-slate-700 text-sm">
+                                                                {item.statement}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )
                                     })}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
-                                    Record ID
-                                </p>
-                                <p className="text-slate-500 font-mono text-sm">
-                                    {chemical.id}
-                                </p>
-                            </div>
-                        </div>
-                    </section>
+                                </>
+                            )
+                        })()}
+                    </div>
+                </section>
+            )}
+        </div>
+
+                {/* Sidebar */ }
+    <div className="space-y-6">
+        {/* Validation Panel */}
+        {chemical.validation_results && (
+            <div className="animate-reveal delay-100">
+                <ValidationPanel
+                    validation={chemical.validation_results}
+                    compact
+                />
+            </div>
+        )}
+
+        {/* Metadata */}
+        <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal delay-200">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                Record Details
+            </h2>
+            <div className="space-y-4">
+                {ghs?.supplier_info && (
+                    <div>
+                        <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                            Supplier / Manufacturer
+                        </p>
+                        <p className="text-slate-900 font-medium text-sm leading-relaxed">
+                            {ghs.supplier_info}
+                        </p>
+                    </div>
+                )}
+                {ghs?.sds_date && (
+                    <div>
+                        <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                            SDS Revision Date
+                        </p>
+                        <p className="text-slate-900 font-medium flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-slate-400" />
+                            {ghs.sds_date}
+                        </p>
+                    </div>
+                )}
+                <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                        Added
+                    </p>
+                    <p className="text-slate-900 font-medium flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-slate-400" />
+                        {new Date(chemical.created_at).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })}
+                    </p>
+                </div>
+                <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                        Record ID
+                    </p>
+                    <p className="text-slate-500 font-mono text-sm">
+                        {chemical.id}
+                    </p>
                 </div>
             </div>
-        </div>
+        </section>
+    </div>
+            </div >
+        </div >
     )
 }
 

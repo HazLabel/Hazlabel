@@ -284,7 +284,7 @@ PICTOGRAM_H_CODE_MAP = {
     "GHS06": ["H300", "H301", "H310", "H311", "H330", "H331"],  # Skull and Crossbones (Acute Toxicity)
     "GHS07": ["H302", "H312", "H315", "H317", "H319", "H332", "H335", "H336"],  # Exclamation Mark
     "GHS08": ["H304", "H334", "H340", "H341", "H350", "H351", "H360", "H361", "H370", "H371", "H372", "H373"],  # Health Hazard
-    "GHS09": ["H400", "H401", "H402", "H410", "H411", "H412", "H413", "H420"],  # Environment
+    "GHS09": ["H400", "H410", "H411", "H420"],  # Environment (H412/H413 do not require GHS09)
 }
 
 # EUH Codes (EU-specific supplemental hazard statements)
@@ -399,7 +399,7 @@ def validate_ghs_label(
     if not sw_valid:
         issues.append(ValidationIssue(
             code="SIGNAL_WORD",
-            severity=ValidationSeverity.ERROR,
+            severity=ValidationSeverity.CRITICAL,
             message=f"Signal word should be '{suggested_sw}' based on hazards, found '{signal_word}'",
             suggestion=f"Change signal word to {suggested_sw}"
         ))
@@ -449,11 +449,22 @@ def suggest_pictograms_for_codes(h_codes: List[str]) -> List[str]:
     # Apply GHS Annex 1 precedence rules
     # Rule 1: If GHS06 (skull/crossbones) is present, GHS07 (exclamation) should not appear
     if "GHS06" in suggested and "GHS07" in suggested:
+        # According to GHS, if GHS06 appears, GHS07 is NOT used for acute toxicity, 
+        # skin/eye irritation, or skin sensitization.
+        # But if GHS07 is needed for STOT SE (H335, H336), some jurisdictions keep it.
+        # Standard GHS says discard.
         suggested.discard("GHS07")
     
-    # Rule 2: If GHS05 (corrosion) is present for skin/eye, GHS07 should not appear for skin/eye irritation
+    # Rule 2: If GHS05 (corrosion) is present, GHS07 should not appear for skin/eye IRRITATION
+    # BUT GHS07 MUST remain if required for other hazards like H332 (Acute 4) or H317 (Sensitizer)
     if "GHS05" in suggested and "GHS07" in suggested:
-        suggested.discard("GHS07")
+        # Check if GHS07 is only triggered by H315/H319/H320
+        # If any other GHS07 code is present (like H332), we MUST keep GHS07
+        ghs07_only_irritation = all(code in ["H315", "H319", "H320"] for code in clean_codes if any(code in h_list for p, h_list in PICTOGRAM_H_CODE_MAP.items() if p == "GHS07"))
+        if ghs07_only_irritation:
+            # We also need to check if GHS05 is specifically for Skin/Eye (H314/H318)
+            if any(code in ["H314", "H318"] for code in clean_codes):
+                suggested.discard("GHS07")
     
     # Rule 3: If GHS08 (health hazard) is present for respiratory sensitization, 
     # GHS07 should not appear for skin sensitization or irritation
