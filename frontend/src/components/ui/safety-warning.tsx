@@ -27,39 +27,25 @@ export function SafetyWarning({ className, variant = "default" }: SafetyWarningP
 
     return (
         <div className={cn(
-            "relative overflow-hidden bg-amber-50 border border-amber-200 rounded-2xl p-5 shadow-sm animate-reveal",
+            "flex gap-3 px-4 animate-reveal",
             className
         )}>
-            {/* Background Accent */}
-            <div className="absolute top-0 right-0 -mr-8 -mt-8 opacity-5">
-                <ShieldAlert className="h-32 w-32 text-amber-600" />
+            <div className="flex-shrink-0 mt-0.5">
+                <AlertTriangle className="h-4 w-4 text-slate-400" />
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center gap-4 relative z-10">
-                <div className="flex-shrink-0">
-                    <div className="p-3 bg-amber-100 rounded-xl">
-                        <AlertTriangle className="h-6 w-6 text-amber-600" />
-                    </div>
-                </div>
-
-                <div className="flex-1">
-                    <h4 className="text-amber-900 font-bold text-sm mb-1 uppercase tracking-wider flex items-center gap-2">
-                        Safety Verification Required
-                    </h4>
-                    <p className="text-amber-800 text-sm leading-relaxed max-w-2xl">
-                        HazLabel utilizes AI to extract GHS data. Automated systems can occasionally misinterpret complex SDS formatting. <span className="font-bold">You are responsible for double-checking all pictograms, signal words, and hazard statements against the original source document before printing or label application.</span>
-                    </p>
-                </div>
-
-                <div className="flex-shrink-0 flex items-center gap-3">
+            <div className="flex-1 text-sm text-slate-500">
+                <p className="leading-relaxed">
+                    <span className="font-semibold text-slate-700">Verification Required:</span> AI-extracted data may contain errors.
+                    Always verify against the original SDS before use.
                     <Link
                         href="/disclaimer"
-                        className="text-amber-700 hover:text-amber-900 text-xs font-bold uppercase tracking-tight flex items-center gap-1.5 transition-colors underline underline-offset-4"
+                        className="inline-flex items-center gap-1 ml-2 text-slate-400 hover:text-slate-600 transition-colors underline underline-offset-2"
                     >
                         Legal Terms
                         <ExternalLink className="h-3 w-3" />
                     </Link>
-                </div>
+                </p>
             </div>
         </div>
     )

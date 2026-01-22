@@ -65,7 +65,7 @@ export default function LandingPage() {
                             <div className="animate-reveal">
                                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sm font-medium text-sky-700">
                                     <Sparkles className="h-4 w-4" />
-                                    Powered by GPT-4o + GHS Rev 11
+                                    Powered by GPT-5 + GHS Rev 11
                                 </span>
                             </div>
 
