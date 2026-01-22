@@ -5,6 +5,7 @@ export type GHSLabel = {
     precautionary_statements: string[];
     pictograms: string[];
     supplier_info: string;
+    sds_date?: string;
 };
 
 export type ValidationSeverity = "info" | "warning" | "error" | "critical";
