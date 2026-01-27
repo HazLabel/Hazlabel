@@ -269,10 +269,12 @@ export default function LandingPage() {
                     <div className="max-w-7xl mx-auto px-6 relative">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4 animate-reveal">
-                                Simple, Transparent Pricing
+                                Scalable Compliance for
+                                <br />
+                                <span className="text-sky-600">Teams of All Sizes</span>
                             </h2>
                             <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10 animate-reveal">
-                                Everything you need for industrial compliance in one membership.
+                                Choose the plan that fits your facility's needs. From local labs to global chemical manufacturers.
                             </p>
 
                             {/* Billing Toggle */}
@@ -304,7 +306,8 @@ export default function LandingPage() {
                                     "2 SDS Uploads / Month",
                                     "2 PDF Downloads / Month",
                                     "Standard GHS Pictograms",
-                                    "Community Support"
+                                    "Community Support",
+                                    "Basic Label Templates"
                                 ]}
                             />
                             <PricingCard
@@ -324,17 +327,18 @@ export default function LandingPage() {
                                 billingCycle={billingCycle}
                             />
                             <PricingCard
-                                title="Scale"
+                                title="Enterprise"
                                 price={billingCycle === 'monthly' ? "299" : "239"}
                                 interval={billingCycle === 'monthly' ? "mo" : "mo"}
-                                description="High-volume compliance for growing enterprises."
+                                description="Custom solutions for global organizations."
                                 features={[
                                     billingCycle === 'monthly' ? "15,000 SDS Parsing / Month" : "200,000 SDS Parsing / Year",
-                                    "Unlimited Downloads",
-                                    "GHS Revision 11 Validation",
-                                    "Priority 24/7 Support",
-                                    "Dedicated Account Manager",
-                                    "SSO & Role Control"
+                                    "Multi-site Management",
+                                    "SSO & Role Control",
+                                    "Custom Template Design",
+                                    "Dedicated Compliance Expert",
+                                    "API Access",
+                                    "Unlimited Team Members"
                                 ]}
                                 billingCycle={billingCycle}
                             />
