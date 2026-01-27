@@ -324,15 +324,19 @@ export default function LandingPage() {
                                 billingCycle={billingCycle}
                             />
                             <PricingCard
-                                title="Enterprise"
-                                price="Custom"
-                                description="Custom solutions for global organizations."
+                                title="Scale"
+                                price={billingCycle === 'monthly' ? "299" : "239"}
+                                interval={billingCycle === 'monthly' ? "mo" : "mo"}
+                                description="High-volume compliance for growing enterprises."
                                 features={[
-                                    "Multi-site Management",
-                                    "SSO & Role Control",
-                                    "Custom Template Design",
-                                    "Dedicated Compliance Expert"
+                                    "40,000 SDS Parsing / Month",
+                                    "Unlimited Downloads",
+                                    "GHS Revision 11 Validation",
+                                    "Priority 24/7 Support",
+                                    "Dedicated Account Manager",
+                                    "SSO & Role Control"
                                 ]}
+                                billingCycle={billingCycle}
                             />
                         </div>
                     </div>
