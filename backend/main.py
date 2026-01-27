@@ -13,6 +13,7 @@ from database import save_chemical, get_chemicals, get_chemical_by_id, delete_ch
 from jobs import inngest_client, parse_sds_job
 from printer import generate_avery_5163_pdf
 from dependencies import verify_user
+import webhooks
 # Already imported at top
 
 from validation import (
@@ -56,6 +57,8 @@ app.add_middleware(
 
 # Serve Inngest functions
 inngest.fast_api.serve(app, inngest_client, [parse_sds_job])
+
+app.include_router(webhooks.router)
 
 
 # -----------------------------------------------------------------------------

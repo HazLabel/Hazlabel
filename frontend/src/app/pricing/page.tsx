@@ -18,6 +18,18 @@ import Image from "next/image"
 export default function PricingPage() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
 
+    // Lemon Squeezy Variant IDs
+    const checkoutUrls = {
+        pro: {
+            monthly: process.env.NEXT_PUBLIC_LEMON_CHECKOUT_PRO_MONTHLY || "#",
+            annual: process.env.NEXT_PUBLIC_LEMON_CHECKOUT_PRO_ANNUAL || "#"
+        },
+        enterprise: {
+            monthly: process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_MONTHLY || "#",
+            annual: process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_ANNUAL || "#"
+        }
+    }
+
     return (
         <div className="min-h-screen bg-white text-slate-900">
             {/* Navigation */}
@@ -110,6 +122,7 @@ export default function PricingPage() {
                             ]}
                             highlighted={true}
                             billingCycle={billingCycle}
+                            checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.pro.monthly : checkoutUrls.pro.annual}
                         />
                         <PricingCard
                             title="Enterprise"
@@ -126,6 +139,7 @@ export default function PricingPage() {
                                 "Unlimited Team Members"
                             ]}
                             billingCycle={billingCycle}
+                            checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.enterprise.monthly : checkoutUrls.enterprise.annual}
                         />
                     </div>
 
@@ -220,7 +234,10 @@ function PricingCard({
     features: string[]
     highlighted?: boolean
     interval?: string
+    highlighted?: boolean
+    interval?: string
     billingCycle?: 'monthly' | 'annual'
+    checkoutUrl?: string
 }) {
     return (
         <div className={`p-8 rounded-3xl border ${highlighted ? 'bg-white border-sky-500 shadow-xl shadow-sky-500/10 scale-105 z-10' : 'bg-white border-slate-200'} flex flex-col h-full`}>
@@ -267,9 +284,15 @@ function PricingCard({
                 asChild
                 className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
             >
-                <Link href="/login">
-                    {price === "Custom" ? "Contact Sales" : "Get Started"}
-                </Link>
+                {price === "Custom" ? (
+                    <Link href="/contact">Contact Sales</Link>
+                ) : price === "0" ? (
+                    <Link href="/login">Get Started</Link>
+                ) : (
+                    <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
+                        Subscribe Now
+                    </a>
+                )}
             </Button>
         </div>
     )

@@ -108,3 +108,35 @@ CREATE TRIGGER update_user_settings_updated_at
     BEFORE UPDATE ON user_settings
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================================
+-- Subscriptions Table (Lemon Squeezy)
+-- ============================================================================
+
+CREATE TYPE subscription_status AS ENUM ('active', 'past_due', 'unpaid', 'cancelled', 'expired', 'on_trial', 'paused');
+
+CREATE TABLE IF NOT EXISTS subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    lemon_subscription_id TEXT UNIQUE NOT NULL,
+    lemon_customer_id TEXT NOT NULL,
+    lemon_variant_id TEXT NOT NULL,
+    status subscription_status NOT NULL,
+    renews_at TIMESTAMPTZ,
+    ends_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON subscriptions(user_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_lemon_id ON subscriptions(lemon_subscription_id);
+
+ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own subscription" ON subscriptions
+    FOR SELECT USING (user_id = auth.uid());
+
+CREATE TRIGGER update_subscriptions_updated_at
+    BEFORE UPDATE ON subscriptions
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
