@@ -313,7 +313,7 @@ export default function LandingPage() {
                                 interval={billingCycle === 'monthly' ? "mo" : "mo"}
                                 description="Comprehensive compliance for active facilities."
                                 features={[
-                                    "2000 SDS Parsing / Year",
+                                    billingCycle === 'monthly' ? "200 SDS Parsing / Month" : "2,500 SDS Parsing / Year",
                                     "Unlimited Downloads",
                                     "GHS Revision 11 Validation",
                                     "Revision Tracking",
@@ -329,7 +329,7 @@ export default function LandingPage() {
                                 interval={billingCycle === 'monthly' ? "mo" : "mo"}
                                 description="High-volume compliance for growing enterprises."
                                 features={[
-                                    "40,000 SDS Parsing / Month",
+                                    billingCycle === 'monthly' ? "15,000 SDS Parsing / Month" : "200,000 SDS Parsing / Year",
                                     "Unlimited Downloads",
                                     "GHS Revision 11 Validation",
                                     "Priority 24/7 Support",
@@ -570,8 +570,8 @@ function PricingCard({
                     {price !== "Custom" && price !== "0" && (
                         <div className="flex flex-col ml-2">
                             <span className="text-slate-500 font-medium leading-none">/{interval}</span>
-                            {billingCycle === 'annual' && title === "Professional" && (
-                                <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-tight mt-1">
+                            {billingCycle === 'annual' && (
+                                <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-tight mt-1 whitespace-nowrap">
                                     Billed annually
                                 </span>
                             )}
