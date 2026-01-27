@@ -98,10 +98,10 @@ export default function PricingPage() {
                         <PricingCard
                             title="Professional"
                             price={billingCycle === 'monthly' ? "99" : "79"}
-                            interval="mo"
+                            interval={billingCycle === 'monthly' ? "mo" : "mo"}
                             description="Comprehensive compliance for active facilities."
                             features={[
-                                "2000 SDS Parsing / Year",
+                                billingCycle === 'monthly' ? "200 SDS Parsing / Month" : "2,500 SDS Parsing / Year",
                                 "Unlimited Downloads",
                                 "GHS Revision 11 Validation",
                                 "Revision Tracking",
@@ -113,9 +113,11 @@ export default function PricingPage() {
                         />
                         <PricingCard
                             title="Enterprise"
-                            price="Custom"
+                            price={billingCycle === 'monthly' ? "299" : "239"}
+                            interval={billingCycle === 'monthly' ? "mo" : "mo"}
                             description="Custom solutions for global organizations."
                             features={[
+                                billingCycle === 'monthly' ? "15,000 SDS Parsing / Month" : "200,000 SDS Parsing / Year",
                                 "Multi-site Management",
                                 "SSO & Role Control",
                                 "Custom Template Design",
@@ -123,6 +125,7 @@ export default function PricingPage() {
                                 "API Access",
                                 "Unlimited Team Members"
                             ]}
+                            billingCycle={billingCycle}
                         />
                     </div>
 
@@ -229,19 +232,24 @@ function PricingCard({
                     )}
                 </div>
                 <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-slate-900">{price === "Custom" ? "" : "$"}</span>
+                    <span className="text-4xl font-bold text-slate-900">{price === "Custom" ? "" : "$"}</span>
                     <span className="text-5xl font-bold text-slate-900">{price}</span>
                     {price !== "Custom" && price !== "0" && (
                         <div className="flex flex-col ml-2">
                             <span className="text-slate-500 font-medium leading-none">/{interval}</span>
-                            {billingCycle === 'annual' && title === "Professional" && (
-                                <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-tight mt-1">
+                            {billingCycle === 'annual' && (
+                                <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-tight mt-1 whitespace-nowrap">
                                     Billed annually
                                 </span>
                             )}
                         </div>
                     )}
                 </div>
+                {billingCycle === 'annual' && price !== "0" && price !== "Custom" && (
+                    <p className="text-xs text-slate-400 mt-2 font-medium">
+                        ${parseInt(price) * 12} billed yearly
+                    </p>
+                )}
                 <p className="text-slate-500 mt-4 text-sm leading-relaxed">{description}</p>
             </div>
 

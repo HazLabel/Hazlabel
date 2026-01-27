@@ -582,6 +582,11 @@ function PricingCard({
                         </div>
                     )}
                 </div>
+                {billingCycle === 'annual' && price !== "0" && price !== "Custom" && (
+                    <p className="text-xs text-slate-400 mt-2 font-medium">
+                        ${parseInt(price) * 12} billed yearly
+                    </p>
+                )}
                 <p className="text-slate-500 mt-4 text-sm leading-relaxed">{description}</p>
             </div>
 
