@@ -14,9 +14,11 @@ import {
     Sparkles
 } from "lucide-react"
 import Image from "next/image"
+import { useUser } from "@/hooks/use-user"
 
 export default function PricingPage() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
+    const { user } = useUser()
 
     // Lemon Squeezy Variant IDs
     const checkoutUrls = {
@@ -123,6 +125,7 @@ export default function PricingPage() {
                             highlighted={true}
                             billingCycle={billingCycle}
                             checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.pro.monthly : checkoutUrls.pro.annual}
+                            userId={user?.id}
                         />
                         <PricingCard
                             title="Enterprise"
@@ -140,6 +143,7 @@ export default function PricingPage() {
                             ]}
                             billingCycle={billingCycle}
                             checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.enterprise.monthly : checkoutUrls.enterprise.annual}
+                            userId={user?.id}
                         />
                     </div>
 
@@ -238,6 +242,7 @@ function PricingCard({
     interval?: string
     billingCycle?: 'monthly' | 'annual'
     checkoutUrl?: string
+    userId?: string
 }) {
     return (
         <div className={`p-8 rounded-3xl border ${highlighted ? 'bg-white border-sky-500 shadow-xl shadow-sky-500/10 scale-105 z-10' : 'bg-white border-slate-200'} flex flex-col h-full`}>
@@ -289,7 +294,17 @@ function PricingCard({
                 ) : price === "0" ? (
                     <Link href="/login">Get Started</Link>
                 ) : (
-                    <a href={checkoutUrl} target="_blank" rel="noopener noreferrer">
+                    <a
+                        href={`${checkoutUrl}${userId ? `?checkout[custom][user_id]=${userId}` : ''}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                            if (!userId) {
+                                e.preventDefault()
+                                window.location.href = "/login"
+                            }
+                        }}
+                    >
                         Subscribe Now
                     </a>
                 )}

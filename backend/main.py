@@ -12,7 +12,7 @@ from models import GHSLabel, GHSLabelValidated, ValidationResponse, GHSCodeInfo
 from database import save_chemical, get_chemicals, get_chemical_by_id, delete_chemical, log_audit, get_audit_logs
 from jobs import inngest_client, parse_sds_job
 from printer import generate_avery_5163_pdf
-from dependencies import verify_user
+from dependencies import verify_user, verify_subscription
 import webhooks
 # Already imported at top
 
@@ -479,7 +479,7 @@ LABEL_SIZE_CONFIG = {
 
 
 @app.post("/print/pdf")
-async def bulk_print_pdf(request: BulkPrintRequest, user: User = Depends(verify_user)):
+async def bulk_print_pdf(request: BulkPrintRequest, user: User = Depends(verify_subscription)):
     """Generate GHS-compliant multi-page PDF labels for multiple chemicals."""
     from reportlab.lib.pagesizes import letter
     from reportlab.pdfgen import canvas
