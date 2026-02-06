@@ -244,6 +244,61 @@ function PricingCard({
     checkoutUrl?: string
     userId?: string
 }) {
+    const [isLoading, setIsLoading] = React.useState(false)
+
+    const handleSubscribe = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+
+        if (!userId) {
+            window.location.href = "/login"
+            return
+        }
+
+        // Extract variant ID from checkoutUrl (format: https://hazlabel.lemonsqueezy.com/buy/1283692)
+        const variantId = checkoutUrl?.split('/').pop()
+        if (!variantId) {
+            console.error("Invalid checkout URL")
+            return
+        }
+
+        setIsLoading(true)
+
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
+            const { createClient } = await import('@/utils/supabase/client')
+            const supabase = createClient()
+            const { data: { session } } = await supabase.auth.getSession()
+
+            if (!session) {
+                window.location.href = "/login"
+                return
+            }
+
+            const response = await fetch(
+                `${apiUrl}/subscription/create-checkout?variant_id=${variantId}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${session.access_token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+
+            if (!response.ok) {
+                throw new Error('Failed to create checkout')
+            }
+
+            const { checkout_url } = await response.json()
+            window.location.href = checkout_url
+        } catch (error) {
+            console.error("Checkout error:", error)
+            alert("Failed to create checkout. Please try again.")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <div className={`p-8 rounded-3xl border ${highlighted ? 'bg-white border-sky-500 shadow-xl shadow-sky-500/10 scale-105 z-10' : 'bg-white border-slate-200'} flex flex-col h-full`}>
             <div className="mb-8">
@@ -284,31 +339,32 @@ function PricingCard({
                 ))}
             </ul>
 
-            <Button
-                variant={highlighted ? "default" : "outline"}
-                asChild
-                className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
-            >
-                {price === "Custom" ? (
+            {price === "Custom" ? (
+                <Button
+                    variant={highlighted ? "default" : "outline"}
+                    asChild
+                    className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
+                >
                     <Link href="/contact">Contact Sales</Link>
-                ) : price === "0" ? (
+                </Button>
+            ) : price === "0" ? (
+                <Button
+                    variant={highlighted ? "default" : "outline"}
+                    asChild
+                    className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
+                >
                     <Link href="/login">Get Started</Link>
-                ) : (
-                    <a
-                        href={`${checkoutUrl}${userId ? `?checkout[custom][user_id]=${userId}` : ''}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => {
-                            if (!userId) {
-                                e.preventDefault()
-                                window.location.href = "/login"
-                            }
-                        }}
-                    >
-                        Subscribe Now
-                    </a>
-                )}
-            </Button>
+                </Button>
+            ) : (
+                <Button
+                    variant={highlighted ? "default" : "outline"}
+                    onClick={handleSubscribe}
+                    disabled={isLoading}
+                    className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
+                >
+                    {isLoading ? "Loading..." : "Subscribe Now"}
+                </Button>
+            )}
         </div>
     )
 }

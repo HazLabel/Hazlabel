@@ -1266,6 +1266,84 @@ async def get_customer_portal(user: User = Depends(verify_user)):
         )
 
 
+@app.post("/subscription/create-checkout")
+async def create_checkout(
+    variant_id: str,
+    user: User = Depends(verify_user)
+):
+    """
+    Create a Lemon Squeezy checkout session with user_id embedded.
+    Returns a checkout URL that the frontend can redirect to.
+    """
+    import requests
+
+    api_key = os.environ.get("LEMONSQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Subscription service not configured."
+        )
+
+    # Get store ID from environment or use default
+    store_id = os.environ.get("LEMONSQUEEZY_STORE_ID", "117111")
+
+    try:
+        # Create checkout via Lemon Squeezy API
+        response = requests.post(
+            "https://api.lemonsqueezy.com/v1/checkouts",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            },
+            json={
+                "data": {
+                    "type": "checkouts",
+                    "attributes": {
+                        "checkout_data": {
+                            "custom": {
+                                "user_id": user.id
+                            }
+                        }
+                    },
+                    "relationships": {
+                        "store": {
+                            "data": {
+                                "type": "stores",
+                                "id": store_id
+                            }
+                        },
+                        "variant": {
+                            "data": {
+                                "type": "variants",
+                                "id": variant_id
+                            }
+                        }
+                    }
+                }
+            }
+        )
+
+        if response.status_code != 201:
+            print(f"Lemon Squeezy checkout error: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to create checkout session."
+            )
+
+        checkout_data = response.json()
+        checkout_url = checkout_data["data"]["attributes"]["url"]
+
+        return {"checkout_url": checkout_url}
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to subscription service."
+        )
+
+
 @app.get("/health")
 async def health_check():
     """Simple health check endpoint."""
