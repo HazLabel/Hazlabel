@@ -238,8 +238,6 @@ function PricingCard({
     features: string[]
     highlighted?: boolean
     interval?: string
-    highlighted?: boolean
-    interval?: string
     billingCycle?: 'monthly' | 'annual'
     checkoutUrl?: string
     userId?: string
