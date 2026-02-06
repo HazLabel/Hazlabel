@@ -1,82 +1,96 @@
-# Lemon Squeezy Implementation Plan
+# Lemon Squeezy Implementation Plan (Revised)
 
-This document outlines the plan to integrate Lemon Squeezy subscriptions into the HazLabel platform.
+This document outlines the plan to integrate Lemon Squeezy subscriptions into the HazLabel platform, incorporating specific product details and the requested user flow.
 
-## Current Status
+## Configuration Details
 
-*   **Backend**:
-    *   `backend/webhooks.py` already contains a handler for Lemon Squeezy webhooks (`subscription_created`, `updated`, etc.).
-    *   `backend/database.py` and `schema.sql` already include a `subscriptions` table and `upsert_subscription` logic.
-    *   **Missing**: Logic to generate Customer Portal URLs.
-*   **Frontend**:
-    *   No subscription integration exists.
-    *   `useUser` hook exists but doesn't fetch subscription data.
-    *   No pricing page or checkout initiation.
+**Store URL**: `hazlabel.lemonsqueezy.com`
+**Callback URL**: `https://hazlabel-production.up.railway.app/webhooks/lemon-squeezy`
+
+### Product & Variant IDs
+
+| Plan | Billing | Product ID | Variant ID |
+| :--- | :--- | :--- | :--- |
+| **Professional** | Monthly | 795475 | `1283692` |
+| **Professional** | Annual | 795475 | `1254589` |
+| **Enterprise** | Monthly | 795475 | `1283714` |
+| **Enterprise** | Annual | 795475 | `1283715` |
 
 ## Implementation Steps
 
 ### Phase 1: Environment Configuration
 
-1.  **Lemon Squeezy Setup**:
-    *   Create a Store and a Product (Variant) in Lemon Squeezy.
-    *   Configure Webhooks in Lemon Squeezy to point to `https://api.hazlabel.co/webhooks/lemon-squeezy` (or development URL).
-    *   Select events: `subscription_created`, `subscription_updated`, `subscription_cancelled`, `subscription_expired`.
+1.  **Backend (`.env` in Railway)**:
+    *   `LEMONSQUEEZY_WEBHOOK_SECRET`: Set to the provided secret (`Jai...`).
+    *   `LEMONSQUEEZY_API_KEY`: (Required for Customer Portal) Generate this in Lemon Squeezy settings.
 
-2.  **Environment Variables**:
-    *   **Backend** (`.env`):
-        *   `LEMONSQUEEZY_API_KEY`: Read-write API key for fetching portal URLs.
-        *   `LEMONSQUEEZY_WEBHOOK_SECRET`: Secret for verifying webhook signatures.
-        *   `LEMONSQUEEZY_STORE_ID`: (Optional) For validation.
-    *   **Frontend** (`.env.local`):
-        *   `NEXT_PUBLIC_LEMONSQUEEZY_VARIANT_ID`: The ID of the subscription variant to purchase.
-        *   `NEXT_PUBLIC_LEMONSQUEEZY_STORE_URL`: The base URL for the store (e.g., `https://hazlabel.lemonsqueezy.com`).
+2.  **Frontend (`.env.local`)**:
+    *   `NEXT_PUBLIC_LEMONSQUEEZY_STORE_URL`: `https://hazlabel.lemonsqueezy.com`
+    *   `NEXT_PUBLIC_VARIANT_PROFESSIONAL_MONTHLY`: `1283692`
+    *   `NEXT_PUBLIC_VARIANT_PROFESSIONAL_ANNUAL`: `1254589`
+    *   `NEXT_PUBLIC_VARIANT_ENTERPRISE_MONTHLY`: `1283714`
+    *   `NEXT_PUBLIC_VARIANT_ENTERPRISE_ANNUAL`: `1283715`
 
-### Phase 2: Backend Enhancements
+### Phase 2: User Flow & Frontend Logic
 
-1.  **Customer Portal Endpoint**:
-    *   Create `backend/lemonsqueezy.py` to handle API requests.
-    *   Implement `get_customer_portal_url(lemon_customer_id: str) -> str`.
-        *   This requires calling `GET https://api.lemonsqueezy.com/v1/customers/{id}` and extracting `attributes.urls.customer_portal`.
-    *   Add API endpoint `GET /subscription/portal` in `backend/main.py`.
-        *   Verifies user is logged in.
-        *   Fetches user's subscription from DB.
-        *   Returns the portal URL.
+**User State**: All new users start on a **Free Tier** by default.
 
-### Phase 3: Frontend Implementation
+1.  **Landing Page Modification**:
+    *   Locate the "Get Started" buttons in the Membership/Pricing section.
+    *   **Change**: Update links to redirect to the Sign-In page (`/login` or equivalent).
+    *   *Note*: Users must be authenticated to upgrade.
 
-1.  **Subscription Hook**:
-    *   Create `frontend/src/hooks/use-subscription.ts`.
-    *   Uses Supabase client to query `subscriptions` table for the current user.
-    *   Returns `{ subscription, isLoading, isSubscribed }`.
+2.  **Dashboard Upgrade Flow**:
+    *   Create a **Pricing/Upgrade Modal** or Page accessible from the Dashboard (e.g., via a "Upgrade Plan" button in the sidebar or header).
+    *   **UI Components**:
+        *   Toggle for Monthly vs. Annual billing.
+        *   Card for **Professional Plan** with "Upgrade" button.
+        *   Card for **Enterprise Plan** with "Upgrade" button.
+    *   **Checkout Logic**:
+        *   When clicking "Upgrade", generate the Lemon Squeezy Checkout URL.
+        *   **Crucial**: Pass the `user_id` and `email` in the checkout data.
+        *   URL Format:
+            ```javascript
+            const checkoutUrl = `https://hazlabel.lemonsqueezy.com/checkout/buy/${variantId}?checkout[custom][user_id]=${user.id}&checkout[email]=${user.email}`;
+            window.open(checkoutUrl, '_blank'); // or redirect
+            ```
 
-2.  **Pricing Component**:
-    *   Create `frontend/src/components/pricing-card.tsx`.
-    *   **Logic**:
-        *   If `isSubscribed` is false:
-            *   Render "Subscribe" button.
-            *   Link: `https://store.lemonsqueezy.com/checkout/buy/${VARIANT_ID}?checkout[custom][user_id]=${user.id}&checkout[email]=${user.email}`.
-        *   If `isSubscribed` is true:
-            *   Render "Manage Subscription" button.
-            *   On click, call `GET /subscription/portal` and redirect to the returned URL.
+3.  **Subscription Management (For existing subscribers)**:
+    *   If the user already has an active subscription (checked via `useSubscription` hook):
+        *   Show "Manage Subscription" instead of "Upgrade".
+        *   Clicking this calls the backend endpoint `/subscription/portal`.
 
-3.  **Integration**:
-    *   Add the `PricingCard` to `frontend/src/app/settings/page.tsx` (or create a new Pricing page).
+### Phase 3: Backend Implementation
 
-### Phase 4: Testing & Verification
+1.  **Database**:
+    *   Existing `subscriptions` table is sufficient.
+    *   Ensure `status` column defaults to `active` (for free tier?) or handle "no record" as Free Tier in logic. *Decision: No record in `subscriptions` table = Free Tier.*
 
-1.  **Local Testing**:
-    *   Use `ngrok` or similar to expose local backend for webhooks.
-    *   Perform a test purchase in Lemon Squeezy "Test Mode".
-    *   Verify webhook is received and DB is updated.
-    *   Verify frontend reflects "Subscribed" status.
-    *   Verify "Manage Subscription" link works.
+2.  **API Endpoints**:
+    *   `GET /subscription/portal`:
+        *   Fetch the user's `lemon_customer_id` from the database.
+        *   Call Lemon Squeezy API to get the portal URL.
+        *   Return the URL to the frontend.
 
-## detailed Tasks
+3.  **Webhooks**:
+    *   Verify `backend/webhooks.py` handles the `subscription_created` and `subscription_updated` events.
+    *   Ensure the `upsert_subscription` function correctly maps the `user_id` from `meta.custom_data.user_id` (passed during checkout) to the database record.
 
-- [ ] Add `LEMONSQUEEZY_API_KEY` to backend env.
-- [ ] Add `NEXT_PUBLIC_LEMONSQUEEZY_VARIANT_ID` to frontend env.
-- [ ] Implement `backend/lemonsqueezy.py` for API calls.
-- [ ] Add `GET /subscription/portal` endpoint.
-- [ ] Create `useSubscription` hook in frontend.
-- [ ] Create `PricingCard` component in frontend.
-- [ ] Deploy and configure webhooks in Lemon Squeezy dashboard.
+### Phase 4: Testing Plan
+
+1.  **Environment**: Test locally using `ngrok` to tunnel webhooks.
+2.  **Free User Test**:
+    *   Sign up a new user.
+    *   Verify they can see the Dashboard.
+    *   Verify they see "Upgrade" options.
+3.  **Upgrade Test**:
+    *   Click "Upgrade" (Professional Monthly).
+    *   Complete purchase in Lemon Squeezy Test Mode.
+    *   **Verify**:
+        *   Webhook received by backend.
+        *   Database `subscriptions` table updated with new record.
+        *   Frontend updates to show "Professional" badge/status.
+        *   "Upgrade" button changes to "Manage Subscription".
+4.  **Portal Test**:
+    *   Click "Manage Subscription".
+    *   Verify redirection to Lemon Squeezy Customer Portal.
