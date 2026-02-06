@@ -44,11 +44,12 @@ from fastapi.middleware.cors import CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000", 
+        "http://localhost:3000",
         "http://localhost:3001",
         "https://www.hazlabel.co",
         "https://hazlabel.co",
-        "https://hazlabel.vercel.app"
+        "https://hazlabel.vercel.app",
+        "https://hazlabel-production.up.railway.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
