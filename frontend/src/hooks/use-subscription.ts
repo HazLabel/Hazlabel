@@ -31,8 +31,9 @@ export function useSubscription() {
         }
       }
 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscription/status`,
+        `${apiUrl}/subscription/status`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`

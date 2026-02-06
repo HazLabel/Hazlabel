@@ -24,8 +24,9 @@ export function SubscriptionManagement() {
         return
       }
 
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscription/portal`,
+        `${apiUrl}/subscription/portal`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`
