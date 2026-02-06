@@ -73,12 +73,45 @@ async def parse_sds(
 ):
     """
     Parse a Safety Data Sheet PDF and extract GHS compliance data.
-    
+
     Validates extracted data against UN GHS Revision 11 (2025).
     Optionally saves to the user's chemical vault.
+    Enforces usage limits based on subscription tier (soft limit with grace period).
     """
+    from queries import get_user_subscription, count_monthly_uploads
+
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    # Check usage limits (soft limit: warn at 2, hard block at 5 for free tier)
+    subscription = await get_user_subscription(user.id)
+    monthly_count = await count_monthly_uploads(user.id)
+
+    # Define tier limits: (soft_limit, hard_limit)
+    limits = {
+        None: (2, 5),  # Free tier: warn at 2, block at 5
+        "1283692": (200, None),  # Pro monthly: warn at 200, no hard limit
+        "1254589": (208, None),  # Pro annual
+        "1283714": (15000, None),  # Enterprise monthly
+        "1283715": (16666, None),  # Enterprise annual
+    }
+
+    variant_id = subscription.get("lemon_variant_id") if subscription else None
+    soft_limit, hard_limit = limits.get(variant_id, (2, 5))
+
+    # Hard block at limit (only for free tier)
+    if hard_limit and monthly_count >= hard_limit:
+        raise HTTPException(
+            status_code=403,
+            detail=f"You've exceeded your free tier limit ({hard_limit} uploads/month). Please upgrade your plan to continue."
+        )
+
+    # Soft warning (returned in response header or separate field)
+    approaching_limit = monthly_count >= soft_limit
+    upload_warning = None
+    if approaching_limit and variant_id is None:  # Free tier
+        remaining = hard_limit - monthly_count if hard_limit else 0
+        upload_warning = f"You've reached your free tier limit. {remaining} grace uploads remaining before upgrade required."
 
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
@@ -103,7 +136,16 @@ async def parse_sds(
                     target_id=saved[0].get("id"),
                     details={"name": ghs_data.product_identifier, "source": file.filename}
                 )
-            
+
+        # Add upload warning to response if approaching limit
+        if upload_warning:
+            from fastapi.responses import JSONResponse
+            response = JSONResponse(
+                content=ghs_data.model_dump(),
+                headers={"X-Upload-Warning": upload_warning}
+            )
+            return response
+
         return ghs_data
 
     except Exception as e:
@@ -125,15 +167,45 @@ async def parse_sds_validated(
 ):
     """
     Parse a Safety Data Sheet PDF with comprehensive validation results.
-    
+
     Returns both the extracted GHS label AND detailed validation information including:
     - Signal word validation (prevents fatal "Danger" vs "Warning" mismatches)
     - H-code validation against GHS Revision 11 master database
     - P-code cross-validation (ensures required precautionary codes are present)
     - Suggested pictograms based on hazard codes
+    Enforces usage limits based on subscription tier.
     """
+    from queries import get_user_subscription, count_monthly_uploads
+
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    # Check usage limits
+    subscription = await get_user_subscription(user.id)
+    monthly_count = await count_monthly_uploads(user.id)
+
+    limits = {
+        None: (2, 5),
+        "1283692": (200, None),
+        "1254589": (208, None),
+        "1283714": (15000, None),
+        "1283715": (16666, None),
+    }
+
+    variant_id = subscription.get("lemon_variant_id") if subscription else None
+    soft_limit, hard_limit = limits.get(variant_id, (2, 5))
+
+    if hard_limit and monthly_count >= hard_limit:
+        raise HTTPException(
+            status_code=403,
+            detail=f"You've exceeded your free tier limit ({hard_limit} uploads/month). Please upgrade your plan to continue."
+        )
+
+    approaching_limit = monthly_count >= soft_limit
+    upload_warning = None
+    if approaching_limit and variant_id is None:
+        remaining = hard_limit - monthly_count if hard_limit else 0
+        upload_warning = f"You've reached your free tier limit. {remaining} grace uploads remaining before upgrade required."
 
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
@@ -154,7 +226,16 @@ async def parse_sds_validated(
                 result.label,
                 needs_review=result.validation.needs_review
             )
-            
+
+        # Add upload warning to response if approaching limit
+        if upload_warning:
+            from fastapi.responses import JSONResponse
+            response = JSONResponse(
+                content=result.model_dump(),
+                headers={"X-Upload-Warning": upload_warning}
+            )
+            return response
+
         return result
 
     except Exception as e:
@@ -1074,6 +1155,114 @@ async def root():
             "Avery 5163 PDF generation"
         ]
     }
+
+
+# -----------------------------------------------------------------------------
+# Subscription Endpoints
+# -----------------------------------------------------------------------------
+
+@app.get("/subscription/status")
+async def get_subscription_status(user: User = Depends(verify_user)):
+    """
+    Get current user's subscription status and usage stats.
+    Returns tier, status, and monthly upload count.
+    """
+    from queries import get_user_subscription, count_monthly_uploads
+
+    subscription = await get_user_subscription(user.id)
+    monthly_uploads = await count_monthly_uploads(user.id)
+
+    # Map variant_id to plan name and limits
+    variant_to_plan = {
+        "1283692": ("professional", 200),  # Pro monthly
+        "1254589": ("professional", 208),  # Pro annual (~2500/12)
+        "1283714": ("enterprise", 15000),  # Enterprise monthly
+        "1283715": ("enterprise", 16666),  # Enterprise annual (~200k/12)
+    }
+
+    if not subscription:
+        return {
+            "tier": "free",
+            "status": None,
+            "variant_id": None,
+            "renews_at": None,
+            "ends_at": None,
+            "monthly_uploads": monthly_uploads,
+            "upload_limit": 2
+        }
+
+    variant_id = subscription.get("lemon_variant_id")
+    tier, limit = variant_to_plan.get(variant_id, ("unknown", 2))
+
+    return {
+        "tier": tier,
+        "status": subscription.get("status"),
+        "variant_id": variant_id,
+        "renews_at": subscription.get("renews_at"),
+        "ends_at": subscription.get("ends_at"),
+        "monthly_uploads": monthly_uploads,
+        "upload_limit": limit
+    }
+
+
+@app.get("/subscription/portal")
+async def get_customer_portal(user: User = Depends(verify_user)):
+    """
+    Generate Lemon Squeezy Customer Portal URL for subscription management.
+    Allows users to update payment methods, view invoices, and cancel subscriptions.
+    """
+    from queries import get_user_subscription
+    import requests
+
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        raise HTTPException(
+            status_code=404,
+            detail="No active subscription found. Please subscribe to a plan first."
+        )
+
+    api_key = os.environ.get("LEMONSQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Subscription management temporarily unavailable."
+        )
+
+    customer_id = subscription.get("lemon_customer_id")
+
+    try:
+        # Call Lemon Squeezy API to get customer portal URL
+        response = requests.post(
+            f"https://api.lemonsqueezy.com/v1/customers/{customer_id}/portal",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            }
+        )
+
+        if response.status_code != 200:
+            print(f"Lemon Squeezy API error: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to generate portal URL. Please try again later."
+            )
+
+        portal_data = response.json()
+        portal_url = portal_data.get("data", {}).get("attributes", {}).get("url")
+
+        if not portal_url:
+            raise HTTPException(status_code=500, detail="Invalid portal response from Lemon Squeezy")
+
+        return {"portal_url": portal_url}
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to subscription service."
+        )
 
 
 @app.get("/health")

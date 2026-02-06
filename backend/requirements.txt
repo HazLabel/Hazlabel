@@ -10,3 +10,4 @@ supabase
 inngest
 reportlab
 zpl
+requests

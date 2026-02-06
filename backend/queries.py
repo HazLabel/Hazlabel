@@ -1,6 +1,6 @@
 from database import supabase
 from typing import Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 
 async def upsert_subscription(data: Dict[str, Any]):
     """
@@ -50,3 +50,22 @@ async def get_user_subscription(user_id: str):
         return result.data
     except Exception:
         return None
+
+async def count_monthly_uploads(user_id: str) -> int:
+    """Count SDS uploads in the current month."""
+    # Get first day of current month
+    now = datetime.now()
+    first_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    try:
+        result = supabase.table("audit_logs")\
+            .select("*", count="exact")\
+            .eq("user_id", user_id)\
+            .eq("action", "chemical.created")\
+            .gte("created_at", first_of_month.isoformat())\
+            .execute()
+
+        return result.count or 0
+    except Exception as e:
+        print(f"Error counting uploads: {e}")
+        return 0

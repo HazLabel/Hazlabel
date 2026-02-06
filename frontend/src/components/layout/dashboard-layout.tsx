@@ -7,6 +7,7 @@ import { AppSidebar } from "@/components/layout/app-sidebar"
 import { Bell, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useUser } from "@/hooks/use-user"
+import { useSubscription } from "@/hooks/use-subscription"
 import { UploadModal } from "@/components/inventory/upload-modal"
 
 // Loading component to prevent hydration mismatch
@@ -29,6 +30,7 @@ export default function DashboardLayout({
     children: React.ReactNode
 }) {
     const { user, loading } = useUser()
+    const { data: subscription } = useSubscription()
     const router = useRouter()
     const [mounted, setMounted] = useState(false)
 
@@ -91,8 +93,16 @@ export default function DashboardLayout({
                                             <p className="text-sm font-medium text-slate-900 leading-tight">
                                                 {user.email?.split('@')[0]}
                                             </p>
-                                            <p className="text-[10px] text-slate-500">
-                                                Pro Plan
+                                            <p className="text-[10px] text-slate-500 capitalize flex items-center gap-1.5">
+                                                {subscription?.tier || 'Free'}
+                                                {subscription?.tier !== 'free' && subscription?.tier && (
+                                                    <span className="inline-block h-1 w-1 rounded-full bg-emerald-500"></span>
+                                                )}
+                                                {subscription?.monthly_uploads !== undefined && subscription?.upload_limit && (
+                                                    <span className="text-[9px]">
+                                                        {subscription.monthly_uploads}/{subscription.upload_limit}
+                                                    </span>
+                                                )}
                                             </p>
                                         </div>
                                     </div>

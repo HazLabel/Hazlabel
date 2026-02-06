@@ -26,10 +26,12 @@ import {
     Eye,
     EyeOff,
     Key,
-    X
+    X,
+    CreditCard
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { SubscriptionManagement } from "@/components/subscription-management"
 
 // PDF Label Size Options
 const LABEL_SIZE_OPTIONS = {
@@ -487,6 +489,21 @@ export default function SettingsPage() {
                         />
                     </button>
                 </div>
+            </section>
+
+            {/* Subscription & Billing */}
+            <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal delay-350">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 rounded-lg bg-emerald-50">
+                        <CreditCard className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-semibold text-slate-900">Subscription & Billing</h2>
+                        <p className="text-sm text-slate-500">Manage your plan and payment details</p>
+                    </div>
+                </div>
+
+                <SubscriptionManagement />
             </section>
 
             {/* Security */}
