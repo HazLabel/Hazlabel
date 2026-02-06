@@ -32,7 +32,7 @@ export function useSubscription() {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/subscription/status`,
+        `${process.env.NEXT_PUBLIC_API_URL}/subscription/status`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`

@@ -25,7 +25,7 @@ export function SubscriptionManagement() {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/subscription/portal`,
+        `${process.env.NEXT_PUBLIC_API_URL}/subscription/portal`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`
