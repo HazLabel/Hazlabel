@@ -230,7 +230,9 @@ function PricingCard({
     features,
     highlighted = false,
     interval = "mo",
-    billingCycle = "monthly"
+    billingCycle = "monthly",
+    checkoutUrl,
+    userId
 }: {
     title: string
     price: string
