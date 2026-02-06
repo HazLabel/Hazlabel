@@ -1304,6 +1304,9 @@ async def create_checkout(
                             "custom": {
                                 "user_id": user.id
                             }
+                        },
+                        "product_options": {
+                            "enabled_variants": [int(variant_id)]
                         }
                     },
                     "relationships": {
