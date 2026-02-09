@@ -1288,6 +1288,8 @@ async def create_checkout(
     store_id = os.environ.get("LEMONSQUEEZY_STORE_ID", "117111")
 
     try:
+        print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}")
+
         # Create checkout via Lemon Squeezy API
         response = requests.post(
             "https://api.lemonsqueezy.com/v1/checkouts",
@@ -1300,9 +1302,10 @@ async def create_checkout(
                 "data": {
                     "type": "checkouts",
                     "attributes": {
+                        "custom_price": None,
                         "checkout_data": {
                             "custom": {
-                                "user_id": user.id
+                                "user_id": str(user.id)
                             }
                         },
                         "product_options": {
@@ -1313,13 +1316,13 @@ async def create_checkout(
                         "store": {
                             "data": {
                                 "type": "stores",
-                                "id": store_id
+                                "id": str(store_id)
                             }
                         },
                         "variant": {
                             "data": {
                                 "type": "variants",
-                                "id": variant_id
+                                "id": str(variant_id)
                             }
                         }
                     }
@@ -1336,6 +1339,9 @@ async def create_checkout(
 
         checkout_data = response.json()
         checkout_url = checkout_data["data"]["attributes"]["url"]
+
+        print(f"Checkout created successfully: {checkout_url}")
+        print(f"Custom data in response: {checkout_data['data']['attributes'].get('checkout_data', {})}")
 
         return {"checkout_url": checkout_url}
 
