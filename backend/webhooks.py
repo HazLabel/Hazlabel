@@ -25,25 +25,36 @@ async def verify_signature(request: Request, x_signature: str = Header(None)):
     """
     Verify the Lemon Squeezy webhook signature.
     """
+    print(f"[SIGNATURE DEBUG] Received X-Signature header: {x_signature[:20] if x_signature else 'None'}...")
+
     if not x_signature:
+        print("[SIGNATURE ERROR] No X-Signature header provided")
         raise HTTPException(status_code=401, detail="No signature provided")
-        
+
     if not LEMON_SQUEEZY_WEBHOOK_SECRET:
         print("WARNING: LEMONSQUEEZY_WEBHOOK_SECRET not set")
-        # In production this should probably fail, but for dev we might be lax? 
-        # No, security first.
         raise HTTPException(status_code=500, detail="Server misconfigured")
 
     body = await request.body()
-    
+    print(f"[SIGNATURE DEBUG] Request body length: {len(body)} bytes")
+    print(f"[SIGNATURE DEBUG] Body preview: {body[:100]}...")
+    print(f"[SIGNATURE DEBUG] Secret configured: {LEMON_SQUEEZY_WEBHOOK_SECRET[:4]}...{LEMON_SQUEEZY_WEBHOOK_SECRET[-2:]}")
+
     # Create digest
     digest = hmac.new(
         LEMON_SQUEEZY_WEBHOOK_SECRET.encode('utf-8'),
         body,
         hashlib.sha256
     ).hexdigest()
-    
+
+    print(f"[SIGNATURE DEBUG] Expected signature: {digest[:20]}...")
+    print(f"[SIGNATURE DEBUG] Received signature: {x_signature[:20] if x_signature else 'None'}...")
+    print(f"[SIGNATURE DEBUG] Signatures match: {hmac.compare_digest(digest, x_signature)}")
+
     if not hmac.compare_digest(digest, x_signature):
+        print(f"[SIGNATURE ERROR] Signature mismatch!")
+        print(f"[SIGNATURE ERROR] Expected: {digest}")
+        print(f"[SIGNATURE ERROR] Received: {x_signature}")
         raise HTTPException(status_code=401, detail="Invalid signature")
 
 @router.post("/webhooks/lemon-squeezy")
