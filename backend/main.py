@@ -1223,7 +1223,7 @@ async def get_customer_portal(user: User = Depends(verify_user)):
             detail="No active subscription found. Please subscribe to a plan first."
         )
 
-    api_key = os.environ.get("LEMONSQUEEZY_API_KEY")
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
     if not api_key:
         raise HTTPException(
             status_code=500,
@@ -1277,7 +1277,7 @@ async def create_checkout(
     """
     import requests
 
-    api_key = os.environ.get("LEMONSQUEEZY_API_KEY")
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
     if not api_key:
         raise HTTPException(
             status_code=500,
@@ -1285,7 +1285,7 @@ async def create_checkout(
         )
 
     # Get store ID from environment or use default
-    store_id = os.environ.get("LEMONSQUEEZY_STORE_ID", "117111")
+    store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID", "117111")
 
     try:
         print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}")
