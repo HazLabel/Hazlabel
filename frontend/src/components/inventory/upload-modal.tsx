@@ -136,6 +136,7 @@ export function UploadModal() {
 
         setIsUploading(false)
         queryClient.invalidateQueries({ queryKey: ["chemicals"] })
+        queryClient.invalidateQueries({ queryKey: ["subscription"] })
 
         // Close modal after a brief delay if all successful
         const allSuccess = files.every(f => f.status === "success" || f.status === "pending")
