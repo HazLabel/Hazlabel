@@ -7,7 +7,7 @@ from queries import upsert_subscription
 
 router = APIRouter()
 
-LEMON_SQUEEZY_WEBHOOK_SECRET = os.environ.get("LEMONSQUEEZY_WEBHOOK_SECRET")
+LEMON_SQUEEZY_WEBHOOK_SECRET = os.environ.get("LEMON_SQUEEZY_WEBHOOK_SECRET")
 
 @router.get("/webhooks/lemon-squeezy/health")
 async def webhook_health_check():
