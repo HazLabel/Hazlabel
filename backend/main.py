@@ -1233,9 +1233,9 @@ async def get_customer_portal(user: User = Depends(verify_user)):
     customer_id = subscription.get("lemon_customer_id")
 
     try:
-        # Call Lemon Squeezy API to get customer portal URL
-        response = requests.post(
-            f"https://api.lemonsqueezy.com/v1/customers/{customer_id}/portal",
+        # Call Lemon Squeezy API to get customer data with portal URL
+        response = requests.get(
+            f"https://api.lemonsqueezy.com/v1/customers/{customer_id}",
             headers={
                 "Accept": "application/vnd.api+json",
                 "Content-Type": "application/vnd.api+json",
@@ -1250,11 +1250,14 @@ async def get_customer_portal(user: User = Depends(verify_user)):
                 detail="Failed to generate portal URL. Please try again later."
             )
 
-        portal_data = response.json()
-        portal_url = portal_data.get("data", {}).get("attributes", {}).get("url")
+        customer_data = response.json()
+        portal_url = customer_data.get("data", {}).get("attributes", {}).get("urls", {}).get("customer_portal")
 
         if not portal_url:
-            raise HTTPException(status_code=500, detail="Invalid portal response from Lemon Squeezy")
+            raise HTTPException(
+                status_code=500,
+                detail="No customer portal available. Please ensure you have an active subscription."
+            )
 
         return {"portal_url": portal_url}
 
