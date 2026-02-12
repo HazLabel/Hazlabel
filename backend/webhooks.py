@@ -9,6 +9,18 @@ router = APIRouter()
 
 LEMON_SQUEEZY_WEBHOOK_SECRET = os.environ.get("LEMONSQUEEZY_WEBHOOK_SECRET")
 
+@router.get("/webhooks/lemon-squeezy/health")
+async def webhook_health_check():
+    """
+    Health check endpoint to verify webhook URL is reachable.
+    Lemon Squeezy may ping this to verify the endpoint before activating webhooks.
+    """
+    return {
+        "status": "ok",
+        "message": "Lemon Squeezy webhook endpoint is reachable",
+        "webhook_secret_configured": bool(LEMON_SQUEEZY_WEBHOOK_SECRET)
+    }
+
 async def verify_signature(request: Request, x_signature: str = Header(None)):
     """
     Verify the Lemon Squeezy webhook signature.
@@ -40,22 +52,34 @@ async def lemon_squeezy_webhook(request: Request, x_signature: str = Header(None
     Handle Lemon Squeezy webhooks.
     Supported events: subscription_created, subscription_updated, subscription_cancelled
     """
-    await verify_signature(request, x_signature)
-    
+    print(f"[WEBHOOK] Received webhook request from {request.client.host if request.client else 'unknown'}")
+
+    try:
+        await verify_signature(request, x_signature)
+        print(f"[WEBHOOK] Signature verified successfully")
+    except HTTPException as e:
+        print(f"[WEBHOOK ERROR] Signature verification failed: {e.detail}")
+        raise
+
     payload = await request.json()
     data = payload.get("data", {})
     attributes = data.get("attributes", {})
     event_name = payload.get("meta", {}).get("event_name")
     custom_data = payload.get("meta", {}).get("custom_data", {})
-    
-    print(f"Received webhook: {event_name}")
-    
+
+    print(f"[WEBHOOK] Event: {event_name}")
+    print(f"[WEBHOOK] Subscription ID: {data.get('id')}")
+    print(f"[WEBHOOK] Customer ID: {attributes.get('customer_id')}")
+    print(f"[WEBHOOK] Variant ID: {attributes.get('variant_id')}")
+    print(f"[WEBHOOK] Status: {attributes.get('status')}")
+    print(f"[WEBHOOK] Custom data: {custom_data}")
+
     if event_name in ["subscription_created", "subscription_updated", "subscription_cancelled", "subscription_expired", "subscription_resumed"]:
-        
+
         # Map Lemon Squeezy status to our DB enum
         # LS statuses: on_trial, active, paused, past_due, unpaid, cancelled, expired
         status = attributes.get("status")
-        
+
         # Prepare DB record
         subscription_data = {
             "lemon_subscription_id": str(data.get("id")),
@@ -65,22 +89,31 @@ async def lemon_squeezy_webhook(request: Request, x_signature: str = Header(None
             "renews_at": attributes.get("renews_at"),
             "ends_at": attributes.get("ends_at"),
         }
-        
+
         # Only set user_id on creation or if present in custom_data
         # We assume custom_data contains user_id passed during checkout
         user_id = custom_data.get("user_id")
         if user_id:
             subscription_data["user_id"] = user_id
-            
-        # If it's an update and we don't have user_id, it needs to exist already. 
-        # upsert_subscription handles the check.
-        
-        result = await upsert_subscription(subscription_data)
-        
-        if result:
-             return {"status": "processed", "event": event_name}
+            print(f"[WEBHOOK] Processing for user_id: {user_id}")
         else:
-             # If we tried to update a non-existent sub without user_id, it failed silentish
-             return {"status": "ignored", "reason": "updated failed or missing user_id"}
+            print(f"[WEBHOOK WARNING] No user_id found in custom_data")
 
+        # If it's an update and we don't have user_id, it needs to exist already.
+        # upsert_subscription handles the check.
+
+        try:
+            result = await upsert_subscription(subscription_data)
+
+            if result:
+                print(f"[WEBHOOK SUCCESS] Subscription upserted successfully")
+                return {"status": "processed", "event": event_name}
+            else:
+                print(f"[WEBHOOK ERROR] Subscription upsert failed")
+                return {"status": "ignored", "reason": "upsert failed or missing user_id"}
+        except Exception as e:
+            print(f"[WEBHOOK ERROR] Exception during upsert: {str(e)}")
+            raise
+
+    print(f"[WEBHOOK] Event type '{event_name}' not handled, ignoring")
     return {"status": "ignored", "event": event_name}
