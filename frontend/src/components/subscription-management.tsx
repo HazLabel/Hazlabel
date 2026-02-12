@@ -3,53 +3,12 @@
 import { useSubscription } from "@/hooks/use-subscription"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Loader2, Sparkles, TrendingUp } from "lucide-react"
-import { createClient } from "@/utils/supabase/client"
-import { toast } from "sonner"
-import { useState } from "react"
+import { Loader2, Sparkles, TrendingUp } from "lucide-react"
+import { BillingDialog } from "@/components/billing-dialog"
 import Link from "next/link"
 
 export function SubscriptionManagement() {
-  const { data: subscription, isLoading } = useSubscription()
-  const [portalLoading, setPortalLoading] = useState(false)
-
-  const handleManageSubscription = async () => {
-    setPortalLoading(true)
-    try {
-      const supabase = createClient()
-      const { data: { session } } = await supabase.auth.getSession()
-
-      if (!session) {
-        toast.error("Please sign in to manage your subscription")
-        return
-      }
-
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
-      const response = await fetch(
-        `${apiUrl}/subscription/portal`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.access_token}`
-          }
-        }
-      )
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.detail || "Failed to get portal URL")
-      }
-
-      const { portal_url } = await response.json()
-      window.open(portal_url, '_blank')
-    } catch (error) {
-      console.error("Portal error:", error)
-      toast.error(
-        error instanceof Error ? error.message : "Failed to open subscription portal"
-      )
-    } finally {
-      setPortalLoading(false)
-    }
-  }
+  const { data: subscription, isLoading, refetch } = useSubscription()
 
   if (isLoading) {
     return (
@@ -122,25 +81,14 @@ export function SubscriptionManagement() {
               </Link>
             </Button>
           ) : (
-            <Button
-              onClick={handleManageSubscription}
-              disabled={portalLoading}
-              variant="outline"
-              size="sm"
-              className="gap-2 border-slate-300 hover:bg-slate-50"
-            >
-              {portalLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Loading...
-                </>
-              ) : (
-                <>
-                  <ExternalLink className="h-4 w-4" />
-                  Manage Subscription
-                </>
-              )}
-            </Button>
+            <BillingDialog
+              subscription={{
+                tier: subscription?.tier || 'free',
+                status: subscription?.status || 'active',
+                renews_at: subscription?.renews_at
+              }}
+              onUpdate={() => refetch()}
+            />
           )}
         </div>
 
