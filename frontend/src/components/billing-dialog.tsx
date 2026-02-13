@@ -29,7 +29,9 @@ import {
   XCircle,
   PlayCircle,
   ExternalLink,
-  Download
+  Download,
+  ArrowUpCircle,
+  RefreshCw
 } from "lucide-react"
 
 interface BillingDialogProps {
@@ -37,6 +39,7 @@ interface BillingDialogProps {
     tier: string
     status: string
     renews_at?: string
+    variant_id?: string
   }
   onUpdate?: () => void
 }
@@ -209,7 +212,91 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
     }
   }
 
+  const handleChangePlan = async (variantId: string, planName: string) => {
+    setLoading(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        toast.error("Please sign in to manage your subscription")
+        return
+      }
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
+      const response = await fetch(
+        `${apiUrl}/subscription/change-plan?variant_id=${variantId}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${session.access_token}`
+          }
+        }
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.detail || "Failed to change plan")
+      }
+
+      toast.success("Plan Updated", {
+        description: `Switched to ${planName}. Changes take effect on next billing cycle.`
+      })
+
+      setOpen(false)
+      onUpdate?.()
+    } catch (error) {
+      console.error("Plan change error:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Failed to change plan"
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const isCancelled = subscription?.status === 'cancelled'
+
+  // Plan configurations
+  const plans = {
+    professional: {
+      monthly: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_MONTHLY || '1254588', name: 'Professional Monthly' },
+      annual: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_ANNUAL || '1254589', name: 'Professional Annual' }
+    },
+    enterprise: {
+      monthly: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_MONTHLY || '1283714', name: 'Enterprise Monthly' },
+      annual: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_ANNUAL || '1283715', name: 'Enterprise Annual' }
+    }
+  }
+
+  const currentVariantId = subscription?.variant_id
+  const currentTier = subscription?.tier || 'free'
+
+  // Determine current billing cycle
+  const isMonthly = currentVariantId === plans.professional.monthly.id || currentVariantId === plans.enterprise.monthly.id
+  const isAnnual = currentVariantId === plans.professional.annual.id || currentVariantId === plans.enterprise.annual.id
+
+  // Available plan switches
+  const availableSwitches = []
+
+  if (currentTier === 'professional') {
+    // Can switch between monthly/annual or upgrade to enterprise
+    if (isMonthly) {
+      availableSwitches.push({ ...plans.professional.annual, type: 'cycle', label: 'Switch to Annual (Save 17%)' })
+    } else if (isAnnual) {
+      availableSwitches.push({ ...plans.professional.monthly, type: 'cycle', label: 'Switch to Monthly' })
+    }
+    availableSwitches.push({
+      ...(isMonthly ? plans.enterprise.monthly : plans.enterprise.annual),
+      type: 'upgrade',
+      label: 'Upgrade to Enterprise'
+    })
+  } else if (currentTier === 'enterprise') {
+    // Can switch between monthly/annual
+    if (isMonthly) {
+      availableSwitches.push({ ...plans.enterprise.annual, type: 'cycle', label: 'Switch to Annual (Save 17%)' })
+    } else if (isAnnual) {
+      availableSwitches.push({ ...plans.enterprise.monthly, type: 'cycle', label: 'Switch to Monthly' })
+    }
+  }
 
   return (
     <>
@@ -257,6 +344,42 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
                 )}
               </Button>
             </div>
+
+            {/* Plan Switching Options */}
+            {availableSwitches.length > 0 && !isCancelled && (
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold text-slate-700 px-1">Change Plan</h3>
+                {availableSwitches.map((plan) => (
+                  <button
+                    key={plan.id}
+                    onClick={() => handleChangePlan(plan.id, plan.name)}
+                    disabled={loading}
+                    className="w-full flex items-start gap-3 p-4 rounded-lg border border-slate-200 hover:border-sky-300 hover:bg-sky-50/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <div className={`p-2 rounded-lg ${plan.type === 'upgrade' ? 'bg-violet-100' : 'bg-sky-100'}`}>
+                      {plan.type === 'upgrade' ? (
+                        <ArrowUpCircle className="h-5 w-5 text-violet-600" />
+                      ) : (
+                        <RefreshCw className="h-5 w-5 text-sky-600" />
+                      )}
+                    </div>
+                    <div className="flex-1 text-left">
+                      <p className="font-semibold text-slate-900 text-sm">{plan.label}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        {plan.type === 'upgrade'
+                          ? 'Get unlimited uploads and priority support'
+                          : 'Changes take effect on next billing cycle'}
+                      </p>
+                    </div>
+                    {loading ? (
+                      <Loader2 className="h-5 w-5 animate-spin text-slate-400 shrink-0" />
+                    ) : (
+                      <ExternalLink className="h-4 w-4 text-slate-400 shrink-0" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Invoices */}
             <div className="border border-slate-200 rounded-lg overflow-hidden">

@@ -1604,6 +1604,74 @@ async def get_update_payment_url(user: User = Depends(verify_user)):
         )
 
 
+@app.post("/subscription/change-plan")
+async def change_subscription_plan(
+    variant_id: str,
+    user: User = Depends(verify_user)
+):
+    """
+    Change the user's subscription to a different plan (upgrade/downgrade or switch billing cycle).
+    """
+    from queries import get_user_subscription
+    import requests
+
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        raise HTTPException(
+            status_code=404,
+            detail="No active subscription found."
+        )
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Subscription management temporarily unavailable."
+        )
+
+    lemon_subscription_id = subscription.get("lemon_subscription_id")
+
+    try:
+        # Update subscription variant via Lemon Squeezy API
+        response = requests.patch(
+            f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            },
+            json={
+                "data": {
+                    "type": "subscriptions",
+                    "id": str(lemon_subscription_id),
+                    "attributes": {
+                        "variant_id": int(variant_id)
+                    }
+                }
+            }
+        )
+
+        if response.status_code != 200:
+            print(f"Lemon Squeezy plan change error: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to change plan. Please try again later."
+            )
+
+        return {
+            "success": True,
+            "message": "Plan updated successfully. Changes will take effect on next billing cycle."
+        }
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to subscription service."
+        )
+
+
 @app.get("/health")
 async def health_check():
     """Simple health check endpoint."""

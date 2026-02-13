@@ -85,7 +85,8 @@ export function SubscriptionManagement() {
               subscription={{
                 tier: subscription?.tier || 'free',
                 status: subscription?.status || 'active',
-                renews_at: subscription?.renews_at || undefined
+                renews_at: subscription?.renews_at || undefined,
+                variant_id: subscription?.variant_id || undefined
               }}
               onUpdate={() => refetch()}
             />
