@@ -1307,6 +1307,7 @@ async def create_checkout(
                     "attributes": {
                         "custom_price": None,
                         "checkout_data": {
+                            "email": user.email,  # Pre-fill customer email
                             "custom": {
                                 "user_id": str(user.id)
                             }
@@ -1347,6 +1348,253 @@ async def create_checkout(
         print(f"Custom data in response: {checkout_data['data']['attributes'].get('checkout_data', {})}")
 
         return {"checkout_url": checkout_url}
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to subscription service."
+        )
+
+
+@app.post("/subscription/cancel")
+async def cancel_subscription(user: User = Depends(verify_user)):
+    """
+    Cancel the user's active subscription via Lemon Squeezy API.
+    Subscription remains active until the end of the billing period.
+    """
+    from queries import get_user_subscription
+    import requests
+
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        raise HTTPException(
+            status_code=404,
+            detail="No active subscription found."
+        )
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Subscription management temporarily unavailable."
+        )
+
+    lemon_subscription_id = subscription.get("lemon_subscription_id")
+
+    try:
+        # Cancel subscription via Lemon Squeezy API
+        response = requests.delete(
+            f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            }
+        )
+
+        if response.status_code not in [200, 204]:
+            print(f"Lemon Squeezy cancel error: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to cancel subscription. Please try again later."
+            )
+
+        # Webhook will update the database status
+        return {
+            "success": True,
+            "message": "Subscription cancelled. Access continues until end of billing period."
+        }
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to subscription service."
+        )
+
+
+@app.post("/subscription/resume")
+async def resume_subscription(user: User = Depends(verify_user)):
+    """
+    Resume a cancelled subscription before it expires.
+    """
+    from queries import get_user_subscription
+    import requests
+
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        raise HTTPException(
+            status_code=404,
+            detail="No subscription found."
+        )
+
+    if subscription.get("status") != "cancelled":
+        raise HTTPException(
+            status_code=400,
+            detail="Only cancelled subscriptions can be resumed."
+        )
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Subscription management temporarily unavailable."
+        )
+
+    lemon_subscription_id = subscription.get("lemon_subscription_id")
+
+    try:
+        # Resume subscription via Lemon Squeezy API
+        response = requests.patch(
+            f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            },
+            json={
+                "data": {
+                    "type": "subscriptions",
+                    "id": str(lemon_subscription_id),
+                    "attributes": {
+                        "cancelled": False
+                    }
+                }
+            }
+        )
+
+        if response.status_code != 200:
+            print(f"Lemon Squeezy resume error: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to resume subscription. Please try again later."
+            )
+
+        return {
+            "success": True,
+            "message": "Subscription resumed successfully."
+        }
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to subscription service."
+        )
+
+
+@app.get("/subscription/invoices")
+async def get_invoices(user: User = Depends(verify_user)):
+    """
+    Get list of invoices for the user's subscription.
+    """
+    from queries import get_user_subscription
+    import requests
+
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        return {"invoices": []}
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Invoice service temporarily unavailable."
+        )
+
+    lemon_subscription_id = subscription.get("lemon_subscription_id")
+
+    try:
+        # Get invoices from Lemon Squeezy API
+        response = requests.get(
+            f"https://api.lemonsqueezy.com/v1/subscription-invoices?filter[subscription_id]={lemon_subscription_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            }
+        )
+
+        if response.status_code != 200:
+            print(f"Lemon Squeezy invoices error: {response.status_code} - {response.text}")
+            return {"invoices": []}
+
+        data = response.json()
+        invoices = []
+
+        for invoice in data.get("data", []):
+            attrs = invoice.get("attributes", {})
+            invoices.append({
+                "id": invoice.get("id"),
+                "status": attrs.get("status"),
+                "total": attrs.get("total"),
+                "currency": attrs.get("currency"),
+                "created_at": attrs.get("created_at"),
+                "invoice_url": attrs.get("urls", {}).get("invoice_url")
+            })
+
+        return {"invoices": invoices}
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        return {"invoices": []}
+
+
+@app.get("/subscription/update-payment-url")
+async def get_update_payment_url(user: User = Depends(verify_user)):
+    """
+    Get URL to update payment method for the subscription.
+    """
+    from queries import get_user_subscription
+    import requests
+
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        raise HTTPException(
+            status_code=404,
+            detail="No active subscription found."
+        )
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Payment update temporarily unavailable."
+        )
+
+    lemon_subscription_id = subscription.get("lemon_subscription_id")
+
+    try:
+        # Get subscription details to extract update payment URL
+        response = requests.get(
+            f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            }
+        )
+
+        if response.status_code != 200:
+            print(f"Lemon Squeezy subscription error: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to get payment update URL."
+            )
+
+        sub_data = response.json()
+        update_url = sub_data.get("data", {}).get("attributes", {}).get("urls", {}).get("update_payment_method")
+
+        if not update_url:
+            raise HTTPException(
+                status_code=500,
+                detail="Payment update URL not available."
+            )
+
+        return {"update_payment_url": update_url}
 
     except requests.RequestException as e:
         print(f"Request error: {e}")
