@@ -1634,7 +1634,8 @@ async def change_subscription_plan(
 
     try:
         # Update subscription variant via Lemon Squeezy API
-        # invoice_immediately: false defers charges to next billing cycle
+        # disable_prorations: true = no proration charges, new price starts next cycle
+        # This prevents immediate payment attempts that can fail
         response = requests.patch(
             f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
             headers={
@@ -1648,7 +1649,7 @@ async def change_subscription_plan(
                     "id": str(lemon_subscription_id),
                     "attributes": {
                         "variant_id": int(variant_id),
-                        "invoice_immediately": False
+                        "disable_prorations": True  # Avoid immediate charges
                     }
                 }
             }
