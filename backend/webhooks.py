@@ -85,7 +85,7 @@ async def lemon_squeezy_webhook(request: Request, x_signature: str = Header(None
     print(f"[WEBHOOK] Status: {attributes.get('status')}")
     print(f"[WEBHOOK] Custom data: {custom_data}")
 
-    if event_name in ["subscription_created", "subscription_updated", "subscription_cancelled", "subscription_expired", "subscription_resumed"]:
+    if event_name in ["subscription_created", "subscription_updated", "subscription_cancelled", "subscription_expired", "subscription_resumed", "subscription_plan_changed"]:
 
         # Map Lemon Squeezy status to our DB enum
         # LS statuses: on_trial, active, paused, past_due, unpaid, cancelled, expired
