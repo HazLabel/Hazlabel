@@ -1634,6 +1634,7 @@ async def change_subscription_plan(
 
     try:
         # Update subscription variant via Lemon Squeezy API
+        # invoice_immediately: false defers charges to next billing cycle
         response = requests.patch(
             f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
             headers={
@@ -1646,7 +1647,8 @@ async def change_subscription_plan(
                     "type": "subscriptions",
                     "id": str(lemon_subscription_id),
                     "attributes": {
-                        "variant_id": int(variant_id)
+                        "variant_id": int(variant_id),
+                        "invoice_immediately": False
                     }
                 }
             }
