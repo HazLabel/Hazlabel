@@ -1674,6 +1674,69 @@ async def change_subscription_plan(
         )
 
 
+@app.post("/subscription/fix-past-due")
+async def fix_past_due_subscription(user: User = Depends(verify_user)):
+    """
+    Emergency fix for past_due subscriptions - cancels and allows user to resubscribe.
+    Only use when payment failed during plan change.
+    """
+    from queries import get_user_subscription
+    import requests
+
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        raise HTTPException(
+            status_code=404,
+            detail="No subscription found."
+        )
+
+    if subscription.get("status") != "past_due":
+        raise HTTPException(
+            status_code=400,
+            detail=f"This endpoint is only for past_due subscriptions. Your status is: {subscription.get('status')}"
+        )
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    if not api_key:
+        raise HTTPException(
+            status_code=500,
+            detail="Subscription management temporarily unavailable."
+        )
+
+    lemon_subscription_id = subscription.get("lemon_subscription_id")
+
+    try:
+        # Cancel the past_due subscription
+        response = requests.delete(
+            f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            }
+        )
+
+        if response.status_code not in [200, 204]:
+            print(f"Lemon Squeezy cancel error: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to cancel subscription. Please try again later."
+            )
+
+        return {
+            "success": True,
+            "message": "Past due subscription cancelled. You can now create a new subscription."
+        }
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to connect to subscription service."
+        )
+
+
 @app.get("/health")
 async def health_check():
     """Simple health check endpoint."""

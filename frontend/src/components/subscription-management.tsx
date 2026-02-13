@@ -50,8 +50,38 @@ export function SubscriptionManagement() {
   const uploadPercentage = Math.min((uploadCount / uploadLimit) * 100, 100)
   const isNearLimit = uploadPercentage >= 80
 
+  const isPastDue = subscription?.status === 'past_due'
+
   return (
     <div className="space-y-4">
+      {/* Past Due Warning */}
+      {isPastDue && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-lg bg-red-100">
+              <TrendingUp className="h-5 w-5 text-red-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-red-900 text-sm mb-1">Payment Failed</h3>
+              <p className="text-xs text-red-700 mb-3">
+                Your plan upgrade failed due to a payment issue. Please update your payment method or contact support.
+              </p>
+              <div className="flex gap-2">
+                <BillingDialog
+                  subscription={{
+                    tier: subscription?.tier || 'free',
+                    status: subscription?.status || 'active',
+                    renews_at: subscription?.renews_at || undefined,
+                    variant_id: subscription?.variant_id || undefined
+                  }}
+                  onUpdate={() => refetch()}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Current Plan Card */}
       <div className="p-5 bg-gradient-to-br from-slate-50 to-white rounded-xl border border-slate-200 shadow-sm">
         <div className="flex items-start justify-between mb-4">
