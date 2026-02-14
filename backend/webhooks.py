@@ -8,6 +8,8 @@ from queries import upsert_subscription
 router = APIRouter()
 
 LEMON_SQUEEZY_WEBHOOK_SECRET = os.environ.get("LEMON_SQUEEZY_WEBHOOK_SECRET")
+if not LEMON_SQUEEZY_WEBHOOK_SECRET:
+    print("[WEBHOOK WARNING] LEMON_SQUEEZY_WEBHOOK_SECRET not set in environment variables")
 
 @router.get("/webhooks/lemon-squeezy/health")
 async def webhook_health_check():

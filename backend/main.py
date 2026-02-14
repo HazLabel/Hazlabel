@@ -1312,6 +1312,9 @@ async def create_checkout(
                                 "user_id": str(user.id)
                             }
                         },
+                        "checkout_options": {
+                            "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
+                        },
                         "product_options": {
                             "enabled_variants": [int(variant_id)]
                         }
@@ -1346,8 +1349,12 @@ async def create_checkout(
 
         print(f"Checkout created successfully: {checkout_url}")
         print(f"Custom data in response: {checkout_data['data']['attributes'].get('checkout_data', {})}")
+        print(f"Checkout options: {checkout_data['data']['attributes'].get('checkout_options', {})}")
 
-        return {"checkout_url": checkout_url}
+        return {
+            "checkout_url": checkout_url,
+            "checkout_id": checkout_data["data"]["id"]
+        }
 
     except requests.RequestException as e:
         print(f"Request error: {e}")
