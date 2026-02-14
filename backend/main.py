@@ -1290,9 +1290,6 @@ async def create_checkout(
     # Get store ID from environment or use default
     store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID", "117111")
 
-    # Get frontend URL for redirects
-    frontend_url = os.environ.get("FRONTEND_URL", "https://hazlabel.co")
-
     try:
         print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}")
 
@@ -1309,9 +1306,6 @@ async def create_checkout(
                     "type": "checkouts",
                     "attributes": {
                         "custom_price": None,
-                        "checkout_options": {
-                            "button_color": "#0ea5e9"  # Sky-600 to match brand
-                        },
                         "checkout_data": {
                             "email": user.email,  # Pre-fill customer email
                             "custom": {
@@ -1319,11 +1313,7 @@ async def create_checkout(
                             }
                         },
                         "product_options": {
-                            "enabled_variants": [int(variant_id)],
-                            "redirect_url": f"{frontend_url}/checkout/success",
-                            "receipt_button_text": "Go to Dashboard",
-                            "receipt_link_url": f"{frontend_url}/(dashboard)/dashboard",
-                            "receipt_thank_you_note": "Thank you for subscribing to HazLabel! Your Chemical Vault is now ready."
+                            "enabled_variants": [int(variant_id)]
                         }
                     },
                     "relationships": {
