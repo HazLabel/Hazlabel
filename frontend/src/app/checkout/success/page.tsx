@@ -1,14 +1,13 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import React, { useEffect, useState, Suspense } from "react"
+import { useRouter } from "next/navigation"
 import { CheckCircle2, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
     const router = useRouter()
-    const searchParams = useSearchParams()
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
     const [message, setMessage] = useState('Verifying your subscription...')
 
@@ -144,5 +143,26 @@ export default function CheckoutSuccessPage() {
                 </p>
             </div>
         </div>
+    )
+}
+
+export default function CheckoutSuccessPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 flex items-center justify-center p-6">
+                <div className="max-w-md w-full">
+                    <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+                        <div className="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Loader2 className="h-8 w-8 text-sky-600 animate-spin" />
+                        </div>
+                        <h1 className="text-2xl font-bold text-slate-900 mb-2">
+                            Loading...
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        }>
+            <CheckoutSuccessContent />
+        </Suspense>
     )
 }
