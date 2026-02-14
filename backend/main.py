@@ -1317,13 +1317,9 @@ async def create_checkout(
                                 "user_id": str(user.id)
                             }
                         },
-                        "checkout_options": {
-                            "redirect": {
-                                "url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
-                            }
-                        },
                         "product_options": {
-                            "enabled_variants": [int(variant_id)]
+                            "enabled_variants": [int(variant_id)],
+                            "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
                         }
                     },
                     "relationships": {

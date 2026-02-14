@@ -1,0 +1,42 @@
+✅ FIXED: Lemon Squeezy Checkout 422 Error
+==========================================
+
+ERROR MESSAGE:
+"The checkout options field must be an array."
+
+ROOT CAUSE:
+Incorrect API format for checkout_options in Lemon Squeezy API
+
+WRONG FORMAT (was):
+{
+  "checkout_options": {
+    "redirect_url": "https://www.hazlabel.co/checkout/success"
+  }
+}
+
+CORRECT FORMAT (now):
+{
+  "checkout_options": {
+    "redirect": {
+      "url": "https://www.hazlabel.co/checkout/success"
+    }
+  }
+}
+
+STATUS: ✅ DEPLOYED TO RAILWAY
+
+NEXT STEPS:
+1. Wait for Railway deployment to complete (~2 minutes)
+2. Test checkout from: https://www.hazlabel.co/pricing
+3. Click "Subscribe" on Professional plan
+4. Should now create checkout successfully
+
+WHAT SHOULD HAPPEN NOW:
+- Checkout URL is created ✅
+- User redirected to Lemon Squeezy payment page ✅
+- After payment, redirected to /checkout/success ✅
+- Webhook received by backend ✅
+- Subscription activated ✅
+
+DEPLOYED AT: 2026-02-14 17:25 UTC
+COMMIT: 8518e5b
