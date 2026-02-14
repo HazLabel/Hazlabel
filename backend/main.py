@@ -1318,7 +1318,9 @@ async def create_checkout(
                             }
                         },
                         "checkout_options": {
-                            "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
+                            "redirect": {
+                                "url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
+                            }
                         },
                         "product_options": {
                             "enabled_variants": [int(variant_id)]
