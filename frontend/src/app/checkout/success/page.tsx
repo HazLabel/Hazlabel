@@ -41,9 +41,9 @@ function CheckoutSuccessContent() {
                         setStatus('success')
                         setMessage(`Successfully subscribed to ${data.tier}!`)
 
-                        // Redirect to dashboard after 3 seconds
+                        // Redirect to chemical vault after 3 seconds
                         setTimeout(() => {
-                            router.push('/(dashboard)/dashboard')
+                            router.push('/inventory')
                         }, 3000)
                     } else {
                         // Subscription not yet processed, keep checking
@@ -101,8 +101,8 @@ function CheckoutSuccessContent() {
                                 Redirecting you to your dashboard...
                             </p>
                             <Button asChild className="w-full bg-sky-600 hover:bg-sky-700">
-                                <Link href="/(dashboard)/dashboard">
-                                    Go to Dashboard Now
+                                <Link href="/inventory">
+                                    Go to Chemical Vault
                                 </Link>
                             </Button>
                         </>
@@ -121,8 +121,8 @@ function CheckoutSuccessContent() {
                             </p>
                             <div className="flex flex-col gap-3">
                                 <Button asChild className="w-full bg-sky-600 hover:bg-sky-700">
-                                    <Link href="/(dashboard)/dashboard">
-                                        Go to Dashboard
+                                    <Link href="/inventory">
+                                        Go to Chemical Vault
                                     </Link>
                                 </Button>
                                 <Button asChild variant="outline" className="w-full">
