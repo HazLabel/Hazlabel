@@ -89,16 +89,13 @@ async def lemon_squeezy_webhook(request: Request, x_signature: str = Header(None
 
     # Handle subscription lifecycle events
     # Note: subscription_plan_changed does NOT exist - plan changes trigger subscription_updated
-    # Added payment events for better recovery handling
+    # Payment events have different structure - they reference subscription via relationships
     if event_name in [
         "subscription_created",
         "subscription_updated",
         "subscription_cancelled",
         "subscription_expired",
-        "subscription_resumed",
-        "subscription_payment_success",
-        "subscription_payment_failed",
-        "subscription_payment_recovered"
+        "subscription_resumed"
     ]:
 
         # Map Lemon Squeezy status to our DB enum
