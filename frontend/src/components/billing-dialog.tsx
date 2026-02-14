@@ -237,12 +237,22 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
         throw new Error(error.detail || "Failed to change plan")
       }
 
-      toast.success("Plan Updated", {
-        description: `Switched to ${planName}. Changes take effect on next billing cycle.`
-      })
+      const result = await response.json()
 
-      setOpen(false)
-      onUpdate?.()
+      if (result.requires_checkout) {
+        // Upgrade requires payment authorization - redirect to checkout
+        toast.success("Redirecting to checkout", {
+          description: "Please authorize payment for your upgraded plan."
+        })
+        window.location.href = result.checkout_url
+      } else {
+        // Downgrade/cycle change - scheduled for next billing cycle
+        toast.success("Plan Updated", {
+          description: `Switched to ${planName}. Changes take effect on next billing cycle.`
+        })
+        setOpen(false)
+        onUpdate?.()
+      }
     } catch (error) {
       console.error("Plan change error:", error)
       toast.error(

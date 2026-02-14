@@ -1630,7 +1630,10 @@ async def change_subscription_plan(
     user: User = Depends(verify_user)
 ):
     """
-    Change the user's subscription to a different plan (upgrade/downgrade or switch billing cycle).
+    Change the user's subscription to a different plan.
+
+    For upgrades (higher price), cancels current subscription and creates new checkout.
+    For downgrades/cycle changes, schedules change for next billing cycle.
     """
     from queries import get_user_subscription
     import requests
@@ -1650,45 +1653,136 @@ async def change_subscription_plan(
             detail="Subscription management temporarily unavailable."
         )
 
+    current_variant_id = subscription.get("lemon_variant_id")
     lemon_subscription_id = subscription.get("lemon_subscription_id")
 
-    try:
-        # Update subscription variant via Lemon Squeezy API
-        # disable_prorations: true = no proration charges, new price starts next cycle
-        # This prevents immediate payment attempts that can fail
-        response = requests.patch(
-            f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
-            headers={
-                "Accept": "application/vnd.api+json",
-                "Content-Type": "application/vnd.api+json",
-                "Authorization": f"Bearer {api_key}"
-            },
-            json={
-                "data": {
-                    "type": "subscriptions",
-                    "id": str(lemon_subscription_id),
-                    "attributes": {
-                        "variant_id": int(variant_id),
-                        "disable_prorations": True  # Avoid immediate charges
-                    }
-                }
-            }
-        )
+    # Define variant prices (in priority order: Enterprise Annual > Enterprise Monthly > Pro Annual > Pro Monthly)
+    variant_tiers = {
+        "1283715": 4,  # Enterprise Annual (highest)
+        "1283714": 3,  # Enterprise Monthly
+        "1254589": 2,  # Pro Annual
+        "1283692": 1,  # Pro Monthly (lowest)
+    }
 
-        if response.status_code != 200:
-            print(f"Lemon Squeezy plan change error: {response.status_code} - {response.text}")
-            raise HTTPException(
-                status_code=500,
-                detail="Failed to change plan. Please try again later."
+    current_tier = variant_tiers.get(str(current_variant_id), 0)
+    new_tier = variant_tiers.get(str(variant_id), 0)
+    is_upgrade = new_tier > current_tier
+
+    try:
+        if is_upgrade:
+            # For upgrades: Cancel current and create new checkout (requires payment verification)
+            # This ensures proper payment authorization (OTP, etc.)
+            print(f"[PLAN CHANGE] Upgrade detected: {current_variant_id} -> {variant_id}")
+            print(f"[PLAN CHANGE] Cancelling current subscription and creating checkout")
+
+            # Cancel current subscription
+            cancel_response = requests.delete(
+                f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+                headers={
+                    "Accept": "application/vnd.api+json",
+                    "Content-Type": "application/vnd.api+json",
+                    "Authorization": f"Bearer {api_key}"
+                }
             )
 
-        return {
-            "success": True,
-            "message": "Plan updated successfully. Changes will take effect on next billing cycle."
-        }
+            if cancel_response.status_code not in [200, 204]:
+                print(f"[ERROR] Failed to cancel subscription: {cancel_response.status_code}")
+                raise HTTPException(
+                    status_code=500,
+                    detail="Failed to cancel current subscription."
+                )
+
+            # Create new checkout for upgraded plan
+            # This will open a payment page for user to authorize
+            store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID", "117111")
+
+            checkout_response = requests.post(
+                "https://api.lemonsqueezy.com/v1/checkouts",
+                headers={
+                    "Accept": "application/vnd.api+json",
+                    "Content-Type": "application/vnd.api+json",
+                    "Authorization": f"Bearer {api_key}"
+                },
+                json={
+                    "data": {
+                        "type": "checkouts",
+                        "attributes": {
+                            "checkout_data": {
+                                "email": user.email,
+                                "custom": {
+                                    "user_id": str(user.id)
+                                }
+                            },
+                            "product_options": {
+                                "enabled_variants": [int(variant_id)],
+                                "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
+                            }
+                        },
+                        "relationships": {
+                            "store": {"data": {"type": "stores", "id": str(store_id)}},
+                            "variant": {"data": {"type": "variants", "id": str(variant_id)}}
+                        }
+                    }
+                }
+            )
+
+            if checkout_response.status_code != 201:
+                print(f"[ERROR] Failed to create checkout: {checkout_response.status_code}")
+                raise HTTPException(
+                    status_code=500,
+                    detail="Failed to create checkout for upgrade."
+                )
+
+            checkout_data = checkout_response.json()
+            checkout_url = checkout_data["data"]["attributes"]["url"]
+
+            print(f"[PLAN CHANGE] Checkout created for upgrade: {checkout_url}")
+
+            return {
+                "success": True,
+                "requires_checkout": True,
+                "checkout_url": checkout_url,
+                "message": "Please complete payment to activate your upgraded plan."
+            }
+
+        else:
+            # For downgrades/cycle changes: Schedule for next billing cycle
+            print(f"[PLAN CHANGE] Downgrade/cycle change: {current_variant_id} -> {variant_id}")
+
+            response = requests.patch(
+                f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+                headers={
+                    "Accept": "application/vnd.api+json",
+                    "Content-Type": "application/vnd.api+json",
+                    "Authorization": f"Bearer {api_key}"
+                },
+                json={
+                    "data": {
+                        "type": "subscriptions",
+                        "id": str(lemon_subscription_id),
+                        "attributes": {
+                            "variant_id": int(variant_id),
+                            "invoice_immediately": False
+                        }
+                    }
+                }
+            )
+
+            if response.status_code != 200:
+                print(f"[ERROR] Plan change error: {response.status_code} - {response.text}")
+                raise HTTPException(
+                    status_code=500,
+                    detail="Failed to change plan."
+                )
+
+            return {
+                "success": True,
+                "requires_checkout": False,
+                "message": "Plan updated. Changes take effect on next billing cycle."
+            }
 
     except requests.RequestException as e:
-        print(f"Request error: {e}")
+        print(f"[ERROR] Request error: {e}")
         raise HTTPException(
             status_code=500,
             detail="Unable to connect to subscription service."
