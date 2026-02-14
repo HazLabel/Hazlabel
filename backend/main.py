@@ -1318,9 +1318,9 @@ async def create_checkout(
                                 "user_id": str(user.id)
                             }
                         },
-                        "redirect_url": f"{frontend_url}/checkout/success",
                         "product_options": {
                             "enabled_variants": [int(variant_id)],
+                            "redirect_url": f"{frontend_url}/checkout/success",
                             "receipt_button_text": "Go to Dashboard",
                             "receipt_link_url": f"{frontend_url}/(dashboard)/dashboard",
                             "receipt_thank_you_note": "Thank you for subscribing to HazLabel! Your Chemical Vault is now ready."
