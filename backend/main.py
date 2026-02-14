@@ -1282,13 +1282,18 @@ async def create_checkout(
 
     api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
     if not api_key:
+        print("[ERROR] LEMON_SQUEEZY_API_KEY not set in environment")
         raise HTTPException(
             status_code=500,
-            detail="Subscription service not configured."
+            detail="Subscription service not configured. Please contact support."
         )
 
     # Get store ID from environment or use default
     store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID", "117111")
+
+    print(f"[CHECKOUT] API Key configured: {bool(api_key)}")
+    print(f"[CHECKOUT] Store ID: {store_id}")
+    print(f"[CHECKOUT] Variant ID: {variant_id}")
 
     try:
         print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}")
@@ -1338,10 +1343,20 @@ async def create_checkout(
         )
 
         if response.status_code != 201:
-            print(f"Lemon Squeezy checkout error: {response.status_code} - {response.text}")
+            error_detail = response.text[:500] if response.text else "Unknown error"
+            print(f"[ERROR] Lemon Squeezy checkout error: {response.status_code}")
+            print(f"[ERROR] Response body: {error_detail}")
+
+            # Parse error for better user message
+            try:
+                error_json = response.json()
+                error_msg = error_json.get("errors", [{}])[0].get("detail", "Failed to create checkout")
+            except:
+                error_msg = f"Checkout failed with status {response.status_code}"
+
             raise HTTPException(
                 status_code=500,
-                detail="Failed to create checkout session."
+                detail=f"Failed to create checkout: {error_msg}"
             )
 
         checkout_data = response.json()
@@ -1749,3 +1764,30 @@ async def fix_past_due_subscription(user: User = Depends(verify_user)):
 async def health_check():
     """Simple health check endpoint."""
     return {"status": "healthy"}
+
+
+@app.get("/subscription/config-check")
+async def subscription_config_check():
+    """
+    Check Lemon Squeezy configuration status.
+    Useful for debugging subscription issues.
+    """
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    webhook_secret = os.environ.get("LEMON_SQUEEZY_WEBHOOK_SECRET")
+    store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID")
+    frontend_url = os.environ.get("FRONTEND_URL")
+
+    return {
+        "lemon_squeezy_configured": bool(api_key),
+        "api_key_set": bool(api_key),
+        "api_key_length": len(api_key) if api_key else 0,
+        "webhook_secret_set": bool(webhook_secret),
+        "store_id": store_id or "default: 117111",
+        "frontend_url": frontend_url or "default: https://www.hazlabel.co",
+        "environment_check": {
+            "LEMON_SQUEEZY_API_KEY": "✅ SET" if api_key else "❌ MISSING",
+            "LEMON_SQUEEZY_WEBHOOK_SECRET": "✅ SET" if webhook_secret else "❌ MISSING",
+            "LEMON_SQUEEZY_STORE_ID": "✅ SET" if store_id else "⚠️ USING DEFAULT",
+            "FRONTEND_URL": "✅ SET" if frontend_url else "⚠️ USING DEFAULT"
+        }
+    }
