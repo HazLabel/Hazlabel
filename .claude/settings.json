@@ -1,0 +1,24 @@
+{
+  "hooks": {
+    "tool_approval": [
+      {
+        "name": "env-file-protection",
+        "description": "Block commits that include .env files with API keys",
+        "command": "bash -c 'if git diff --cached --name-only | grep -E \"\\.(env|env\\.local|env\\.production)$\"; then echo \"⚠️  BLOCKED: Attempting to commit .env file with secrets\"; echo \"Detected files:\"; git diff --cached --name-only | grep -E \"\\.(env|env\\.local|env\\.production)$\"; echo \"\"; echo \"Please add these to .gitignore and use git rm --cached <file> to unstage.\"; exit 1; fi'",
+        "match": {
+          "tool": "Bash",
+          "pattern": "git commit"
+        }
+      },
+      {
+        "name": "typescript-auto-format",
+        "description": "Auto-format TypeScript files before git commits",
+        "command": "bash -c 'FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E \"\\.(ts|tsx)$\" || true); if [ -n \"$FILES\" ]; then echo \"📝 Auto-formatting TypeScript files...\"; echo \"$FILES\" | xargs npx prettier --write 2>/dev/null || true; echo \"$FILES\" | xargs git add; echo \"✅ Formatted $(echo \"$FILES\" | wc -l | tr -d \" \") file(s)\"; fi'",
+        "match": {
+          "tool": "Bash",
+          "pattern": "git commit"
+        }
+      }
+    ]
+  }
+}
