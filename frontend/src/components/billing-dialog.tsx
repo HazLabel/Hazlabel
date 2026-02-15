@@ -324,7 +324,7 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
   // Plan configurations
   const plans = {
     professional: {
-      monthly: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_MONTHLY || '1254588', name: 'Professional Monthly' },
+      monthly: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_MONTHLY || '1283692', name: 'Professional Monthly' },
       annual: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_ANNUAL || '1254589', name: 'Professional Annual' }
     },
     enterprise: {
@@ -507,11 +507,10 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`text-xs px-2 py-1 rounded-md capitalize ${
-                            invoice.status === 'paid'
+                          <span className={`text-xs px-2 py-1 rounded-md capitalize ${invoice.status === 'paid'
                               ? 'bg-emerald-100 text-emerald-700'
                               : 'bg-amber-100 text-amber-700'
-                          }`}>
+                            }`}>
                             {invoice.status}
                           </span>
                           <Button
