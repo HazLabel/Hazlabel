@@ -245,6 +245,19 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
           description: "Please authorize payment for your upgraded plan."
         })
         window.location.href = result.checkout_url
+      } else if (result.requires_payment_update) {
+        // Upgrade failed - need to update payment method
+        toast.info("Payment Method Update Required", {
+          description: "Please update your payment method to complete the upgrade."
+        })
+        window.open(result.update_payment_url, '_blank')
+      } else if (result.success) {
+        // Success - prorated upgrade or downgrade
+        toast.success("Plan Updated", {
+          description: result.message || `Switched to ${planName}.`
+        })
+        setOpen(false)
+        onUpdate?.()
       } else {
         // Downgrade/cycle change - scheduled for next billing cycle
         toast.success("Plan Updated", {

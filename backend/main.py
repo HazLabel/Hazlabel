@@ -1670,34 +1670,13 @@ async def change_subscription_plan(
 
     try:
         if is_upgrade:
-            # For upgrades: Cancel current and create new checkout (requires payment verification)
-            # This ensures proper payment authorization (OTP, etc.)
+            # For upgrades: Use Lemon Squeezy's built-in proration
+            # invoice_immediately=true charges the prorated difference immediately
             print(f"[PLAN CHANGE] Upgrade detected: {current_variant_id} -> {variant_id}")
-            print(f"[PLAN CHANGE] Cancelling current subscription and creating checkout")
+            print(f"[PLAN CHANGE] Attempting prorated upgrade (charges difference only)")
 
-            # Cancel current subscription
-            cancel_response = requests.delete(
+            response = requests.patch(
                 f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
-                headers={
-                    "Accept": "application/vnd.api+json",
-                    "Content-Type": "application/vnd.api+json",
-                    "Authorization": f"Bearer {api_key}"
-                }
-            )
-
-            if cancel_response.status_code not in [200, 204]:
-                print(f"[ERROR] Failed to cancel subscription: {cancel_response.status_code}")
-                raise HTTPException(
-                    status_code=500,
-                    detail="Failed to cancel current subscription."
-                )
-
-            # Create new checkout for upgraded plan
-            # This will open a payment page for user to authorize
-            store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID", "117111")
-
-            checkout_response = requests.post(
-                "https://api.lemonsqueezy.com/v1/checkouts",
                 headers={
                     "Accept": "application/vnd.api+json",
                     "Content-Type": "application/vnd.api+json",
@@ -1705,44 +1684,60 @@ async def change_subscription_plan(
                 },
                 json={
                     "data": {
-                        "type": "checkouts",
+                        "type": "subscriptions",
+                        "id": str(lemon_subscription_id),
                         "attributes": {
-                            "checkout_data": {
-                                "email": user.email,
-                                "custom": {
-                                    "user_id": str(user.id)
-                                }
-                            },
-                            "product_options": {
-                                "enabled_variants": [int(variant_id)],
-                                "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
-                            }
-                        },
-                        "relationships": {
-                            "store": {"data": {"type": "stores", "id": str(store_id)}},
-                            "variant": {"data": {"type": "variants", "id": str(variant_id)}}
+                            "variant_id": int(variant_id),
+                            "invoice_immediately": True  # Charge prorated amount NOW
                         }
                     }
                 }
             )
 
-            if checkout_response.status_code != 201:
-                print(f"[ERROR] Failed to create checkout: {checkout_response.status_code}")
-                raise HTTPException(
-                    status_code=500,
-                    detail="Failed to create checkout for upgrade."
+            if response.status_code != 200:
+                error_data = response.json() if response.text else {}
+                error_msg = error_data.get("errors", [{}])[0].get("detail", "Unknown error")
+
+                print(f"[ERROR] Prorated upgrade failed: {response.status_code} - {error_msg}")
+
+                # If proration fails, likely needs payment method update/authorization
+                # Get the update payment URL
+                sub_response = requests.get(
+                    f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+                    headers={
+                        "Accept": "application/vnd.api+json",
+                        "Authorization": f"Bearer {api_key}"
+                    }
                 )
 
-            checkout_data = checkout_response.json()
-            checkout_url = checkout_data["data"]["attributes"]["url"]
+                update_url = None
+                if sub_response.status_code == 200:
+                    sub_data = sub_response.json()
+                    update_url = sub_data.get("data", {}).get("attributes", {}).get("urls", {}).get("update_payment_method")
 
-            print(f"[PLAN CHANGE] Checkout created for upgrade: {checkout_url}")
+                if update_url:
+                    print(f"[PLAN CHANGE] Redirecting to payment update page")
+                    return {
+                        "success": False,
+                        "requires_payment_update": True,
+                        "update_payment_url": update_url,
+                        "message": "Please update your payment method to complete the upgrade."
+                    }
+                else:
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"Upgrade failed: {error_msg}. Please try again or contact support."
+                    )
+
+            print(f"[PLAN CHANGE] Prorated upgrade successful!")
+
+            # Get the prorated invoice amount (optional, for display)
+            response_data = response.json()
 
             return {
                 "success": True,
-                "requires_checkout": True,
-                "checkout_url": checkout_url,
-                "message": "Please complete payment to activate your upgraded plan."
+                "requires_checkout": False,
+                "message": "Plan upgraded! The prorated difference has been charged to your payment method."
             }
 
         else:
