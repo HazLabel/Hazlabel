@@ -1515,10 +1515,18 @@ async def create_upgrade_checkout(
         raise HTTPException(status_code=404, detail="No active subscription found")
 
     current_variant_id = subscription.get("lemon_variant_id")
-    current_tier = subscription.get("tier")
+    
+    # Map variant to tier
+    variant_to_tier = {
+        "1283692": "professional",  # Pro Monthly
+        "1254589": "professional",  # Pro Annual
+        "1283714": "enterprise",    # Enterprise Monthly
+        "1283715": "enterprise"     # Enterprise Annual
+    }
+    current_tier = variant_to_tier.get(current_variant_id, "free")
 
     if current_tier != "professional":
-        raise HTTPException(status_code=400, detail="Upgrade only available for Professional tier")
+        raise HTTPException(status_code=400, detail=f"Upgrade only available for Professional tier (current: {current_tier})")
 
     api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
     store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID", "117111")
