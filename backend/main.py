@@ -1296,7 +1296,16 @@ async def create_checkout(
     print(f"[CHECKOUT] Variant ID: {variant_id}")
 
     try:
-        print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}")
+        # Check for existing subscription to handle upgrades
+        from queries import get_user_subscription
+        current_sub = await get_user_subscription(user.id)
+        old_subscription_id = None
+        
+        if current_sub and current_sub.get("status") in ["active", "on_trial", "past_due"]:
+            old_subscription_id = current_sub.get("lemon_subscription_id")
+            print(f"[CHECKOUT] Detected upgrade from subscription: {old_subscription_id}")
+
+        print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}, old_sub: {old_subscription_id}")
 
         # Create checkout via Lemon Squeezy API
         response = requests.post(
@@ -1314,7 +1323,8 @@ async def create_checkout(
                         "checkout_data": {
                             "email": user.email,  # Pre-fill customer email
                             "custom": {
-                                "user_id": str(user.id)
+                                "user_id": str(user.id),
+                                "old_subscription_id": old_subscription_id  # Pass old sub ID for upgrades
                             }
                         },
                         "product_options": {
@@ -1375,6 +1385,244 @@ async def create_checkout(
             status_code=500,
             detail="Unable to connect to subscription service."
         )
+
+
+@app.post("/subscription/update")
+async def update_subscription(
+    variant_id: str,
+    user: User = Depends(verify_user)
+):
+    """
+    Update an existing subscription to a new variant (e.g., Monthly -> Annual).
+    Seamlessly switches billing without a new checkout page.
+    """
+    import requests
+    from queries import get_user_subscription
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    current_sub = await get_user_subscription(user.id)
+
+    if not current_sub or current_sub.get("status") != "active":
+        raise HTTPException(
+            status_code=400,
+            detail="No active subscription found to update. Please start a new subscription."
+        )
+    
+    subscription_id = current_sub.get("lemon_subscription_id")
+    
+    try:
+        # Update subscription via Lemon Squeezy API
+        response = requests.patch(
+            f"https://api.lemonsqueezy.com/v1/subscriptions/{subscription_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            },
+            json={
+                "data": {
+                    "type": "subscriptions",
+                    "id": subscription_id,
+                    "attributes": {
+                        "variant_id": int(variant_id),
+                        "invoice_immediately": True, # Charge proration immediately
+                        "disable_prorations": False
+                    }
+                }
+            }
+        )
+
+        if response.status_code != 200:
+            print(f"[ERROR] Update subscription failed: {response.text}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to update subscription. Please try again or contact support."
+            )
+
+        data = response.json()
+        return {"status": "updated", "data": data.get("data")}
+
+    except requests.RequestException as e:
+        print(f"Request error: {e}")
+        raise HTTPException(status_code=500, detail="Service unavailable")
+
+
+@app.post("/subscription/create-portal")
+async def create_portal_link(user: User = Depends(verify_user)):
+    """
+    Generate a Customer Portal link for managing subscriptions (cancel/downgrade).
+    """
+    import requests
+    from queries import get_user_subscription
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    current_sub = await get_user_subscription(user.id)
+
+    if not current_sub:
+        raise HTTPException(status_code=400, detail="No subscription found.")
+
+    customer_id = current_sub.get("lemon_customer_id")
+    if not customer_id:
+         raise HTTPException(status_code=400, detail="Customer record incomplete.")
+
+    try:
+        # Get customer details to find portal link
+        response = requests.get(
+            f"https://api.lemonsqueezy.com/v1/customers/{customer_id}",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            }
+        )
+        
+        if response.status_code != 200:
+             raise HTTPException(status_code=500, detail="Failed to fetch customer data")
+
+        data = response.json()
+        portal_url = data.get("data", {}).get("attributes", {}).get("urls", {}).get("customer_portal")
+
+        return {"portal_url": portal_url}
+
+    except Exception as e:
+        print(f"Portal error: {e}")
+        raise HTTPException(status_code=500, detail="Service unavailable")
+
+
+@app.post("/subscription/create-upgrade-checkout")
+async def create_upgrade_checkout(
+    target_cycle: str,  # 'monthly' or 'annual'
+    user: User = Depends(verify_user)
+):
+    """
+    Create a Lemon Squeezy checkout for upgrading from Professional to Enterprise.
+    Shows appropriate variants with correct discount codes applied.
+
+    For Pro Monthly users:
+    - Shows both Enterprise Monthly and Annual
+    - Applies $99 discount (works for both)
+
+    For Pro Annual users:
+    - Monthly: Shows only Enterprise Monthly with $79 discount
+    - Annual: Shows only Enterprise Annual with $948 discount
+    """
+    import requests
+    from queries import get_user_subscription
+
+    # Get current subscription
+    subscription = await get_user_subscription(user.id)
+
+    if not subscription:
+        raise HTTPException(status_code=404, detail="No active subscription found")
+
+    current_variant_id = subscription.get("lemon_variant_id")
+    current_tier = subscription.get("tier")
+
+    if current_tier != "professional":
+        raise HTTPException(status_code=400, detail="Upgrade only available for Professional tier")
+
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    store_id = os.environ.get("LEMON_SQUEEZY_STORE_ID", "117111")
+
+    if not api_key:
+        raise HTTPException(status_code=500, detail="Subscription service not configured")
+
+    # Enterprise variant IDs
+    ENTERPRISE_MONTHLY = "1283714"
+    ENTERPRISE_ANNUAL = "1283715"
+    ENTERPRISE_PRODUCT_ID = "814299"
+
+    # Discount codes created in Lemon Squeezy
+    DISCOUNT_PRO_MONTHLY = "A3RTYMA"  # -$99
+    DISCOUNT_PRO_ANNUAL_TO_ANNUAL = "UMTA60G"  # -$948
+    DISCOUNT_PRO_ANNUAL_TO_MONTHLY = "YYNJEYMQ"  # -$79
+
+    # Determine enabled variants and discount based on current plan and target
+    if current_variant_id == "1283692":  # Pro Monthly
+        # Show both Enterprise variants
+        enabled_variants = [int(ENTERPRISE_MONTHLY), int(ENTERPRISE_ANNUAL)]
+        discount_code = DISCOUNT_PRO_MONTHLY  # -$99 works for both
+
+    elif current_variant_id == "1254589":  # Pro Annual
+        if target_cycle == "monthly":
+            # Only show Enterprise Monthly
+            enabled_variants = [int(ENTERPRISE_MONTHLY)]
+            discount_code = DISCOUNT_PRO_ANNUAL_TO_MONTHLY  # -$79
+        else:  # annual
+            # Only show Enterprise Annual
+            enabled_variants = [int(ENTERPRISE_ANNUAL)]
+            discount_code = DISCOUNT_PRO_ANNUAL_TO_ANNUAL  # -$948
+    else:
+        raise HTTPException(status_code=400, detail="Invalid current subscription variant")
+
+    print(f"[UPGRADE] User {user.id} upgrading from variant {current_variant_id} to Enterprise {target_cycle}")
+    print(f"[UPGRADE] Enabled variants: {enabled_variants}, Discount: {discount_code}")
+
+    try:
+        # Create checkout
+        checkout_payload = {
+            "data": {
+                "type": "checkouts",
+                "attributes": {
+                    "checkout_data": {
+                        "email": user.email,
+                        "discount_code": discount_code,
+                        "custom": {
+                            "user_id": str(user.id),
+                            "old_subscription_id": str(subscription.get("lemon_subscription_id")),
+                            "current_variant_id": current_variant_id
+                        }
+                    },
+                    "product_options": {
+                        "enabled_variants": enabled_variants,
+                        "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
+                    }
+                },
+                "relationships": {
+                    "store": {
+                        "data": {
+                            "type": "stores",
+                            "id": str(store_id)
+                        }
+                    },
+                    "variant": {
+                        "data": {
+                            "type": "variants",
+                            "id": str(enabled_variants[0])  # Primary variant
+                        }
+                    }
+                }
+            }
+        }
+
+        response = requests.post(
+            "https://api.lemonsqueezy.com/v1/checkouts",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            },
+            json=checkout_payload
+        )
+
+        if response.status_code != 201:
+            error_detail = response.text[:500] if response.text else "Unknown error"
+            print(f"[ERROR] Upgrade checkout error: {response.status_code}")
+            print(f"[ERROR] Response: {error_detail}")
+            raise HTTPException(status_code=500, detail="Failed to create upgrade checkout")
+
+        checkout_data = response.json()
+        checkout_url = checkout_data["data"]["attributes"]["url"]
+
+        print(f"[UPGRADE] Checkout created: {checkout_url}")
+
+        return {
+            "checkout_url": checkout_url,
+            "checkout_id": checkout_data["data"]["id"]
+        }
+
+    except requests.RequestException as e:
+        print(f"[ERROR] Request error: {e}")
+        raise HTTPException(status_code=500, detail="Unable to connect to subscription service")
 
 
 @app.post("/subscription/cancel")
@@ -1669,10 +1917,27 @@ async def change_subscription_plan(
     is_upgrade = new_tier > current_tier
 
     try:
+        # Check if this is a cross-tier upgrade (Pro -> Enterprise)
+        # These should go through checkout flow, not direct PATCH
+        current_tier_name = subscription.get("tier", "").lower()
+        is_cross_tier_upgrade = (
+            current_tier_name == "professional" and
+            variant_id in ["1283714", "1283715"]  # Enterprise variants
+        )
+
+        if is_cross_tier_upgrade:
+            # Cross-tier upgrades MUST use checkout flow for proper payment handling
+            print(f"[PLAN CHANGE] Cross-tier upgrade detected: {current_tier_name} -> Enterprise")
+            print(f"[PLAN CHANGE] This requires checkout - rejecting direct change")
+            raise HTTPException(
+                status_code=400,
+                detail="Cross-tier upgrades require checkout. Please use the upgrade button."
+            )
+
         if is_upgrade:
-            # For upgrades: Use Lemon Squeezy's built-in proration
+            # For same-tier upgrades (Monthly -> Annual within same tier): Use Lemon Squeezy's built-in proration
             # invoice_immediately=true charges the prorated difference immediately
-            print(f"[PLAN CHANGE] Upgrade detected: {current_variant_id} -> {variant_id}")
+            print(f"[PLAN CHANGE] Same-tier upgrade detected: {current_variant_id} -> {variant_id}")
             print(f"[PLAN CHANGE] Attempting prorated upgrade (charges difference only)")
 
             response = requests.patch(

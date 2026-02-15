@@ -1,6 +1,7 @@
 import hmac
 import hashlib
 import os
+import requests
 from fastapi import APIRouter, Request, HTTPException, Header
 from typing import Dict, Any
 from queries import upsert_subscription
@@ -87,6 +88,32 @@ async def lemon_squeezy_webhook(request: Request, x_signature: str = Header(None
     print(f"[WEBHOOK] Status: {attributes.get('status')}")
     print(f"[WEBHOOK] Custom data: {custom_data}")
 
+    # Handle payment failure events
+    if event_name == "subscription_payment_failed":
+        print(f"[WEBHOOK] Payment failed for subscription")
+        
+        # CRITICAL: Mark as past_due immediately to revoke access
+        subscription_id = str(data.get("subscription_id")) # Check payload structure
+        # Note: payment_failed event has 'subscription_id' in attributes or data? 
+        # Actually in payment_failed: data.relationships.subscription.data.id usually
+        # But let's check payload structure. Usually it's an event object.
+        # Let's rely on finding subscription by some ID.
+        
+        # Simpler: The 'data' object IS the subscription-invoice or payment object.
+        # It usually has relationship to subscription.
+        try:
+            # Try to get subscription ID from relationships
+            sub_id = data.get("relationships", {}).get("subscription", {}).get("data", {}).get("id")
+            if sub_id:
+                print(f"[WEBHOOK] Marking subscription {sub_id} as past_due")
+                from database import supabase
+                supabase.table("subscriptions").update({"status": "past_due"}).eq("lemon_subscription_id", str(sub_id)).execute()
+                return {"status": "processed", "event": event_name, "action": "marked_past_due"}
+        except Exception as e:
+            print(f"[WEBHOOK ERROR] Failed to process payment failure: {e}")
+            
+        return {"status": "processed", "event": event_name, "note": "Logged payment failure"}
+
     # Handle subscription lifecycle events
     # Note: subscription_plan_changed does NOT exist - plan changes trigger subscription_updated
     # Payment events have different structure - they reference subscription via relationships
@@ -129,6 +156,33 @@ async def lemon_squeezy_webhook(request: Request, x_signature: str = Header(None
 
             if result:
                 print(f"[WEBHOOK SUCCESS] Subscription upserted successfully")
+
+                # Handle subscription swap for upgrades
+                # If this is a new subscription created from an upgrade, cancel the old one
+                if event_name == "subscription_created":
+                    old_subscription_id = custom_data.get("old_subscription_id")
+                    if old_subscription_id:
+                        print(f"[WEBHOOK] Detected upgrade - canceling old subscription: {old_subscription_id}")
+                        try:
+                            api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+
+                            cancel_response = requests.delete(
+                                f"https://api.lemonsqueezy.com/v1/subscriptions/{old_subscription_id}",
+                                headers={
+                                    "Accept": "application/vnd.api+json",
+                                    "Content-Type": "application/vnd.api+json",
+                                    "Authorization": f"Bearer {api_key}"
+                                }
+                            )
+
+                            if cancel_response.status_code in [200, 204]:
+                                print(f"[WEBHOOK] Old subscription {old_subscription_id} canceled successfully")
+                            else:
+                                print(f"[WEBHOOK WARNING] Failed to cancel old subscription: {cancel_response.status_code} - {cancel_response.text}")
+                        except Exception as cancel_error:
+                            print(f"[WEBHOOK ERROR] Exception canceling old subscription: {str(cancel_error)}")
+                            # Don't fail the webhook if cancel fails - the new subscription is created
+
                 return {"status": "processed", "event": event_name}
             else:
                 print(f"[WEBHOOK ERROR] Subscription upsert failed")

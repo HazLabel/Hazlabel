@@ -212,6 +212,49 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
     }
   }
 
+  const handleEnterpriseUpgrade = async (targetCycle: 'monthly' | 'annual') => {
+    setLoading(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        toast.error("Please sign in to manage your subscription")
+        return
+      }
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
+      const response = await fetch(
+        `${apiUrl}/subscription/create-upgrade-checkout?target_cycle=${targetCycle}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${session.access_token}`
+          }
+        }
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.detail || "Failed to create upgrade checkout")
+      }
+
+      const { checkout_url } = await response.json()
+
+      toast.success("Redirecting to checkout", {
+        description: "Complete your upgrade to Enterprise."
+      })
+
+      // Redirect to Lemon Squeezy checkout
+      window.location.href = checkout_url
+    } catch (error) {
+      console.error("Upgrade error:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create upgrade checkout"
+      )
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleChangePlan = async (variantId: string, planName: string) => {
     setLoading(true)
     try {
@@ -298,20 +341,45 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
   const isAnnual = currentVariantId === plans.professional.annual.id || currentVariantId === plans.enterprise.annual.id
 
   // Available plan switches
-  const availableSwitches = []
+  const availableSwitches: Array<{
+    id?: string
+    name: string
+    type: 'cycle' | 'upgrade' | 'upgrade_enterprise'
+    label: string
+    description?: string
+    targetCycle?: 'monthly' | 'annual'
+  }> = []
 
   if (currentTier === 'professional') {
     // Can switch between monthly/annual or upgrade to enterprise
     if (isMonthly) {
       availableSwitches.push({ ...plans.professional.annual, type: 'cycle', label: 'Switch to Annual (Save 17%)' })
+      // Pro Monthly: Show one button that opens checkout with both Enterprise variants
+      availableSwitches.push({
+        name: 'Enterprise',
+        type: 'upgrade_enterprise',
+        label: 'Upgrade to Enterprise',
+        description: 'Choose Monthly ($200) or Annual ($2,769) at checkout',
+        targetCycle: 'monthly' // Default for Pro Monthly users
+      })
     } else if (isAnnual) {
       availableSwitches.push({ ...plans.professional.monthly, type: 'cycle', label: 'Switch to Monthly' })
+      // Pro Annual: Show two separate buttons
+      availableSwitches.push({
+        name: 'Enterprise Monthly',
+        type: 'upgrade_enterprise',
+        label: 'Upgrade to Enterprise Monthly',
+        description: '$220 today, then $299/month',
+        targetCycle: 'monthly'
+      })
+      availableSwitches.push({
+        name: 'Enterprise Annual',
+        type: 'upgrade_enterprise',
+        label: 'Upgrade to Enterprise Annual',
+        description: '$1,920 today, then $2,868/year',
+        targetCycle: 'annual'
+      })
     }
-    availableSwitches.push({
-      ...(isMonthly ? plans.enterprise.monthly : plans.enterprise.annual),
-      type: 'upgrade',
-      label: 'Upgrade to Enterprise'
-    })
   } else if (currentTier === 'enterprise') {
     // Can switch between monthly/annual
     if (isMonthly) {
@@ -372,15 +440,21 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
             {availableSwitches.length > 0 && !isCancelled && (
               <div className="space-y-2">
                 <h3 className="text-sm font-semibold text-slate-700 px-1">Change Plan</h3>
-                {availableSwitches.map((plan) => (
+                {availableSwitches.map((plan, index) => (
                   <button
-                    key={plan.id}
-                    onClick={() => handleChangePlan(plan.id, plan.name)}
+                    key={plan.id || `upgrade-${index}`}
+                    onClick={() => {
+                      if (plan.type === 'upgrade_enterprise' && plan.targetCycle) {
+                        handleEnterpriseUpgrade(plan.targetCycle)
+                      } else if (plan.id) {
+                        handleChangePlan(plan.id, plan.name)
+                      }
+                    }}
                     disabled={loading}
                     className="w-full flex items-start gap-3 p-4 rounded-lg border border-slate-200 hover:border-sky-300 hover:bg-sky-50/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <div className={`p-2 rounded-lg ${plan.type === 'upgrade' ? 'bg-violet-100' : 'bg-sky-100'}`}>
-                      {plan.type === 'upgrade' ? (
+                    <div className={`p-2 rounded-lg ${plan.type === 'upgrade_enterprise' ? 'bg-violet-100' : 'bg-sky-100'}`}>
+                      {plan.type === 'upgrade_enterprise' ? (
                         <ArrowUpCircle className="h-5 w-5 text-violet-600" />
                       ) : (
                         <RefreshCw className="h-5 w-5 text-sky-600" />
@@ -389,9 +463,9 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
                     <div className="flex-1 text-left">
                       <p className="font-semibold text-slate-900 text-sm">{plan.label}</p>
                       <p className="text-xs text-slate-500 mt-0.5">
-                        {plan.type === 'upgrade'
+                        {plan.description || (plan.type === 'upgrade_enterprise'
                           ? 'Get unlimited uploads and priority support'
-                          : 'Changes take effect on next billing cycle'}
+                          : 'Changes take effect on next billing cycle')}
                       </p>
                     </div>
                     {loading ? (

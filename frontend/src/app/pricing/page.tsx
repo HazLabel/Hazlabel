@@ -11,14 +11,18 @@ import {
     FileSearch,
     Database,
     History,
-    Sparkles
+    Sparkles,
+    Loader2
 } from "lucide-react"
 import Image from "next/image"
 import { useUser } from "@/hooks/use-user"
+import { useSubscription } from "@/hooks/use-subscription"
+import { createClient } from "@/utils/supabase/client"
 
 export default function PricingPage() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
     const { user } = useUser()
+    const { data: subscription, isLoading: subLoading } = useSubscription()
 
     // Lemon Squeezy Variant IDs
     const checkoutUrls = {
@@ -29,6 +33,30 @@ export default function PricingPage() {
         enterprise: {
             monthly: process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_MONTHLY || "#",
             annual: process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_ANNUAL || "#"
+        }
+    }
+
+    const handleManageSubscription = async () => {
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
+            const supabase = createClient()
+            const { data: { session } } = await supabase.auth.getSession()
+
+            if (!session) return
+
+            const response = await fetch(`${apiUrl}/subscription/create-portal`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${session.access_token}`
+                }
+            })
+
+            const data = await response.json()
+            if (data.portal_url) {
+                window.location.href = data.portal_url
+            }
+        } catch (error) {
+            console.error("Error creating portal link:", error)
         }
     }
 
@@ -54,12 +82,28 @@ export default function PricingPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Button variant="ghost" asChild className="text-slate-600 hover:text-slate-900">
-                            <Link href="/login">Sign In</Link>
-                        </Button>
-                        <Button asChild className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-5 shadow-md shadow-sky-500/20">
-                            <Link href="/login">Get Started</Link>
-                        </Button>
+                        {user ? (
+                            subscription?.status === 'active' ? (
+                                <Button
+                                    onClick={handleManageSubscription}
+                                    variant="outline"
+                                    className="text-slate-600 hover:text-slate-900"
+                                >
+                                    Manage Subscription
+                                </Button>
+                            ) : (
+                                <span className="text-sm text-slate-600">{user.email}</span>
+                            )
+                        ) : (
+                            <>
+                                <Button variant="ghost" asChild className="text-slate-600 hover:text-slate-900">
+                                    <Link href="/login">Sign In</Link>
+                                </Button>
+                                <Button asChild className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-5 shadow-md shadow-sky-500/20">
+                                    <Link href="/login">Get Started</Link>
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </div>
             </nav>
@@ -99,6 +143,7 @@ export default function PricingPage() {
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start mb-24">
                         <PricingCard
                             title="Starter"
+                            tier="free"
                             price="0"
                             description="Perfect for small labs and trial runs."
                             features={[
@@ -108,9 +153,11 @@ export default function PricingPage() {
                                 "Community Support",
                                 "Basic Label Templates"
                             ]}
+                            subscription={subscription}
                         />
                         <PricingCard
                             title="Professional"
+                            tier="professional"
                             price={billingCycle === 'monthly' ? "99" : "79"}
                             interval={billingCycle === 'monthly' ? "mo" : "mo"}
                             description="Comprehensive compliance for active facilities."
@@ -126,9 +173,11 @@ export default function PricingPage() {
                             billingCycle={billingCycle}
                             checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.pro.monthly : checkoutUrls.pro.annual}
                             userId={user?.id}
+                            subscription={subscription}
                         />
                         <PricingCard
                             title="Enterprise"
+                            tier="enterprise"
                             price={billingCycle === 'monthly' ? "299" : "239"}
                             interval={billingCycle === 'monthly' ? "mo" : "mo"}
                             description="Custom solutions for global organizations."
@@ -144,10 +193,11 @@ export default function PricingPage() {
                             billingCycle={billingCycle}
                             checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.enterprise.monthly : checkoutUrls.enterprise.annual}
                             userId={user?.id}
+                            subscription={subscription}
                         />
                     </div>
 
-                    {/* Detailed Comparison Table (Optional but good for Paddle) */}
+                    {/* Detailed Comparison Table */}
                     <div className="bg-slate-50 rounded-3xl p-8 md:p-12 mb-24">
                         <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Feature Comparison</h2>
                         <div className="overflow-x-auto">
@@ -186,7 +236,7 @@ export default function PricingPage() {
                             />
                             <FAQItem
                                 question="What forms of payment do you accept?"
-                                answer="We accept all major credit cards, PayPal, and wire transfers for Enterprise customers. All payments are processed securely via Paddle."
+                                answer="We accept all major credit cards, PayPal, and wire transfers for Enterprise customers. All payments are processed securely via Paddle (Lemon Squeezy)."
                             />
                             <FAQItem
                                 question="Is there a setup fee?"
@@ -225,6 +275,7 @@ export default function PricingPage() {
 
 function PricingCard({
     title,
+    tier,
     price,
     description,
     features,
@@ -232,9 +283,11 @@ function PricingCard({
     interval = "mo",
     billingCycle = "monthly",
     checkoutUrl,
-    userId
+    userId,
+    subscription
 }: {
     title: string
+    tier: 'free' | 'professional' | 'enterprise'
     price: string
     description: string
     features: string[]
@@ -243,60 +296,180 @@ function PricingCard({
     billingCycle?: 'monthly' | 'annual'
     checkoutUrl?: string
     userId?: string
+    subscription?: any
 }) {
     const [isLoading, setIsLoading] = React.useState(false)
 
+    // Action Handlers
     const handleSubscribe = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-
         if (!userId) {
             window.location.href = "/login"
             return
         }
 
-        // Extract variant ID from checkoutUrl (format: https://hazlabel.lemonsqueezy.com/buy/1283692)
         const variantId = checkoutUrl?.split('/').pop()
-        if (!variantId) {
-            console.error("Invalid checkout URL")
-            return
-        }
+        handleCheckout(variantId!)
+    }
 
+    const handleUpdate = async () => {
+        const variantId = checkoutUrl?.split('/').pop()
+        if (!variantId) return
+
+        setIsLoading(true)
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
+            const supabase = createClient()
+            const { data: { session } } = await supabase.auth.getSession()
+
+            const response = await fetch(`${apiUrl}/subscription/update?variant_id=${variantId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${session?.access_token}`
+                }
+            })
+
+            if (!response.ok) throw new Error("Update failed")
+
+            // Refresh page to show new status
+            window.location.reload()
+        } catch (error) {
+            console.error("Update error:", error)
+            alert("Failed to update subscription")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const handleCheckout = async (variantId: string) => {
+        if (!variantId) return
         setIsLoading(true)
 
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
-            const { createClient } = await import('@/utils/supabase/client')
             const supabase = createClient()
             const { data: { session } } = await supabase.auth.getSession()
-
-            if (!session) {
-                window.location.href = "/login"
-                return
-            }
 
             const response = await fetch(
                 `${apiUrl}/subscription/create-checkout?variant_id=${variantId}`,
                 {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${session.access_token}`,
+                        'Authorization': `Bearer ${session?.access_token}`,
                         'Content-Type': 'application/json'
                     }
                 }
             )
 
-            if (!response.ok) {
-                throw new Error('Failed to create checkout')
-            }
-
+            if (!response.ok) throw new Error('Failed to create checkout')
             const { checkout_url } = await response.json()
             window.location.href = checkout_url
         } catch (error) {
             console.error("Checkout error:", error)
-            alert("Failed to create checkout. Please try again.")
         } finally {
             setIsLoading(false)
         }
+    }
+
+    // Determine Button State
+    const isCurrentPlan = subscription?.tier === tier &&
+        ((!subscription?.variant_id && tier === 'free') ||
+            (subscription?.variant_id === checkoutUrl?.split('/').pop()))
+
+    // For Free tier, we don't have variants usually, but logic holds.
+    // Logic for "Switch to Annual" etc.
+    // If same tier, but not current plan (implies diff variant/interval) -> Update
+    // If different tier -> specific logic
+
+    let buttonContent = null
+
+    if (tier === 'free') {
+        if (subscription?.tier === 'free') {
+            buttonContent = (
+                <Button variant="outline" disabled className="w-full h-12 rounded-xl font-bold">
+                    Current Plan
+                </Button>
+            )
+        } else {
+            // Downgrade to free -> Manage
+            // Or just hide it? usually starter is just "Get Started" if not logged in.
+            // If logged in and on Pro, starter is strictly a downgrade.
+            buttonContent = (
+                <Button variant="outline" asChild className="w-full h-12 rounded-xl font-bold">
+                    <Link href="/dashboard">Go to Dashboard</Link>
+                </Button>
+            )
+        }
+    } else {
+        // Paid Plans
+        if (!userId) {
+            buttonContent = (
+                <Button variant={highlighted ? "default" : "outline"} asChild className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700' : ''}`}>
+                    <Link href="/login">Get Started</Link>
+                </Button>
+            )
+        } else if (isCurrentPlan) {
+            buttonContent = (
+                <Button variant="outline" disabled className="w-full h-12 rounded-xl font-bold bg-emerald-50 text-emerald-600 border-emerald-200">
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Current Plan
+                </Button>
+            )
+        } else if (subscription?.tier === tier) {
+            // Same tier, different interval (e.g. Monthly -> Annual)
+            buttonContent = (
+                <Button
+                    variant="outline"
+                    onClick={handleUpdate}
+                    disabled={isLoading}
+                    className="w-full h-12 rounded-xl font-bold border-sky-200 text-sky-600 hover:bg-sky-50"
+                >
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : `Switch to ${billingCycle === 'monthly' ? 'Monthly' : 'Annual'}`}
+                </Button>
+            )
+        } else {
+            // Different tier (Upgrade or Downgrade)
+            // If subscription is active and we are moving UP -> Upgrade
+            // If we are moving DOWN -> Dashboard (or Manage)
+            // Simplified: Just use Checkout for everything, LS handles upgrades. 
+            // Downgrades via checkout are messy, but for now we rely on Portal for explicit questions.
+            // But here, if a Pro user clicks Enterprise, it's an Upgrade.
+
+            const isUpgrade = (subscription?.tier === 'free' || (subscription?.tier === 'professional' && tier === 'enterprise'))
+
+            if (isUpgrade) {
+                buttonContent = (
+                    <Button
+                        variant={highlighted ? "default" : "outline"}
+                        onClick={(e) => handleSubscribe(e)}
+                        disabled={isLoading}
+                        className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
+                    >
+                        {isLoading ? "Loading..." : (subscription?.tier === 'free' ? "Subscribe Now" : "Upgrade Plan")}
+                    </Button>
+                )
+            } else {
+                // Downgrade (e.g. Enterprise to Pro) -> Send to Portal
+                // Or we could let them checkout and LS might handle it, but portal is safer.
+                buttonContent = (
+                    <Button
+                        variant="outline"
+                        disabled
+                        className="w-full h-12 rounded-xl font-bold text-slate-400"
+                    >
+                        Contact Support to Downgrade
+                    </Button>
+                )
+            }
+        }
+    }
+
+    if (price === "Custom") {
+        buttonContent = (
+            <Button variant="outline" asChild className="w-full h-12 rounded-xl font-bold">
+                <Link href="/contact">Contact Sales</Link>
+            </Button>
+        )
     }
 
     return (
@@ -339,32 +512,7 @@ function PricingCard({
                 ))}
             </ul>
 
-            {price === "Custom" ? (
-                <Button
-                    variant={highlighted ? "default" : "outline"}
-                    asChild
-                    className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
-                >
-                    <Link href="/contact">Contact Sales</Link>
-                </Button>
-            ) : price === "0" ? (
-                <Button
-                    variant={highlighted ? "default" : "outline"}
-                    asChild
-                    className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
-                >
-                    <Link href="/login">Get Started</Link>
-                </Button>
-            ) : (
-                <Button
-                    variant={highlighted ? "default" : "outline"}
-                    onClick={handleSubscribe}
-                    disabled={isLoading}
-                    className={`w-full h-12 rounded-xl font-bold ${highlighted ? 'bg-sky-600 hover:bg-sky-700 shadow-lg shadow-sky-500/20' : ''}`}
-                >
-                    {isLoading ? "Loading..." : "Subscribe Now"}
-                </Button>
-            )}
+            {buttonContent}
         </div>
     )
 }
