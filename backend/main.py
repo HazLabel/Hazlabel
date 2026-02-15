@@ -1324,7 +1324,7 @@ async def create_checkout(
                             "email": user.email,  # Pre-fill customer email
                             "custom": {
                                 "user_id": str(user.id),
-                                "old_subscription_id": old_subscription_id  # Pass old sub ID for upgrades
+                                **({"old_subscription_id": str(old_subscription_id)} if old_subscription_id else {})
                             }
                         },
                         "product_options": {
