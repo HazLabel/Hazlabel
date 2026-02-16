@@ -1409,6 +1409,9 @@ async def create_checkout(
                      if created_code:
                          discount_code = created_code
 
+            except Exception as e:
+                print(f"[CHECKOUT ERROR] Failed to calculate proration: {e}")
+
         print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}, old_sub: {old_subscription_id}, discount: {discount_code}")
 
         # Create checkout via Lemon Squeezy API
