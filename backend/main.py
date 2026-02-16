@@ -1546,12 +1546,13 @@ async def create_upgrade_checkout(
     
     credit_amount = 0
     
-    if current_sub.get("renews_at"):
+    
+    if subscription.get("renews_at"):
         try:
             from datetime import datetime
             import dateutil.parser
             
-            renews_at = dateutil.parser.parse(current_sub.get("renews_at"))
+            renews_at = dateutil.parser.parse(subscription.get("renews_at"))
             now = datetime.now(renews_at.tzinfo)
             
             # Simple linear proration
