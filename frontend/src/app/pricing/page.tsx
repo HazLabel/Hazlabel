@@ -420,7 +420,10 @@ function PricingCard({
             buttonContent = (
                 <Button
                     variant="outline"
-                    onClick={handleUpdate}
+                    onClick={() => {
+                        const variantId = checkoutUrl?.split('/').pop()
+                        if (variantId) handleCheckout(variantId)
+                    }}
                     disabled={isLoading}
                     className="w-full h-12 rounded-xl font-bold border-sky-200 text-sky-600 hover:bg-sky-50"
                 >

@@ -447,7 +447,33 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
                       if (plan.type === 'upgrade_enterprise' && plan.targetCycle) {
                         handleEnterpriseUpgrade(plan.targetCycle)
                       } else if (plan.id) {
-                        handleChangePlan(plan.id, plan.name)
+                        // Use checkout flow for switching plans too (safer than patch)
+                        // This prevents downgrading if payment fails
+                        const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
+                        const supabase = createClient()
+                        supabase.auth.getSession().then(async ({ data: { session } }) => {
+                          if (!session) return
+                          try {
+                            setLoading(true)
+                            const response = await fetch(
+                              `${apiUrl}/subscription/create-checkout?variant_id=${plan.id}`,
+                              {
+                                method: 'POST',
+                                headers: {
+                                  'Authorization': `Bearer ${session.access_token}`,
+                                  'Content-Type': 'application/json'
+                                }
+                              }
+                            )
+                            if (!response.ok) throw new Error('Failed to create checkout')
+                            const { checkout_url } = await response.json()
+                            window.location.href = checkout_url
+                          } catch (e) {
+                            console.error("Checkout error:", e)
+                            toast.error("Failed to start checkout")
+                            setLoading(false)
+                          }
+                        })
                       }
                     }}
                     disabled={loading}
@@ -508,8 +534,8 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className={`text-xs px-2 py-1 rounded-md capitalize ${invoice.status === 'paid'
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-amber-100 text-amber-700'
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-amber-100 text-amber-700'
                             }`}>
                             {invoice.status}
                           </span>
