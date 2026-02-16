@@ -1373,6 +1373,7 @@ async def create_checkout(
         }
         
         custom_price = None
+        discount_code = None
         credit_amount = 0
         
         if old_subscription_id and current_sub:
@@ -1396,13 +1397,12 @@ async def create_checkout(
                         
                     remaining = (renews_at - now).days
                     
-                    if remaining > 0:
+                if remaining > 0:
                         credit_amount = int((remaining / total_period) * current_price)
                         print(f"[CHECKOUT] Calculated credit: {credit_amount} cents (remaining days: {remaining})")
                         
                 
                 # Create discount if applicable
-                discount_code = None
                 if credit_amount > 0:
                      # Create the discount code dynamically
                      created_code = await create_one_time_discount(store_id, credit_amount, user.email)
