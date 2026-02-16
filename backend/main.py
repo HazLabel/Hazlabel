@@ -1305,7 +1305,53 @@ async def create_checkout(
             old_subscription_id = current_sub.get("lemon_subscription_id")
             print(f"[CHECKOUT] Detected upgrade from subscription: {old_subscription_id}")
 
-        print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}, old_sub: {old_subscription_id}")
+        # Calculate Proration Credit
+        PRICING_TABLE = {
+            "1283692": 9900,   # Pro Monthly
+            "1254589": 94800,  # Pro Annual
+            "1283714": 29900,  # Enterprise Monthly
+            "1283715": 286800  # Enterprise Annual
+        }
+        
+        custom_price = None
+        credit_amount = 0
+        
+        if old_subscription_id and current_sub:
+            try:
+                from datetime import datetime
+                import dateutil.parser
+                
+                current_variant_id = str(current_sub.get("lemon_variant_id"))
+                renews_at_str = current_sub.get("renews_at")
+                
+                if renews_at_str and current_variant_id in PRICING_TABLE:
+                    current_price = PRICING_TABLE[current_variant_id]
+                    renews_at = dateutil.parser.parse(renews_at_str)
+                    now = datetime.now(renews_at.tzinfo)
+                    
+                    # Determine total period days
+                    if "monthly" in str(current_variant_id) or current_variant_id in ["1283692", "1283714"]:
+                        total_period = 30
+                    else:
+                        total_period = 365
+                        
+                    remaining = (renews_at - now).days
+                    
+                    if remaining > 0:
+                        credit_amount = int((remaining / total_period) * current_price)
+                        print(f"[CHECKOUT] Calculated credit: {credit_amount} cents (remaining days: {remaining})")
+                        
+                        target_price = PRICING_TABLE.get(str(variant_id))
+                        if target_price:
+                            final_price = max(0, target_price - credit_amount)
+                            custom_price = final_price
+                            print(f"[CHECKOUT] Applying custom price: {custom_price} (Target: {target_price} - Credit: {credit_amount})")
+                        else:
+                            print(f"[CHECKOUT WARNING] Target variant {variant_id} not in pricing table, cannot apply credit.")
+            except Exception as e:
+                print(f"[CHECKOUT ERROR] Failed to calculate proration: {e}")
+
+        print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}, old_sub: {old_subscription_id}, price: {custom_price}")
 
         # Create checkout via Lemon Squeezy API
         response = requests.post(
@@ -1319,9 +1365,9 @@ async def create_checkout(
                 "data": {
                     "type": "checkouts",
                     "attributes": {
-                        "custom_price": None,
+                        "custom_price": custom_price,
                         "checkout_data": {
-                            "email": user.email,  # Pre-fill customer email
+                            "email": user.email,
                             "custom": {
                                 "user_id": str(user.id),
                                 **({"old_subscription_id": str(old_subscription_id)} if old_subscription_id else {})

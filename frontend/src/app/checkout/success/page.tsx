@@ -92,7 +92,7 @@ function CheckoutSuccessContent() {
                                 <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                             </div>
                             <h1 className="text-2xl font-bold text-slate-900 mb-2">
-                                Welcome to HazLabel Professional!
+                                Welcome to HazLabel {message.includes('Enterprise') ? 'Enterprise' : 'Professional'}!
                             </h1>
                             <p className="text-slate-600 mb-6">
                                 {message}
