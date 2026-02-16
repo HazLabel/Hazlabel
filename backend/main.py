@@ -1268,6 +1268,65 @@ async def get_customer_portal(user: User = Depends(verify_user)):
             detail="Unable to connect to subscription service."
         )
 
+async def create_one_time_discount(store_id: str, amount_cents: int, user_email: str) -> str:
+    """
+    Creates a unique one-time discount code for the given amount.
+    Returns the discount code string.
+    """
+    import requests
+    import uuid
+    
+    api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+    if not api_key:
+        print("[ERROR] No API key for discount creation")
+        return None
+        
+    # Generate a unique code
+    code = f"CREDIT-{uuid.uuid4().hex[:8].upper()}"
+    
+    try:
+        response = requests.post(
+            "https://api.lemonsqueezy.com/v1/discounts",
+            headers={
+                "Accept": "application/vnd.api+json",
+                "Content-Type": "application/vnd.api+json",
+                "Authorization": f"Bearer {api_key}"
+            },
+            json={
+                "data": {
+                    "type": "discounts",
+                    "attributes": {
+                        "name": f"Proration Credit for {user_email}",
+                        "code": code,
+                        "amount": amount_cents,
+                        "amount_type": "fixed",
+                        "duration": "once", # Important: Only applies to first payment
+                        "is_limited_redemptions": True,
+                        "max_redemptions": 1
+                    },
+                    "relationships": {
+                        "store": {
+                            "data": {
+                                "type": "stores",
+                                "id": str(store_id)
+                            }
+                        }
+                    }
+                }
+            }
+        )
+        
+        if response.status_code == 201:
+            print(f"[DISCOUNT] Created discount code: {code} for {amount_cents} cents")
+            return code
+        else:
+            print(f"[DISCOUNT ERROR] Failed to create discount: {response.text}")
+            return None
+            
+    except Exception as e:
+        print(f"[DISCOUNT ERROR] Exception creating discount: {e}")
+        return None
+
 
 @app.post("/subscription/create-checkout")
 async def create_checkout(
@@ -1341,19 +1400,35 @@ async def create_checkout(
                         credit_amount = int((remaining / total_period) * current_price)
                         print(f"[CHECKOUT] Calculated credit: {credit_amount} cents (remaining days: {remaining})")
                         
-                        target_price = PRICING_TABLE.get(str(variant_id))
-                        if target_price:
-                            final_price = max(0, target_price - credit_amount)
-                            custom_price = final_price
-                            print(f"[CHECKOUT] Applying custom price: {custom_price} (Target: {target_price} - Credit: {credit_amount})")
-                        else:
-                            print(f"[CHECKOUT WARNING] Target variant {variant_id} not in pricing table, cannot apply credit.")
-            except Exception as e:
-                print(f"[CHECKOUT ERROR] Failed to calculate proration: {e}")
+                
+                # Create discount if applicable
+                discount_code = None
+                if credit_amount > 0:
+                     # Create the discount code dynamically
+                     created_code = await create_one_time_discount(store_id, credit_amount, user.email)
+                     if created_code:
+                         discount_code = created_code
 
-        print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}, old_sub: {old_subscription_id}, price: {custom_price}")
+        print(f"Creating checkout for user_id: {user.id}, variant_id: {variant_id}, old_sub: {old_subscription_id}, discount: {discount_code}")
 
         # Create checkout via Lemon Squeezy API
+        checkout_attributes = {
+            "checkout_data": {
+                "email": user.email,
+                "custom": {
+                    "user_id": str(user.id),
+                    **({"old_subscription_id": str(old_subscription_id)} if old_subscription_id else {})
+                }
+            },
+            "product_options": {
+                "enabled_variants": [int(variant_id)],
+                "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
+            }
+        }
+        
+        if discount_code:
+            checkout_attributes["checkout_data"]["discount_code"] = discount_code
+
         response = requests.post(
             "https://api.lemonsqueezy.com/v1/checkouts",
             headers={
@@ -1364,20 +1439,7 @@ async def create_checkout(
             json={
                 "data": {
                     "type": "checkouts",
-                    "attributes": {
-                        "custom_price": custom_price,
-                        "checkout_data": {
-                            "email": user.email,
-                            "custom": {
-                                "user_id": str(user.id),
-                                **({"old_subscription_id": str(old_subscription_id)} if old_subscription_id else {})
-                            }
-                        },
-                        "product_options": {
-                            "enabled_variants": [int(variant_id)],
-                            "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
-                        }
-                    },
+                    "attributes": checkout_attributes,
                     "relationships": {
                         "store": {
                             "data": {
@@ -1622,28 +1684,30 @@ async def create_upgrade_checkout(
     ENTERPRISE_MONTHLY_PRICE = 29900
     ENTERPRISE_ANNUAL_PRICE = 286800
     
-    final_price = 0
-    
+    display_credit = 0
+    discount_code = None
+
     if current_variant_id == "1283692":  # Pro Monthly
         enabled_variants = [int(ENTERPRISE_MONTHLY), int(ENTERPRISE_ANNUAL)]
-        # We can't easily set different prices for different variants in one checkout link without variants override
-        # For now, let's just NOT apply a custom price if multiple variants are enabled, 
-        # OR we pick the target based on target_cycle query param which we have!
+        # For upgrade endpoint, we might just default to generating a discount code for the calculated credit
+        # and applying it.
+        display_credit = credit_amount
         
-        if target_cycle == "monthly":
-             final_price = max(0, ENTERPRISE_MONTHLY_PRICE - credit_amount)
-        else:
-             final_price = max(0, ENTERPRISE_ANNUAL_PRICE - credit_amount)
-
     elif current_variant_id == "1254589":  # Pro Annual
         if target_cycle == "monthly":
             enabled_variants = [int(ENTERPRISE_MONTHLY)]
-            final_price = max(0, ENTERPRISE_MONTHLY_PRICE - credit_amount)
+            display_credit = credit_amount
         else:  # annual
             enabled_variants = [int(ENTERPRISE_ANNUAL)]
-            final_price = max(0, ENTERPRISE_ANNUAL_PRICE - credit_amount)
+            display_credit = credit_amount
 
-    print(f"[UPGRADE] User {user.id} upgrading. Credit: {credit_amount}. Final Price: {final_price}")
+    if display_credit > 0:
+        # Create unique discount code
+        code = await create_one_time_discount(str(store_id), display_credit, user.email)
+        if code:
+            discount_code = code
+
+    print(f"[UPGRADE] User {user.id} upgrading. Credit: {display_credit}. Discount Code: {discount_code}")
 
     try:
         # Create checkout
@@ -1663,12 +1727,8 @@ async def create_upgrade_checkout(
             }
         }
         
-        # Only set custom price if we have a specific target variant (Lemon Squeezy creates checkout for the *first* enabled variant otherwise)
-        # If we have multiple enabled variants, setting custom_price applies to the default one, which might be confusing.
-        # But our frontend forces specific links now? No, BillingDialog "Upgrade" still calls this.
-        
-        if final_price > 0:
-            checkout_attributes["custom_price"] = final_price
+        if discount_code:
+            checkout_attributes["checkout_data"]["discount_code"] = discount_code
 
         checkout_payload = {
             "data": {
