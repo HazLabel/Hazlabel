@@ -89,12 +89,13 @@ async def parse_sds(
     monthly_count = await count_monthly_uploads(user.id)
 
     # Define tier limits: (soft_limit, hard_limit)
+    # Define tier limits: (soft_limit, hard_limit)
     limits = {
         None: (2, 5),  # Free tier: warn at 2, block at 5
-        "1283692": (200, None),  # Pro monthly: warn at 200, no hard limit
-        "1254589": (208, None),  # Pro annual
-        "1283714": (15000, None),  # Enterprise monthly
-        "1283715": (16666, None),  # Enterprise annual
+        os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"): (200, None),
+        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): (208, None),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_MONTHLY", "1286655"): (15000, None),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): (16666, None),
     }
 
     variant_id = subscription.get("lemon_variant_id") if subscription else None
@@ -187,10 +188,10 @@ async def parse_sds_validated(
 
     limits = {
         None: (2, 5),
-        "1283692": (200, None),
-        "1254589": (208, None),
-        "1283714": (15000, None),
-        "1283715": (16666, None),
+        os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"): (200, None),
+        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): (208, None),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_MONTHLY", "1286655"): (15000, None),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): (16666, None),
     }
 
     variant_id = subscription.get("lemon_variant_id") if subscription else None
@@ -1174,11 +1175,12 @@ async def get_subscription_status(user: User = Depends(verify_user)):
     monthly_uploads = await count_monthly_uploads(user.id)
 
     # Map variant_id to plan name and limits
+    # Map variant_id to plan name and limits
     variant_to_plan = {
-        "1283692": ("professional", 200),  # Pro monthly
-        "1254589": ("professional", 208),  # Pro annual (~2500/12)
-        "1283714": ("enterprise", 15000),  # Enterprise monthly
-        "1283715": ("enterprise", 16666),  # Enterprise annual (~200k/12)
+        os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"): ("professional", 200),
+        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): ("professional", 208),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_MONTHLY", "1286655"): ("enterprise", 15000),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): ("enterprise", 16666),
     }
 
     if not subscription:
