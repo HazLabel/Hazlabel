@@ -324,12 +324,32 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
   // Plan configurations
   const plans = {
     professional: {
-      monthly: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_MONTHLY || '1283692', name: 'Professional Monthly' },
-      annual: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_ANNUAL || '1254589', name: 'Professional Annual' }
+      monthly: {
+        id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_MONTHLY ||
+          process.env.NEXT_PUBLIC_LEMON_CHECKOUT_PRO_MONTHLY?.split('/').pop() ||
+          '1283692',
+        name: 'Professional Monthly'
+      },
+      annual: {
+        id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_ANNUAL ||
+          process.env.NEXT_PUBLIC_LEMON_CHECKOUT_PRO_ANNUAL?.split('/').pop() ||
+          '1254589',
+        name: 'Professional Annual'
+      }
     },
     enterprise: {
-      monthly: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_MONTHLY || '1283714', name: 'Enterprise Monthly' },
-      annual: { id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_ANNUAL || '1283715', name: 'Enterprise Annual' }
+      monthly: {
+        id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_MONTHLY ||
+          process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_MONTHLY?.split('/').pop() ||
+          '1283714',
+        name: 'Enterprise Monthly'
+      },
+      annual: {
+        id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_ANNUAL ||
+          process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_ANNUAL?.split('/').pop() ||
+          '1283715',
+        name: 'Enterprise Annual'
+      }
     }
   }
 
