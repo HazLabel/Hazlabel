@@ -1366,10 +1366,10 @@ async def create_checkout(
 
         # Calculate Proration Credit
         PRICING_TABLE = {
-            "1283692": 9900,   # Pro Monthly
-            "1254589": 94800,  # Pro Annual
-            "1283714": 29900,  # Enterprise Monthly
-            "1283715": 286800  # Enterprise Annual
+            "1322160": 9900,   # Pro Monthly
+            "1322159": 94800,  # Pro Annual
+            "1286655": 29900,  # Enterprise Monthly
+            "1286654": 286800  # Enterprise Annual
         }
         
         custom_price = None
@@ -1390,7 +1390,7 @@ async def create_checkout(
                     now = datetime.now(renews_at.tzinfo)
                     
                     # Determine total period days
-                    if "monthly" in str(current_variant_id) or current_variant_id in ["1283692", "1283714"]:
+                    if "monthly" in str(current_variant_id) or current_variant_id in ["1322160", "1286655"]:
                         total_period = 30
                     else:
                         total_period = 365
@@ -1628,11 +1628,12 @@ async def create_upgrade_checkout(
     current_variant_id = subscription.get("lemon_variant_id")
     
     # Map variant to tier
+    # Map variant to tier
     variant_to_tier = {
-        "1283692": "professional",  # Pro Monthly
-        "1254589": "professional",  # Pro Annual
-        "1283714": "enterprise",    # Enterprise Monthly
-        "1283715": "enterprise"     # Enterprise Annual
+        "1322160": "professional",  # Pro Monthly
+        "1322159": "professional",  # Pro Annual
+        "1286655": "enterprise",    # Enterprise Monthly
+        "1286654": "enterprise"     # Enterprise Annual
     }
     current_tier = variant_to_tier.get(current_variant_id, "free")
 
@@ -1646,9 +1647,9 @@ async def create_upgrade_checkout(
         raise HTTPException(status_code=500, detail="Subscription service not configured")
 
     # Enterprise variant IDs
-    ENTERPRISE_MONTHLY = "1283714"
-    ENTERPRISE_ANNUAL = "1283715"
-    ENTERPRISE_PRODUCT_ID = "814299"
+    ENTERPRISE_MONTHLY = "1286655"
+    ENTERPRISE_ANNUAL = "1286654"
+    ENTERPRISE_PRODUCT_ID = "816281"
 
     # Calculate Proration Credit
     # 1. Determine value of current plan
@@ -1667,12 +1668,12 @@ async def create_upgrade_checkout(
             now = datetime.now(renews_at.tzinfo)
             
             # Simple linear proration
-            if current_variant_id == "1283692": # Pro Monthly
+            if current_variant_id == "1322160": # Pro Monthly
                 total_period = 30 # approx days
                 remaining = (renews_at - now).days
                 if remaining > 0:
                     credit_amount = int((remaining / total_period) * PRO_MONTHLY_PRICE)
-            elif current_variant_id == "1254589": # Pro Annual
+            elif current_variant_id == "1322159": # Pro Annual
                 total_period = 365
                 remaining = (renews_at - now).days
                 if remaining > 0:
@@ -1690,13 +1691,13 @@ async def create_upgrade_checkout(
     display_credit = 0
     discount_code = None
 
-    if current_variant_id == "1283692":  # Pro Monthly
+    if current_variant_id == "1322160":  # Pro Monthly
         enabled_variants = [int(ENTERPRISE_MONTHLY), int(ENTERPRISE_ANNUAL)]
         # For upgrade endpoint, we might just default to generating a discount code for the calculated credit
         # and applying it.
         display_credit = credit_amount
         
-    elif current_variant_id == "1254589":  # Pro Annual
+    elif current_variant_id == "1322159":  # Pro Annual
         if target_cycle == "monthly":
             enabled_variants = [int(ENTERPRISE_MONTHLY)]
             display_credit = credit_amount
