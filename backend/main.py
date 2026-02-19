@@ -93,9 +93,9 @@ async def parse_sds(
     limits = {
         None: (2, 5),  # Free tier: warn at 2, block at 5
         os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"): (200, None),
-        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): (208, None),
+        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): (2500, None),
         os.environ.get("LEMON_VARIANT_ENTERPRISE_MONTHLY", "1286655"): (15000, None),
-        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): (16666, None),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): (200000, None),
     }
 
     variant_id = subscription.get("lemon_variant_id") if subscription else None
@@ -1178,9 +1178,9 @@ async def get_subscription_status(user: User = Depends(verify_user)):
     # Map variant_id to plan name and limits
     variant_to_plan = {
         os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"): ("professional", 200),
-        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): ("professional", 208),
+        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): ("professional", 2500),
         os.environ.get("LEMON_VARIANT_ENTERPRISE_MONTHLY", "1286655"): ("enterprise", 15000),
-        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): ("enterprise", 16666),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): ("enterprise", 200000),
     }
 
     if not subscription:
