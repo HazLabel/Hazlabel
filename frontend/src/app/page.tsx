@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { motion } from "framer-motion"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,6 +23,22 @@ import { useUser } from "@/hooks/use-user"
 export default function LandingPage() {
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
     const { user } = useUser()
+
+    const fadeInUp = {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true },
+        transition: { duration: 0.5 }
+    }
+
+    const stagger = {
+        whileInView: {
+            transition: {
+                staggerChildren: 0.1
+            }
+        },
+        viewport: { once: true }
+    }
 
     // Lemon Squeezy Variant IDs
     const checkoutUrls = {
@@ -77,32 +94,55 @@ export default function LandingPage() {
                     <div className="relative max-w-7xl mx-auto px-6">
                         <div className="max-w-4xl mx-auto text-center space-y-8">
                             {/* Badge */}
-                            <div className="animate-reveal">
-                                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sm font-medium text-sky-700">
+                            {/* Badge */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sm font-medium text-sky-700 hover:bg-sky-100 transition-colors cursor-default">
                                     <Sparkles className="h-4 w-4" />
                                     Powered by GPT-5 + GHS Rev 11
                                 </span>
-                            </div>
+                            </motion.div>
 
                             {/* Headline */}
-                            <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] animate-reveal delay-100">
+                            {/* Headline */}
+                            <motion.h1
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.1 }}
+                                className="text-5xl md:text-7xl font-bold tracking-tight leading-[1.1]"
+                            >
                                 Chemical Safety
                                 <br />
                                 <span className="gradient-text">Automated</span>
-                            </h1>
+                            </motion.h1>
 
                             {/* Subheadline */}
-                            <p className="text-xl md:text-2xl text-slate-600 max-w-2xl mx-auto leading-relaxed animate-reveal delay-200">
-                                Transform Safety Data Sheets into compliant GHS labels in seconds.
-                                AI-powered extraction with regulatory precision.
-                            </p>
+                            {/* Subheadline */}
+                            <motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                                className="text-xl md:text-2xl text-slate-600 max-w-2xl mx-auto leading-relaxed"
+                            >
+                                Convert SDS to GHS-compliant labels in seconds with AI.
+                                Trusted for 14M+ labels, 99.9% accuracy, and global regulatory compliance.
+                            </motion.p>
 
                             {/* CTA Buttons */}
-                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 animate-reveal delay-300">
+                            {/* CTA Buttons */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.3 }}
+                                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                            >
                                 <Button
                                     size="lg"
                                     asChild
-                                    className="h-14 px-8 text-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl shadow-lg shadow-sky-500/25 hover:shadow-sky-500/35 transition-all hover:-translate-y-0.5"
+                                    className="h-14 px-8 text-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-xl shadow-lg shadow-sky-500/25 hover:shadow-sky-500/35 transition-all hover:scale-105"
                                 >
                                     <Link href="/login">
                                         Start Free Trial
@@ -112,15 +152,21 @@ export default function LandingPage() {
                                 <Button
                                     size="lg"
                                     variant="outline"
-                                    className="h-14 px-8 text-lg border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl"
+                                    className="h-14 px-8 text-lg border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl hover:scale-105 transition-all"
                                 >
                                     <Play className="mr-2 h-5 w-5" />
                                     Watch Demo
                                 </Button>
-                            </div>
+                            </motion.div>
 
                             {/* Social Proof */}
-                            <div className="flex items-center justify-center gap-8 pt-8 text-sm text-slate-500 animate-reveal delay-400">
+                            {/* Social Proof */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.4 }}
+                                className="flex items-center justify-center gap-8 pt-8 text-sm text-slate-500"
+                            >
                                 <div className="flex items-center gap-2">
                                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                                     <span>14M+ Labels Generated</span>
@@ -133,11 +179,16 @@ export default function LandingPage() {
                                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
                                     <span>GHS Rev 11 Compliant</span>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
 
                         {/* Hero Visual */}
-                        <div className="mt-20 animate-reveal delay-500">
+                        <motion.div
+                            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                            className="mt-20"
+                        >
                             <div className="relative max-w-5xl mx-auto">
                                 {/* Main card */}
                                 <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden">
@@ -148,7 +199,7 @@ export default function LandingPage() {
                                             <div className="h-3 w-3 rounded-full bg-amber-400" />
                                             <div className="h-3 w-3 rounded-full bg-emerald-400" />
                                         </div>
-                                        <span className="text-xs text-slate-500 ml-2 font-mono">hazlabel-console</span>
+                                        <span className="text-xs text-slate-500 ml-2 font-mono">hazlabel-console — Live Preview: Methanol</span>
                                     </div>
 
                                     {/* Terminal content */}
@@ -189,14 +240,21 @@ export default function LandingPage() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                 </section>
 
                 {/* Features Section */}
                 <section id="features" className="py-32 bg-slate-50">
                     <div className="max-w-7xl mx-auto px-6">
-                        <div className="text-center max-w-3xl mx-auto mb-20">
+                        <motion.div
+                            initial="initial"
+                            whileInView="whileInView"
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                            variants={fadeInUp}
+                            className="text-center max-w-3xl mx-auto mb-20"
+                        >
                             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
                                 Everything you need for
                                 <br />
@@ -205,95 +263,135 @@ export default function LandingPage() {
                             <p className="text-xl text-slate-600">
                                 From PDF upload to thermal printer output, we handle the entire compliance workflow.
                             </p>
-                        </div>
+                        </motion.div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <FeatureCard
-                                icon={<FileSearch className="h-6 w-6" />}
-                                title="AI-Powered Extraction"
-                                description="GPT-4o analyzes SDS documents with 99.9% accuracy, extracting hazard codes, precautionary statements, and pictograms."
-                                color="sky"
-                            />
-                            <FeatureCard
-                                icon={<Shield className="h-6 w-6" />}
-                                title="GHS Rev 11 Validation"
-                                description="Every code is validated against the UN GHS Revision 11 master database. Deleted codes and mismatches are flagged instantly."
-                                color="cyan"
-                            />
-                            <FeatureCard
-                                icon={<Zap className="h-6 w-6" />}
-                                title="Signal Word Logic"
-                                description="Automatic enforcement of Danger vs Warning signal words based on hazard severity. Prevents fatal classification errors."
-                                color="amber"
-                            />
-                            <FeatureCard
-                                icon={<Database className="h-6 w-6" />}
-                                title="Chemical Vault"
-                                description="Secure cloud storage for all your chemical records with full audit history, search, and compliance tracking."
-                                color="emerald"
-                            />
-                            <FeatureCard
-                                icon={<History className="h-6 w-6" />}
-                                title="Smart Revision Tracking"
-                                description="Automatically detects changes between SDS versions, highlighting updated hazard codes so you never miss a supplier revision."
-                                color="violet"
-                            />
-                            <FeatureCard
-                                icon={<CheckCircle2 className="h-6 w-6" />}
-                                title="P-Code Cross-Validation"
-                                description="Ensures required precautionary codes are present for each hazard. Catches water-reactive chemicals missing P223."
-                                color="sky"
-                            />
-                        </div>
+                        <motion.div
+                            initial="initial"
+                            whileInView="whileInView"
+                            viewport={{ once: true }}
+                            variants={stagger}
+                            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+                        >
+                            <motion.div variants={fadeInUp}>
+                                <FeatureCard
+                                    icon={<FileSearch className="h-6 w-6" />}
+                                    title="AI-Powered Extraction"
+                                    description="GPT-4o analyzes SDS documents with 99.9% accuracy, extracting hazard codes, precautionary statements, and pictograms."
+                                    color="sky"
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <FeatureCard
+                                    icon={<Shield className="h-6 w-6" />}
+                                    title="GHS Rev 11 Validation"
+                                    description="Every code is validated against the UN GHS Revision 11 master database. Deleted codes and mismatches are flagged instantly."
+                                    color="cyan"
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <FeatureCard
+                                    icon={<Zap className="h-6 w-6" />}
+                                    title="Signal Word Logic"
+                                    description="Automatic enforcement of Danger vs Warning signal words based on hazard severity. Prevents fatal classification errors."
+                                    color="amber"
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <FeatureCard
+                                    icon={<Database className="h-6 w-6" />}
+                                    title="Chemical Vault"
+                                    description="Secure cloud storage for all your chemical records with full audit history, search, and compliance tracking."
+                                    color="emerald"
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <FeatureCard
+                                    icon={<History className="h-6 w-6" />}
+                                    title="Smart Revision Tracking"
+                                    description="Automatically detects changes between SDS versions, highlighting updated hazard codes so you never miss a supplier revision."
+                                    color="violet"
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <FeatureCard
+                                    icon={<CheckCircle2 className="h-6 w-6" />}
+                                    title="P-Code Cross-Validation"
+                                    description="Ensures required precautionary codes are present for each hazard. Catches water-reactive chemicals missing P223."
+                                    color="sky"
+                                />
+                            </motion.div>
+                        </motion.div>
                     </div>
                 </section>
 
                 {/* How it Works */}
                 <section id="how-it-works" className="py-32 bg-white">
                     <div className="max-w-7xl mx-auto px-6">
-                        <div className="text-center max-w-3xl mx-auto mb-20">
+                        <motion.div
+                            initial="initial"
+                            whileInView="whileInView"
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                            variants={fadeInUp}
+                            className="text-center max-w-3xl mx-auto mb-20"
+                        >
                             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-slate-900">
-                                Three steps to
-                                <br />
-                                <span className="gradient-text">Compliant Labels</span>
+                                Automate in 3 Simple Steps
                             </h2>
-                        </div>
+                        </motion.div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
-                            <StepCard
-                                number="01"
-                                title="Upload SDS"
-                                description="Drop your Safety Data Sheet PDF. Supports multi-page documents from any manufacturer."
-                            />
-                            <StepCard
-                                number="02"
-                                title="AI Extraction"
-                                description="Our engine extracts and validates all GHS data against Revision 11 standards in seconds."
-                            />
-                            <StepCard
-                                number="03"
-                                title="Print Labels"
-                                description="Generate compliant labels for any format. Print directly or download for your thermal printers."
-                            />
-                        </div>
+                        <motion.div
+                            initial="initial"
+                            whileInView="whileInView"
+                            viewport={{ once: true }}
+                            variants={stagger}
+                            className="grid md:grid-cols-3 gap-8"
+                        >
+                            <motion.div variants={fadeInUp}>
+                                <StepCard
+                                    number="01"
+                                    title="Upload SDS"
+                                    description="Drop your Safety Data Sheet PDF. Supports multi-page documents from any manufacturer."
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <StepCard
+                                    number="02"
+                                    title="AI Extraction"
+                                    description="Our engine extracts and validates all GHS data against Revision 11 standards in seconds."
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <StepCard
+                                    number="03"
+                                    title="Print Labels"
+                                    description="Generate compliant labels for any format. Print directly or download for your thermal printers."
+                                />
+                            </motion.div>
+                        </motion.div>
                     </div>
                 </section>
 
                 {/* Pricing Section */}
                 <section id="pricing" className="py-32 bg-slate-50 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto px-6 relative">
-                        <div className="text-center mb-16">
-                            <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4 animate-reveal">
-                                Scalable Compliance for
-                                <br />
-                                <span className="text-sky-600">Teams of All Sizes</span>
+                        <motion.div
+                            initial="initial"
+                            whileInView="whileInView"
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.5 }}
+                            variants={fadeInUp}
+                            className="text-center mb-16"
+                        >
+                            <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-4">
+                                Transparent Pricing
                             </h2>
-                            <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10 animate-reveal">
+                            <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10">
                                 Choose the plan that fits your facility's needs. From local labs to global chemical manufacturers.
                             </p>
 
                             {/* Billing Toggle */}
-                            <div className="flex items-center justify-center gap-4 mb-12 animate-reveal delay-100">
+                            <div className="flex items-center justify-center gap-4 mb-12">
                                 <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-slate-900' : 'text-slate-500'}`}>
                                     Monthly
                                 </span>
@@ -301,7 +399,11 @@ export default function LandingPage() {
                                     onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
                                     className="relative w-14 h-7 bg-slate-200 rounded-full p-1 transition-colors hover:bg-slate-300"
                                 >
-                                    <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${billingCycle === 'annual' ? 'translate-x-7' : ''}`} />
+                                    <motion.div
+                                        layout
+                                        transition={{ type: "spring", stiffness: 700, damping: 30 }}
+                                        className={`w-5 h-5 bg-white rounded-full shadow-md ${billingCycle === 'annual' ? 'translate-x-7' : ''}`}
+                                    />
                                 </button>
                                 <span className={`text-sm font-medium ${billingCycle === 'annual' ? 'text-slate-900' : 'text-slate-500'}`}>
                                     Annual
@@ -310,58 +412,70 @@ export default function LandingPage() {
                                     </span>
                                 </span>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
-                            <PricingCard
-                                title="Starter"
-                                price="0"
-                                description="Perfect for small labs and trial runs."
-                                features={[
-                                    "2 SDS Uploads / Month",
-                                    "2 PDF Downloads / Month",
-                                    "Standard GHS Pictograms",
-                                    "Community Support",
-                                    "Basic Label Templates"
-                                ]}
-                            />
-                            <PricingCard
-                                title="Professional"
-                                price={billingCycle === 'monthly' ? "99" : "79"}
-                                interval={billingCycle === 'monthly' ? "mo" : "mo"}
-                                description="Comprehensive compliance for active facilities."
-                                features={[
-                                    billingCycle === 'monthly' ? "200 SDS Parsing / Month" : "2,500 SDS Parsing / Year",
-                                    "Unlimited Downloads",
-                                    "GHS Revision 11 Validation",
-                                    "Revision Tracking",
-                                    "Priority Email Support",
-                                    "Team Workspace (up to 5 users)"
-                                ]}
-                                highlighted={true}
-                                billingCycle={billingCycle}
-                                checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.pro.monthly : checkoutUrls.pro.annual}
-                                userId={user?.id}
-                            />
-                            <PricingCard
-                                title="Enterprise"
-                                price={billingCycle === 'monthly' ? "299" : "239"}
-                                interval={billingCycle === 'monthly' ? "mo" : "mo"}
-                                description="Custom solutions for global organizations."
-                                features={[
-                                    billingCycle === 'monthly' ? "15,000 SDS Parsing / Month" : "200,000 SDS Parsing / Year",
-                                    "Multi-site Management",
-                                    "SSO & Role Control",
-                                    "Custom Template Design",
-                                    "Dedicated Compliance Expert",
-                                    "API Access",
-                                    "Unlimited Team Members"
-                                ]}
-                                billingCycle={billingCycle}
-                                checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.enterprise.monthly : checkoutUrls.enterprise.annual}
-                                userId={user?.id}
-                            />
-                        </div>
+                        <motion.div
+                            initial="initial"
+                            whileInView="whileInView"
+                            viewport={{ once: true }}
+                            variants={stagger}
+                            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-start"
+                        >
+                            <motion.div variants={fadeInUp}>
+                                <PricingCard
+                                    title="Starter"
+                                    price="0"
+                                    description="Perfect for small labs and trial runs."
+                                    features={[
+                                        "2 SDS Uploads / Month",
+                                        "2 PDF Downloads / Month",
+                                        "Standard GHS Pictograms",
+                                        "Community Support",
+                                        "Basic Label Templates"
+                                    ]}
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <PricingCard
+                                    title="Professional"
+                                    price={billingCycle === 'monthly' ? "99" : "79"}
+                                    interval={billingCycle === 'monthly' ? "mo" : "mo"}
+                                    description="Comprehensive compliance for active facilities."
+                                    features={[
+                                        billingCycle === 'monthly' ? "200 SDS Parsing / Month" : "2,500 SDS Parsing / Year",
+                                        "Unlimited Downloads",
+                                        "GHS Revision 11 Validation",
+                                        "Revision Tracking",
+                                        "Priority Email Support",
+                                        "Team Workspace (up to 5 users)"
+                                    ]}
+                                    highlighted={true}
+                                    billingCycle={billingCycle}
+                                    checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.pro.monthly : checkoutUrls.pro.annual}
+                                    userId={user?.id}
+                                />
+                            </motion.div>
+                            <motion.div variants={fadeInUp}>
+                                <PricingCard
+                                    title="Enterprise"
+                                    price={billingCycle === 'monthly' ? "299" : "239"}
+                                    interval={billingCycle === 'monthly' ? "mo" : "mo"}
+                                    description="Custom solutions for global organizations."
+                                    features={[
+                                        billingCycle === 'monthly' ? "15,000 SDS Parsing / Month" : "200,000 SDS Parsing / Year",
+                                        "Multi-site Management",
+                                        "SSO & Role Control",
+                                        "Custom Template Design",
+                                        "Dedicated Compliance Expert",
+                                        "API Access",
+                                        "Unlimited Team Members"
+                                    ]}
+                                    billingCycle={billingCycle}
+                                    checkoutUrl={billingCycle === 'monthly' ? checkoutUrls.enterprise.monthly : checkoutUrls.enterprise.annual}
+                                    userId={user?.id}
+                                />
+                            </motion.div>
+                        </motion.div>
                     </div>
                 </section>
 
@@ -482,7 +596,7 @@ export default function LandingPage() {
                     </div>
                 </div>
             </footer>
-        </div>
+        </div >
     )
 }
 
@@ -517,8 +631,8 @@ function FeatureCard({
     }
 
     return (
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-            <div className={`inline-flex p-3 rounded-xl ${colorClasses[color]} mb-5`}>
+        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:border-sky-300 transition-all duration-300 group cursor-default hover:-translate-y-1">
+            <div className={`inline-flex p-3 rounded-xl ${colorClasses[color]} mb-5 group-hover:scale-110 transition-transform duration-300`}>
                 {icon}
             </div>
             <h3 className="text-xl font-semibold mb-3 text-slate-900">{title}</h3>
