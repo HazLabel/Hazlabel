@@ -44,10 +44,30 @@ async def get_subscription(lemon_subscription_id: str):
         return None
 
 async def get_user_subscription(user_id: str):
-    """Retrieve the active subscription for a user."""
+    """
+    Retrieve the current subscription for a user.
+    Includes cancelled subscriptions since users retain access until ends_at.
+    Priority: active/on_trial first, then cancelled (if still within billing period).
+    """
     try:
+        # First try to find an active or on_trial subscription
         result = supabase.table("subscriptions").select("*").eq("user_id", user_id).in_("status", ["active", "on_trial"]).single().execute()
         return result.data
+    except Exception:
+        pass
+
+    try:
+        # Fall back to cancelled subscription (user still has access until ends_at)
+        from datetime import datetime, timezone
+        result = supabase.table("subscriptions").select("*").eq("user_id", user_id).eq("status", "cancelled").order("updated_at", desc=True).limit(1).single().execute()
+        if result.data:
+            ends_at = result.data.get("ends_at")
+            if ends_at:
+                # Parse ends_at and check if it's still in the future
+                ends_at_dt = datetime.fromisoformat(ends_at.replace("Z", "+00:00"))
+                if ends_at_dt > datetime.now(timezone.utc):
+                    return result.data
+        return None
     except Exception:
         return None
 
