@@ -321,19 +321,19 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
 
   const isCancelled = subscription?.status === 'cancelled'
 
-  // Plan configurations
+  // Plan configurations - fallback IDs must match actual Lemon Squeezy variant IDs
   const plans = {
     professional: {
       monthly: {
         id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_MONTHLY ||
           process.env.NEXT_PUBLIC_LEMON_CHECKOUT_PRO_MONTHLY?.split('/').pop() ||
-          '1283692',
+          '1322160',
         name: 'Professional Monthly'
       },
       annual: {
         id: process.env.NEXT_PUBLIC_LEMON_VARIANT_PRO_ANNUAL ||
           process.env.NEXT_PUBLIC_LEMON_CHECKOUT_PRO_ANNUAL?.split('/').pop() ||
-          '1254589',
+          '1322159',
         name: 'Professional Annual'
       }
     },
@@ -341,13 +341,13 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
       monthly: {
         id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_MONTHLY ||
           process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_MONTHLY?.split('/').pop() ||
-          '1283714',
+          '1286655',
         name: 'Enterprise Monthly'
       },
       annual: {
         id: process.env.NEXT_PUBLIC_LEMON_VARIANT_ENTERPRISE_ANNUAL ||
           process.env.NEXT_PUBLIC_LEMON_CHECKOUT_ENTERPRISE_ANNUAL?.split('/').pop() ||
-          '1283715',
+          '1286654',
         name: 'Enterprise Annual'
       }
     }
@@ -467,33 +467,9 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
                       if (plan.type === 'upgrade_enterprise' && plan.targetCycle) {
                         handleEnterpriseUpgrade(plan.targetCycle)
                       } else if (plan.id) {
-                        // Use checkout flow for switching plans too (safer than patch)
-                        // This prevents downgrading if payment fails
-                        const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || ''
-                        const supabase = createClient()
-                        supabase.auth.getSession().then(async ({ data: { session } }) => {
-                          if (!session) return
-                          try {
-                            setLoading(true)
-                            const response = await fetch(
-                              `${apiUrl}/subscription/create-checkout?variant_id=${plan.id}`,
-                              {
-                                method: 'POST',
-                                headers: {
-                                  'Authorization': `Bearer ${session.access_token}`,
-                                  'Content-Type': 'application/json'
-                                }
-                              }
-                            )
-                            if (!response.ok) throw new Error('Failed to create checkout')
-                            const { checkout_url } = await response.json()
-                            window.location.href = checkout_url
-                          } catch (e) {
-                            console.error("Checkout error:", e)
-                            toast.error("Failed to start checkout")
-                            setLoading(false)
-                          }
-                        })
+                        // Use PATCH API for same-tier cycle switches (Monthly <-> Annual)
+                        // This uses Lemon Squeezy's built-in proration instead of creating a new subscription
+                        handleChangePlan(plan.id, plan.name)
                       }
                     }}
                     disabled={loading}

@@ -189,9 +189,9 @@ async def parse_sds_validated(
     limits = {
         None: (2, 5),
         os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"): (200, None),
-        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): (208, None),
+        os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159"): (2500, None),
         os.environ.get("LEMON_VARIANT_ENTERPRISE_MONTHLY", "1286655"): (15000, None),
-        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): (16666, None),
+        os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654"): (200000, None),
     }
 
     variant_id = subscription.get("lemon_variant_id") if subscription else None
@@ -1390,7 +1390,7 @@ async def create_checkout(
                     current_price = PRICING_TABLE[current_variant_id]
                     renews_at = dateutil.parser.parse(renews_at_str)
                     now = datetime.now(renews_at.tzinfo)
-                    
+
                     # Determine total period days
                     MONTHLY_VARIANTS = [
                         os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"),
@@ -1400,14 +1400,20 @@ async def create_checkout(
                         total_period = 30
                     else:
                         total_period = 365
-                        
+
                     remaining = (renews_at - now).days
-                    
-                if remaining > 0:
+
+                    if remaining > 0:
                         credit_amount = int((remaining / total_period) * current_price)
+
+                        # Cap credit at target variant price to avoid exceeding checkout total
+                        target_price = PRICING_TABLE.get(variant_id, 0)
+                        if target_price > 0 and credit_amount > target_price:
+                            print(f"[CHECKOUT] Credit {credit_amount} exceeds target price {target_price}, capping")
+                            credit_amount = target_price - 100  # Leave $1 minimum
+
                         print(f"[CHECKOUT] Calculated credit: {credit_amount} cents (remaining days: {remaining})")
-                        
-                
+
                 # Create discount if applicable
                 if credit_amount > 0:
                      # Create the discount code dynamically
@@ -1658,88 +1664,93 @@ async def create_upgrade_checkout(
 
     # Calculate Proration Credit
     # 1. Determine value of current plan
-    PRO_MONTHLY_PRICE = 9900  # cents
-    PRO_ANNUAL_PRICE = 95000  # cents
+    PRO_MONTHLY_PRICE = 9900   # cents ($99/month)
+    PRO_ANNUAL_PRICE = 94800   # cents ($948/year = $79/mo * 12)
     
     credit_amount = 0
     
     PRO_MONTHLY_ID = os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160")
     PRO_ANNUAL_ID = os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159")
     
+    # Determine target variant and price based on target_cycle
+    ENTERPRISE_MONTHLY_PRICE = 29900   # $299
+    ENTERPRISE_ANNUAL_PRICE = 286800   # $2,868
+
+    if target_cycle == "annual":
+        target_variant_id = ENTERPRISE_ANNUAL
+        target_price = ENTERPRISE_ANNUAL_PRICE
+    else:
+        target_variant_id = ENTERPRISE_MONTHLY
+        target_price = ENTERPRISE_MONTHLY_PRICE
+
+    # Calculate proration credit from remaining time on current Pro plan
     if subscription.get("renews_at"):
         try:
             from datetime import datetime
             import dateutil.parser
-            
+
             renews_at = dateutil.parser.parse(subscription.get("renews_at"))
             now = datetime.now(renews_at.tzinfo)
-            
+
             # Simple linear proration
-            if current_variant_id == PRO_MONTHLY_ID: # Pro Monthly
-                total_period = 30 # approx days
+            if current_variant_id == PRO_MONTHLY_ID:  # Pro Monthly
+                total_period = 30  # approx days
                 remaining = (renews_at - now).days
                 if remaining > 0:
                     credit_amount = int((remaining / total_period) * PRO_MONTHLY_PRICE)
-            elif current_variant_id == PRO_ANNUAL_ID: # Pro Annual
+            elif current_variant_id == PRO_ANNUAL_ID:  # Pro Annual
                 total_period = 365
                 remaining = (renews_at - now).days
                 if remaining > 0:
                     credit_amount = int((remaining / total_period) * PRO_ANNUAL_PRICE)
-                    
+
+            # IMPORTANT: Cap credit at target price so the discount doesn't exceed the checkout total.
+            # Lemon Squeezy will reject or ignore discounts larger than the checkout amount.
+            if credit_amount > target_price:
+                print(f"[PRORATION] Credit {credit_amount} exceeds target price {target_price}, capping")
+                credit_amount = target_price - 100  # Leave $1 minimum to process checkout
+
             print(f"[PRORATION] Calculated credit: {credit_amount} cents (remaining days: {remaining})")
         except Exception as e:
             print(f"[PRORATION ERROR] Failed to calculate credit: {e}")
             credit_amount = 0
 
-    # Determine target price and apply credit
-    ENTERPRISE_MONTHLY_PRICE = 29900
-    ENTERPRISE_ANNUAL_PRICE = 286800
-    
-    display_credit = 0
+    display_credit = credit_amount
     discount_code = None
-
-    if current_variant_id == PRO_MONTHLY_ID:  # Pro Monthly
-        enabled_variants = [int(ENTERPRISE_MONTHLY), int(ENTERPRISE_ANNUAL)]
-        # For upgrade endpoint, we might just default to generating a discount code for the calculated credit
-        # and applying it.
-        display_credit = credit_amount
-        
-    elif current_variant_id == PRO_ANNUAL_ID:  # Pro Annual
-        if target_cycle == "monthly":
-            enabled_variants = [int(ENTERPRISE_MONTHLY)]
-            display_credit = credit_amount
-        else:  # annual
-            enabled_variants = [int(ENTERPRISE_ANNUAL)]
-            display_credit = credit_amount
 
     if display_credit > 0:
         # Create unique discount code
         code = await create_one_time_discount(str(store_id), display_credit, user.email)
         if code:
             discount_code = code
+        else:
+            print(f"[UPGRADE WARNING] Failed to create discount code, proceeding without proration")
 
-    print(f"[UPGRADE] User {user.id} upgrading. Credit: {display_credit}. Discount Code: {discount_code}")
+    print(f"[UPGRADE] User {user.id} upgrading to Enterprise {target_cycle}. Credit: {display_credit}. Discount Code: {discount_code}")
 
     try:
-        # Create checkout
+        # Create checkout — use the target variant directly
         checkout_attributes = {
             "checkout_data": {
                 "email": user.email,
+                "name": user.email.split("@")[0],  # Pre-fill name for better UX
+                "discount_code": discount_code or "",
                 "custom": {
                     "user_id": str(user.id),
                     "old_subscription_id": str(subscription.get("lemon_subscription_id")),
                     "current_variant_id": current_variant_id,
-                    "is_upgrade": "true" 
+                    "is_upgrade": "true"
                 }
             },
             "product_options": {
-                "enabled_variants": enabled_variants,
+                "enabled_variants": [int(target_variant_id)],
                 "redirect_url": f"{os.environ.get('FRONTEND_URL', 'https://www.hazlabel.co')}/checkout/success"
             }
         }
-        
-        if discount_code:
-            checkout_attributes["checkout_data"]["discount_code"] = discount_code
+
+        # Only include discount_code if we actually have one
+        if not discount_code:
+            del checkout_attributes["checkout_data"]["discount_code"]
 
         checkout_payload = {
             "data": {
@@ -1755,7 +1766,7 @@ async def create_upgrade_checkout(
                     "variant": {
                         "data": {
                             "type": "variants",
-                            "id": str(enabled_variants[0])
+                            "id": str(target_variant_id)
                         }
                     }
                 }
@@ -1785,7 +1796,8 @@ async def create_upgrade_checkout(
 
         return {
             "checkout_url": checkout_url,
-            "checkout_id": checkout_data["data"]["id"]
+            "checkout_id": checkout_data["data"]["id"],
+            "credit_applied": display_credit
         }
 
     except requests.RequestException as e:
@@ -2073,11 +2085,17 @@ async def change_subscription_plan(
     lemon_subscription_id = subscription.get("lemon_subscription_id")
 
     # Define variant prices (in priority order: Enterprise Annual > Enterprise Monthly > Pro Annual > Pro Monthly)
+    # Use env vars to stay in sync with actual Lemon Squeezy configuration
+    VARIANT_PRO_MONTHLY = os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160")
+    VARIANT_PRO_ANNUAL = os.environ.get("LEMON_VARIANT_PRO_ANNUAL", "1322159")
+    VARIANT_ENTERPRISE_MONTHLY = os.environ.get("LEMON_VARIANT_ENTERPRISE_MONTHLY", "1286655")
+    VARIANT_ENTERPRISE_ANNUAL = os.environ.get("LEMON_VARIANT_ENTERPRISE_ANNUAL", "1286654")
+
     variant_tiers = {
-        "1283715": 4,  # Enterprise Annual (highest)
-        "1283714": 3,  # Enterprise Monthly
-        "1254589": 2,  # Pro Annual
-        "1283692": 1,  # Pro Monthly (lowest)
+        VARIANT_ENTERPRISE_ANNUAL: 4,   # Enterprise Annual (highest)
+        VARIANT_ENTERPRISE_MONTHLY: 3,  # Enterprise Monthly
+        VARIANT_PRO_ANNUAL: 2,          # Pro Annual
+        VARIANT_PRO_MONTHLY: 1,         # Pro Monthly (lowest)
     }
 
     current_tier = variant_tiers.get(str(current_variant_id), 0)
@@ -2087,15 +2105,17 @@ async def change_subscription_plan(
     try:
         # Check if this is a cross-tier upgrade (Pro -> Enterprise)
         # These should go through checkout flow, not direct PATCH
-        current_tier_name = subscription.get("tier", "").lower()
+        pro_variants = [VARIANT_PRO_MONTHLY, VARIANT_PRO_ANNUAL]
+        enterprise_variants = [VARIANT_ENTERPRISE_MONTHLY, VARIANT_ENTERPRISE_ANNUAL]
+        current_is_pro = str(current_variant_id) in pro_variants
         is_cross_tier_upgrade = (
-            current_tier_name == "professional" and
-            variant_id in ["1283714", "1283715"]  # Enterprise variants
+            current_is_pro and
+            str(variant_id) in enterprise_variants
         )
 
         if is_cross_tier_upgrade:
             # Cross-tier upgrades MUST use checkout flow for proper payment handling
-            print(f"[PLAN CHANGE] Cross-tier upgrade detected: {current_tier_name} -> Enterprise")
+            print(f"[PLAN CHANGE] Cross-tier upgrade detected: Pro -> Enterprise")
             print(f"[PLAN CHANGE] This requires checkout - rejecting direct change")
             raise HTTPException(
                 status_code=400,
