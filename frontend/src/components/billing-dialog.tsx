@@ -57,6 +57,12 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
+  const [changePlanDialogOpen, setChangePlanDialogOpen] = useState(false)
+  const [pendingPlanChange, setPendingPlanChange] = useState<{
+    variantId: string
+    planName: string
+    isUpgrade: boolean
+  } | null>(null)
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [invoicesLoading, setInvoicesLoading] = useState(false)
   const [invoicesLoaded, setInvoicesLoaded] = useState(false)
@@ -255,6 +261,16 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
     }
   }
 
+  const confirmChangePlan = (variantId: string, planName: string) => {
+    // Determine if this is an upgrade (will charge immediately) or downgrade (scheduled)
+    const currentTierLevel = currentVariantId ? variantTiers[currentVariantId] || 0 : 0
+    const newTierLevel = variantTiers[variantId] || 0
+    const isUpgrade = newTierLevel > currentTierLevel
+
+    setPendingPlanChange({ variantId, planName, isUpgrade })
+    setChangePlanDialogOpen(true)
+  }
+
   const handleChangePlan = async (variantId: string, planName: string) => {
     setLoading(true)
     try {
@@ -355,6 +371,14 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
 
   const currentVariantId = subscription?.variant_id
   const currentTier = subscription?.tier || 'free'
+
+  // Variant tier levels for upgrade/downgrade detection
+  const variantTiers: Record<string, number> = {
+    [plans.professional.monthly.id]: 1,
+    [plans.professional.annual.id]: 2,
+    [plans.enterprise.monthly.id]: 3,
+    [plans.enterprise.annual.id]: 4,
+  }
 
   // Determine current billing cycle
   const isMonthly = currentVariantId === plans.professional.monthly.id || currentVariantId === plans.enterprise.monthly.id
@@ -467,9 +491,8 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
                       if (plan.type === 'upgrade_enterprise' && plan.targetCycle) {
                         handleEnterpriseUpgrade(plan.targetCycle)
                       } else if (plan.id) {
-                        // Use PATCH API for same-tier cycle switches (Monthly <-> Annual)
-                        // This uses Lemon Squeezy's built-in proration instead of creating a new subscription
-                        handleChangePlan(plan.id, plan.name)
+                        // Show confirmation dialog before making the change
+                        confirmChangePlan(plan.id, plan.name)
                       }
                     }}
                     disabled={loading}
@@ -586,6 +609,71 @@ export function BillingDialog({ subscription, onUpdate }: BillingDialogProps) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Plan Change Confirmation Dialog */}
+      <AlertDialog open={changePlanDialogOpen} onOpenChange={setChangePlanDialogOpen}>
+        <AlertDialogContent className="bg-white border-slate-200">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-slate-900">
+              {pendingPlanChange?.isUpgrade ? 'Confirm Plan Upgrade' : 'Confirm Plan Change'}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600">
+              {pendingPlanChange?.isUpgrade ? (
+                <>
+                  You are upgrading to <strong>{pendingPlanChange.planName}</strong>.
+                  The prorated price difference will be <strong>charged immediately</strong> to your card on file.
+                </>
+              ) : (
+                <>
+                  You are switching to <strong>{pendingPlanChange?.planName}</strong>.
+                  This change will take effect at the <strong>end of your current billing cycle</strong>
+                  {subscription?.renews_at && (
+                    <>
+                      {' '}on{' '}
+                      <strong>
+                        {new Date(subscription.renews_at).toLocaleDateString('en-US', {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </strong>
+                    </>
+                  )}
+                  . No charge will be made today.
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-slate-300">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (pendingPlanChange) {
+                  handleChangePlan(pendingPlanChange.variantId, pendingPlanChange.planName)
+                }
+                setChangePlanDialogOpen(false)
+                setPendingPlanChange(null)
+              }}
+              disabled={loading}
+              className={pendingPlanChange?.isUpgrade
+                ? "bg-sky-600 hover:bg-sky-700 text-white"
+                : "bg-slate-800 hover:bg-slate-900 text-white"
+              }
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : pendingPlanChange?.isUpgrade ? (
+                "Confirm & Pay"
+              ) : (
+                "Confirm Change"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Cancel Confirmation Dialog */}
       <AlertDialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
