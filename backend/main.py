@@ -1631,9 +1631,8 @@ async def create_upgrade_checkout(
     if not subscription:
         raise HTTPException(status_code=404, detail="No active subscription found")
 
-    current_variant_id = subscription.get("lemon_variant_id")
+    current_variant_id = str(subscription.get("lemon_variant_id", ""))
     
-    # Map variant to tier
     # Map variant to tier
     variant_to_tier = {
         os.environ.get("LEMON_VARIANT_PRO_MONTHLY", "1322160"): "professional",
