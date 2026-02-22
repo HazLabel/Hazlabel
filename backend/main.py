@@ -1284,7 +1284,7 @@ async def create_one_time_discount(store_id: str, amount_cents: int, user_email:
         return None
         
     # Generate a unique code
-    code = f"CREDIT-{uuid.uuid4().hex[:8].upper()}"
+    code = f"CREDIT{uuid.uuid4().hex[:8].upper()}"
     
     try:
         response = requests.post(
