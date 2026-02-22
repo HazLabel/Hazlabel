@@ -1273,62 +1273,83 @@ async def get_customer_portal(user: User = Depends(verify_user)):
 async def create_one_time_discount(store_id: str, amount_cents: int, user_email: str) -> str:
     """
     Creates a unique one-time discount code for the given amount.
-    Returns the discount code string.
+    Returns the discount code string. Retries once on 500 errors.
     """
     import requests
     import uuid
-    
+    import time
+
     api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
     if not api_key:
         print("[ERROR] No API key for discount creation")
         return None
-        
+
     # Generate a unique code
     code = f"CREDIT{uuid.uuid4().hex[:8].upper()}"
-    
-    try:
-        response = requests.post(
-            "https://api.lemonsqueezy.com/v1/discounts",
-            headers={
-                "Accept": "application/vnd.api+json",
-                "Content-Type": "application/vnd.api+json",
-                "Authorization": f"Bearer {api_key}"
+
+    payload = {
+        "data": {
+            "type": "discounts",
+            "attributes": {
+                "name": f"Proration Credit for {user_email}",
+                "code": code,
+                "amount": amount_cents,
+                "amount_type": "fixed",
+                "duration": "once",
+                "is_limited_redemptions": True,
+                "max_redemptions": 1
             },
-            json={
-                "data": {
-                    "type": "discounts",
-                    "attributes": {
-                        "name": f"Proration Credit for {user_email}",
-                        "code": code,
-                        "amount": amount_cents,
-                        "amount_type": "fixed",
-                        "duration": "once", # Important: Only applies to first payment
-                        "is_limited_redemptions": True,
-                        "max_redemptions": 1,
-                        "test_mode": True  # Must match the store's test mode for discounts to work
-                    },
-                    "relationships": {
-                        "store": {
-                            "data": {
-                                "type": "stores",
-                                "id": str(store_id)
-                            }
-                        }
+            "relationships": {
+                "store": {
+                    "data": {
+                        "type": "stores",
+                        "id": str(store_id)
                     }
                 }
             }
-        )
+        }
+    }
 
-        if response.status_code == 201:
-            print(f"[DISCOUNT] Created discount code: {code} for {amount_cents} cents")
-            return code
-        else:
-            print(f"[DISCOUNT ERROR] Status {response.status_code}: {response.text}")
+    headers = {
+        "Accept": "application/vnd.api+json",
+        "Content-Type": "application/vnd.api+json",
+        "Authorization": f"Bearer {api_key}"
+    }
+
+    print(f"[DISCOUNT] Creating code {code}: {amount_cents} cents, store {store_id}")
+
+    # Retry up to 2 times for transient 500 errors from LS
+    for attempt in range(2):
+        try:
+            response = requests.post(
+                "https://api.lemonsqueezy.com/v1/discounts",
+                headers=headers,
+                json=payload,
+                timeout=15
+            )
+
+            if response.status_code == 201:
+                print(f"[DISCOUNT] Created discount code: {code} for {amount_cents} cents (attempt {attempt + 1})")
+                return code
+            elif response.status_code >= 500 and attempt == 0:
+                print(f"[DISCOUNT] LS returned {response.status_code} on attempt 1, retrying in 2s...")
+                time.sleep(2)
+                # Generate a new code for retry to avoid code collision
+                code = f"CREDIT{uuid.uuid4().hex[:8].upper()}"
+                payload["data"]["attributes"]["code"] = code
+                continue
+            else:
+                print(f"[DISCOUNT ERROR] Status {response.status_code}: {response.text}")
+                return None
+
+        except Exception as e:
+            print(f"[DISCOUNT ERROR] Exception creating discount (attempt {attempt + 1}): {e}")
+            if attempt == 0:
+                time.sleep(2)
+                continue
             return None
-            
-    except Exception as e:
-        print(f"[DISCOUNT ERROR] Exception creating discount: {e}")
-        return None
+
+    return None
 
 
 @app.post("/subscription/create-checkout")
