@@ -1304,7 +1304,8 @@ async def create_one_time_discount(store_id: str, amount_cents: int, user_email:
                         "amount_type": "fixed",
                         "duration": "once", # Important: Only applies to first payment
                         "is_limited_redemptions": True,
-                        "max_redemptions": 1
+                        "max_redemptions": 1,
+                        "test_mode": True  # Must match the store's test mode for discounts to work
                     },
                     "relationships": {
                         "store": {
@@ -1317,12 +1318,12 @@ async def create_one_time_discount(store_id: str, amount_cents: int, user_email:
                 }
             }
         )
-        
+
         if response.status_code == 201:
             print(f"[DISCOUNT] Created discount code: {code} for {amount_cents} cents")
             return code
         else:
-            print(f"[DISCOUNT ERROR] Failed to create discount: {response.text}")
+            print(f"[DISCOUNT ERROR] Status {response.status_code}: {response.text}")
             return None
             
     except Exception as e:
