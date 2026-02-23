@@ -562,7 +562,7 @@ LABEL_SIZE_CONFIG = {
 
 
 @app.post("/print/pdf")
-async def bulk_print_pdf(request: BulkPrintRequest, user: User = Depends(verify_subscription)):
+async def bulk_print_pdf(request: BulkPrintRequest, user: User = Depends(verify_user)):
     """Generate GHS-compliant multi-page PDF labels for multiple chemicals."""
     from reportlab.lib.pagesizes import letter
     from reportlab.pdfgen import canvas
