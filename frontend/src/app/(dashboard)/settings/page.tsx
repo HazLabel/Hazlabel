@@ -162,7 +162,8 @@ export default function SettingsPage() {
             if (error) throw error
 
             toast.success("Verification email sent", {
-                description: `Check ${newEmail} to confirm the change.`
+                description: `Check ${newEmail} for a confirmation link to complete the change.`,
+                duration: 6000,
             })
             setShowEmailModal(false)
             setNewEmail("")
