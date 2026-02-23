@@ -4,8 +4,10 @@ import { createClient } from '@/utils/supabase/server'
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url)
     const code = searchParams.get('code')
-    // For email verification, redirect to success page instead of inventory
-    const next = '/auth/verified'
+    const type = searchParams.get('type')
+
+    // Determine redirect based on callback type
+    const next = type === 'email_change' ? '/settings' : '/auth/verified'
 
     if (code) {
         const supabase = await createClient()
