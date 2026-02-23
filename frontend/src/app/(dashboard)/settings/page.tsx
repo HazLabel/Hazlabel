@@ -626,10 +626,10 @@ export default function SettingsPage() {
 
             {/* Email Change Modal */}
             {showEmailModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
-                    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 space-y-3">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold text-slate-900">Change Email Address</h3>
+                            <h3 className="text-base font-semibold text-slate-900">Change Email Address</h3>
                             <button
                                 onClick={() => {
                                     setShowEmailModal(false)
@@ -637,47 +637,47 @@ export default function SettingsPage() {
                                 }}
                                 className="text-slate-400 hover:text-slate-600"
                             >
-                                <X className="h-5 w-5" />
+                                <X className="h-4 w-4" />
                             </button>
                         </div>
 
-                        <div className="space-y-3">
-                            <div>
-                                <Label className="text-slate-700">Current Email</Label>
+                        <div className="space-y-2.5">
+                            <div className="space-y-1">
+                                <Label className="text-xs text-slate-600">Current Email</Label>
                                 <Input
                                     value={user?.email || ""}
                                     disabled
-                                    className="bg-slate-50 text-slate-500"
+                                    className="bg-slate-50 text-slate-500 h-9 text-sm"
                                 />
                             </div>
 
-                            <div>
-                                <Label htmlFor="newEmail" className="text-slate-700">New Email</Label>
+                            <div className="space-y-1">
+                                <Label htmlFor="newEmail" className="text-xs text-slate-600">New Email</Label>
                                 <Input
                                     id="newEmail"
                                     type="email"
                                     value={newEmail}
                                     onChange={(e) => setNewEmail(e.target.value)}
                                     placeholder="new.email@example.com"
-                                    className="border-slate-200"
+                                    className="border-slate-200 h-9 text-sm"
                                 />
                             </div>
 
-                            <div className="bg-sky-50 border border-sky-200 rounded-lg p-3">
-                                <p className="text-xs text-slate-700">
-                                    We'll send a verification link to your new email. You'll need to confirm before the change takes effect.
+                            <div className="bg-sky-50 border border-sky-200 rounded-lg p-2.5">
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    A verification link will be sent to your new email. Confirm it to complete the change.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex gap-3 pt-2">
+                        <div className="flex gap-2.5 pt-1">
                             <Button
                                 variant="outline"
                                 onClick={() => {
                                     setShowEmailModal(false)
                                     setNewEmail("")
                                 }}
-                                className="flex-1"
+                                className="flex-1 h-9 text-sm"
                                 disabled={emailLoading}
                             >
                                 Cancel
@@ -685,11 +685,11 @@ export default function SettingsPage() {
                             <Button
                                 onClick={handleEmailChange}
                                 disabled={!newEmail || emailLoading}
-                                className="flex-1 bg-sky-600 hover:bg-sky-700"
+                                className="flex-1 h-9 text-sm bg-sky-600 hover:bg-sky-700"
                             >
                                 {emailLoading ? (
                                     <>
-                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
                                         Sending...
                                     </>
                                 ) : (
@@ -703,10 +703,10 @@ export default function SettingsPage() {
 
             {/* Password Change Modal */}
             {showPasswordModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
-                    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 space-y-3">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-lg font-semibold text-slate-900">Change Password</h3>
+                            <h3 className="text-base font-semibold text-slate-900">Change Password</h3>
                             <button
                                 onClick={() => {
                                     setShowPasswordModal(false)
@@ -716,13 +716,13 @@ export default function SettingsPage() {
                                 }}
                                 className="text-slate-400 hover:text-slate-600"
                             >
-                                <X className="h-5 w-5" />
+                                <X className="h-4 w-4" />
                             </button>
                         </div>
 
-                        <div className="space-y-3">
-                            <div>
-                                <Label htmlFor="currentPassword" className="text-slate-700">Current Password</Label>
+                        <div className="space-y-2.5">
+                            <div className="space-y-1">
+                                <Label htmlFor="currentPassword" className="text-xs text-slate-600">Current Password</Label>
                                 <div className="relative">
                                     <Input
                                         id="currentPassword"
@@ -730,20 +730,20 @@ export default function SettingsPage() {
                                         value={currentPassword}
                                         onChange={(e) => setCurrentPassword(e.target.value)}
                                         placeholder="Enter current password"
-                                        className="pr-10"
+                                        className="pr-10 h-9 text-sm"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                                     >
-                                        {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        {showCurrentPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                                     </button>
                                 </div>
                             </div>
 
-                            <div>
-                                <Label htmlFor="newPassword" className="text-slate-700">New Password</Label>
+                            <div className="space-y-1">
+                                <Label htmlFor="newPassword" className="text-xs text-slate-600">New Password</Label>
                                 <div className="relative">
                                     <Input
                                         id="newPassword"
@@ -751,20 +751,20 @@ export default function SettingsPage() {
                                         value={newPassword}
                                         onChange={(e) => setNewPassword(e.target.value)}
                                         placeholder="Enter new password"
-                                        className="pr-10"
+                                        className="pr-10 h-9 text-sm"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowNewPassword(!showNewPassword)}
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                                     >
-                                        {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        {showNewPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                                     </button>
                                 </div>
                             </div>
 
-                            <div>
-                                <Label htmlFor="confirmNewPassword" className="text-slate-700">Confirm New Password</Label>
+                            <div className="space-y-1">
+                                <Label htmlFor="confirmNewPassword" className="text-xs text-slate-600">Confirm New Password</Label>
                                 <div className="relative">
                                     <Input
                                         id="confirmNewPassword"
@@ -772,26 +772,26 @@ export default function SettingsPage() {
                                         value={confirmNewPassword}
                                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                                         placeholder="Confirm new password"
-                                        className="pr-10"
+                                        className="pr-10 h-9 text-sm"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                                     >
-                                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        {showConfirmPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                                     </button>
                                 </div>
                             </div>
 
-                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                                <p className="text-xs text-slate-700">
-                                    Password must be at least 8 characters. Use a mix of uppercase, lowercase, numbers, and symbols.
+                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-2.5">
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    Password must be at least 8 characters with a mix of uppercase, lowercase, numbers, and symbols.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex gap-3 pt-2">
+                        <div className="flex gap-2.5 pt-1">
                             <Button
                                 variant="outline"
                                 onClick={() => {
@@ -800,7 +800,7 @@ export default function SettingsPage() {
                                     setNewPassword("")
                                     setConfirmNewPassword("")
                                 }}
-                                className="flex-1"
+                                className="flex-1 h-9 text-sm"
                                 disabled={passwordLoading}
                             >
                                 Cancel
@@ -808,11 +808,11 @@ export default function SettingsPage() {
                             <Button
                                 onClick={handlePasswordChange}
                                 disabled={!currentPassword || !newPassword || !confirmNewPassword || passwordLoading}
-                                className="flex-1 bg-sky-600 hover:bg-sky-700"
+                                className="flex-1 h-9 text-sm bg-sky-600 hover:bg-sky-700"
                             >
                                 {passwordLoading ? (
                                     <>
-                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
                                         Updating...
                                     </>
                                 ) : (
@@ -826,14 +826,14 @@ export default function SettingsPage() {
 
             {/* Delete Account Confirmation Modal */}
             {showDeleteModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
-                    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 space-y-3">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <div className="p-2 rounded-lg bg-red-100">
-                                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                                <div className="p-1.5 rounded-lg bg-red-100">
+                                    <AlertTriangle className="h-4 w-4 text-red-600" />
                                 </div>
-                                <h3 className="text-lg font-semibold text-slate-900">Delete Account</h3>
+                                <h3 className="text-base font-semibold text-slate-900">Delete Account</h3>
                             </div>
                             <button
                                 onClick={() => {
@@ -842,16 +842,16 @@ export default function SettingsPage() {
                                 }}
                                 className="text-slate-400 hover:text-slate-600"
                             >
-                                <X className="h-5 w-5" />
+                                <X className="h-4 w-4" />
                             </button>
                         </div>
 
-                        <div className="space-y-3">
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                                <p className="text-sm font-medium text-red-800 mb-2">
+                        <div className="space-y-2.5">
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                                <p className="text-xs font-medium text-red-800 mb-1.5">
                                     This action is permanent and cannot be undone.
                                 </p>
-                                <ul className="text-xs text-red-700 space-y-1 list-disc list-inside">
+                                <ul className="text-xs text-red-700 space-y-0.5 list-disc list-inside">
                                     <li>All your chemicals and labels will be deleted</li>
                                     <li>Your subscription will be cancelled immediately</li>
                                     <li>Your audit logs will be removed</li>
@@ -859,8 +859,8 @@ export default function SettingsPage() {
                                 </ul>
                             </div>
 
-                            <div>
-                                <Label htmlFor="deleteConfirm" className="text-slate-700">
+                            <div className="space-y-1">
+                                <Label htmlFor="deleteConfirm" className="text-xs text-slate-600">
                                     Type <span className="font-mono font-bold text-red-600">DELETE</span> to confirm
                                 </Label>
                                 <Input
@@ -868,20 +868,20 @@ export default function SettingsPage() {
                                     value={deleteConfirmText}
                                     onChange={(e) => setDeleteConfirmText(e.target.value)}
                                     placeholder="Type DELETE to confirm"
-                                    className="border-slate-200 mt-1"
+                                    className="border-slate-200 h-9 text-sm"
                                     autoComplete="off"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex gap-3 pt-2">
+                        <div className="flex gap-2.5 pt-1">
                             <Button
                                 variant="outline"
                                 onClick={() => {
                                     setShowDeleteModal(false)
                                     setDeleteConfirmText("")
                                 }}
-                                className="flex-1"
+                                className="flex-1 h-9 text-sm"
                                 disabled={deleteLoading}
                             >
                                 Cancel
@@ -889,16 +889,16 @@ export default function SettingsPage() {
                             <Button
                                 onClick={handleDeleteAccount}
                                 disabled={deleteConfirmText !== "DELETE" || deleteLoading}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white disabled:bg-red-300"
+                                className="flex-1 h-9 text-sm bg-red-600 hover:bg-red-700 text-white disabled:bg-red-300"
                             >
                                 {deleteLoading ? (
                                     <>
-                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
                                         Deleting...
                                     </>
                                 ) : (
                                     <>
-                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
                                         Delete My Account
                                     </>
                                 )}
