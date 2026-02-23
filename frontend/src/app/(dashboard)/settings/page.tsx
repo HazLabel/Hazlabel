@@ -27,11 +27,14 @@ import {
     EyeOff,
     Key,
     X,
-    CreditCard
+    CreditCard,
+    Trash2,
+    AlertTriangle
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { SubscriptionManagement } from "@/components/subscription-management"
+import { useRouter } from "next/navigation"
 
 // PDF Label Size Options
 const LABEL_SIZE_OPTIONS = {
@@ -89,7 +92,13 @@ export default function SettingsPage() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [passwordLoading, setPasswordLoading] = useState(false)
 
+    // Delete account state
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [deleteConfirmText, setDeleteConfirmText] = useState("")
+    const [deleteLoading, setDeleteLoading] = useState(false)
+
     const supabase = createClient()
+    const router = useRouter()
 
     // Load settings from user metadata
     useEffect(() => {
@@ -213,6 +222,44 @@ export default function SettingsPage() {
             })
         } finally {
             setPasswordLoading(false)
+        }
+    }
+
+    const handleDeleteAccount = async () => {
+        if (deleteConfirmText !== "DELETE") return
+
+        setDeleteLoading(true)
+        try {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session?.access_token) {
+                throw new Error("Not authenticated")
+            }
+
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://hazlabel-production.up.railway.app"
+            const response = await fetch(`${apiUrl}/account`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                },
+            })
+
+            if (!response.ok) {
+                const data = await response.json()
+                throw new Error(data.detail || "Failed to delete account")
+            }
+
+            // Sign out and redirect
+            await supabase.auth.signOut()
+            router.push("/login")
+            toast.success("Account deleted", {
+                description: "Your account and all data have been permanently removed.",
+            })
+        } catch (error) {
+            toast.error("Failed to delete account", {
+                description: error instanceof Error ? error.message : "Please try again or contact support.",
+            })
+        } finally {
+            setDeleteLoading(false)
         }
     }
 
@@ -566,8 +613,10 @@ export default function SettingsPage() {
                             </div>
                             <Button
                                 variant="outline"
-                                className="border-red-200 text-red-600 hover:bg-red-50"
+                                className="border-red-200 text-red-600 hover:bg-red-50 gap-2"
+                                onClick={() => setShowDeleteModal(true)}
                             >
+                                <Trash2 className="h-4 w-4" />
                                 Delete Account
                             </Button>
                         </div>
@@ -768,6 +817,90 @@ export default function SettingsPage() {
                                     </>
                                 ) : (
                                     "Change Password"
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Account Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
+                    <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                                <div className="p-2 rounded-lg bg-red-100">
+                                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                                </div>
+                                <h3 className="text-lg font-semibold text-slate-900">Delete Account</h3>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setShowDeleteModal(false)
+                                    setDeleteConfirmText("")
+                                }}
+                                className="text-slate-400 hover:text-slate-600"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-3">
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                <p className="text-sm font-medium text-red-800 mb-2">
+                                    This action is permanent and cannot be undone.
+                                </p>
+                                <ul className="text-xs text-red-700 space-y-1 list-disc list-inside">
+                                    <li>All your chemicals and labels will be deleted</li>
+                                    <li>Your subscription will be cancelled immediately</li>
+                                    <li>Your audit logs will be removed</li>
+                                    <li>You will be signed out and unable to log back in</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <Label htmlFor="deleteConfirm" className="text-slate-700">
+                                    Type <span className="font-mono font-bold text-red-600">DELETE</span> to confirm
+                                </Label>
+                                <Input
+                                    id="deleteConfirm"
+                                    value={deleteConfirmText}
+                                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                                    placeholder="Type DELETE to confirm"
+                                    className="border-slate-200 mt-1"
+                                    autoComplete="off"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 pt-2">
+                            <Button
+                                variant="outline"
+                                onClick={() => {
+                                    setShowDeleteModal(false)
+                                    setDeleteConfirmText("")
+                                }}
+                                className="flex-1"
+                                disabled={deleteLoading}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleDeleteAccount}
+                                disabled={deleteConfirmText !== "DELETE" || deleteLoading}
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white disabled:bg-red-300"
+                            >
+                                {deleteLoading ? (
+                                    <>
+                                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                        Deleting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Trash2 className="h-4 w-4 mr-2" />
+                                        Delete My Account
+                                    </>
                                 )}
                             </Button>
                         </div>

@@ -2322,6 +2322,82 @@ async def fix_past_due_subscription(user: User = Depends(verify_user)):
         )
 
 
+@app.delete("/account")
+async def delete_account(user: User = Depends(verify_user)):
+    """
+    Permanently delete a user's account and all associated data.
+
+    This endpoint:
+    1. Cancels any active Lemon Squeezy subscription
+    2. Deletes all user data (chemicals, subscriptions, audit logs)
+    3. Deletes the user from Supabase Auth
+    """
+    from queries import get_user_subscription
+    import requests
+
+    user_id = user.id
+    errors = []
+
+    # Step 1: Cancel active Lemon Squeezy subscription (if any)
+    try:
+        subscription = await get_user_subscription(user_id)
+        if subscription and subscription.get("status") in ["active", "on_trial"]:
+            api_key = os.environ.get("LEMON_SQUEEZY_API_KEY")
+            lemon_subscription_id = subscription.get("lemon_subscription_id")
+            if api_key and lemon_subscription_id:
+                response = requests.delete(
+                    f"https://api.lemonsqueezy.com/v1/subscriptions/{lemon_subscription_id}",
+                    headers={
+                        "Accept": "application/vnd.api+json",
+                        "Content-Type": "application/vnd.api+json",
+                        "Authorization": f"Bearer {api_key}"
+                    }
+                )
+                if response.status_code not in [200, 204]:
+                    errors.append(f"Failed to cancel subscription: {response.status_code}")
+    except Exception as e:
+        errors.append(f"Subscription cancellation error: {str(e)}")
+
+    # Step 2: Delete all user data from database
+    supabase = get_supabase()
+
+    # Delete chemicals
+    try:
+        supabase.table("chemicals").delete().eq("user_id", user_id).execute()
+    except Exception as e:
+        errors.append(f"Failed to delete chemicals: {str(e)}")
+
+    # Delete subscriptions
+    try:
+        supabase.table("subscriptions").delete().eq("user_id", user_id).execute()
+    except Exception as e:
+        errors.append(f"Failed to delete subscriptions: {str(e)}")
+
+    # Delete audit logs
+    try:
+        supabase.table("audit_logs").delete().eq("user_id", user_id).execute()
+    except Exception as e:
+        errors.append(f"Failed to delete audit logs: {str(e)}")
+
+    # Step 3: Delete user from Supabase Auth (requires service role key)
+    try:
+        supabase.auth.admin.delete_user(user_id)
+    except Exception as e:
+        errors.append(f"Failed to delete auth user: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to delete account. Please contact support. Errors: {'; '.join(errors)}"
+        )
+
+    if errors:
+        print(f"Account deletion warnings for {user_id}: {errors}")
+
+    return {
+        "success": True,
+        "message": "Your account and all associated data have been permanently deleted."
+    }
+
+
 @app.get("/health")
 async def health_check():
     """Simple health check endpoint."""
