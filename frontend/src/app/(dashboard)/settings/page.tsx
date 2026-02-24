@@ -29,7 +29,11 @@ import {
     X,
     CreditCard,
     Trash2,
-    AlertTriangle
+    AlertTriangle,
+    ArrowRight,
+    MailCheck,
+    MousePointerClick,
+    RefreshCw
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -81,6 +85,8 @@ export default function SettingsPage() {
     const [showEmailModal, setShowEmailModal] = useState(false)
     const [newEmail, setNewEmail] = useState("")
     const [emailLoading, setEmailLoading] = useState(false)
+    const [emailSent, setEmailSent] = useState(false)
+    const [sentToEmail, setSentToEmail] = useState("")
 
     // Password change state
     const [showPasswordModal, setShowPasswordModal] = useState(false)
@@ -161,11 +167,8 @@ export default function SettingsPage() {
 
             if (error) throw error
 
-            toast.success("Verification email sent", {
-                description: `Check ${newEmail} for a confirmation link to complete the change.`,
-                duration: 6000,
-            })
-            setShowEmailModal(false)
+            setSentToEmail(newEmail)
+            setEmailSent(true)
             setNewEmail("")
         } catch (error) {
             toast.error("Failed to change email", {
@@ -174,6 +177,13 @@ export default function SettingsPage() {
         } finally {
             setEmailLoading(false)
         }
+    }
+
+    const closeEmailModal = () => {
+        setShowEmailModal(false)
+        setNewEmail("")
+        setEmailSent(false)
+        setSentToEmail("")
     }
 
     const handlePasswordChange = async () => {
@@ -629,76 +639,149 @@ export default function SettingsPage() {
             {/* Email Change Modal */}
             {showEmailModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 space-y-3">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-base font-semibold text-slate-900">Change Email Address</h3>
-                            <button
-                                onClick={() => {
-                                    setShowEmailModal(false)
-                                    setNewEmail("")
-                                }}
-                                className="text-slate-400 hover:text-slate-600"
-                            >
-                                <X className="h-4 w-4" />
-                            </button>
-                        </div>
+                    <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-5">
+                        {!emailSent ? (
+                            /* Step 1: Enter new email */
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-base font-semibold text-slate-900">Change Email Address</h3>
+                                    <button onClick={closeEmailModal} className="text-slate-400 hover:text-slate-600">
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                </div>
 
-                        <div className="space-y-2.5">
-                            <div className="space-y-1">
-                                <Label className="text-xs text-slate-600">Current Email</Label>
-                                <Input
-                                    value={user?.email || ""}
-                                    disabled
-                                    className="bg-slate-50 text-slate-500 h-9 text-sm"
-                                />
+                                <div className="space-y-2.5">
+                                    <div className="space-y-1">
+                                        <Label className="text-xs text-slate-600">Current Email</Label>
+                                        <Input
+                                            value={user?.email || ""}
+                                            disabled
+                                            className="bg-slate-50 text-slate-500 h-9 text-sm"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <Label htmlFor="newEmail" className="text-xs text-slate-600">New Email</Label>
+                                        <Input
+                                            id="newEmail"
+                                            type="email"
+                                            value={newEmail}
+                                            onChange={(e) => setNewEmail(e.target.value)}
+                                            placeholder="new.email@example.com"
+                                            className="border-slate-200 h-9 text-sm"
+                                            onKeyDown={(e) => e.key === "Enter" && newEmail && handleEmailChange()}
+                                        />
+                                    </div>
+
+                                    {/* How it works */}
+                                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                                        <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-2">How it works</p>
+                                        <div className="space-y-2">
+                                            <div className="flex items-start gap-2">
+                                                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center text-[10px] font-bold mt-0.5">1</div>
+                                                <p className="text-xs text-slate-600">We&apos;ll send a verification link to your <span className="font-medium">new email</span></p>
+                                            </div>
+                                            <div className="flex items-start gap-2">
+                                                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center text-[10px] font-bold mt-0.5">2</div>
+                                                <p className="text-xs text-slate-600">Click the link in the email to confirm</p>
+                                            </div>
+                                            <div className="flex items-start gap-2">
+                                                <div className="flex-shrink-0 w-4 h-4 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center text-[10px] font-bold mt-0.5">3</div>
+                                                <p className="text-xs text-slate-600">Your email will be updated automatically</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-2.5 pt-1">
+                                    <Button
+                                        variant="outline"
+                                        onClick={closeEmailModal}
+                                        className="flex-1 h-9 text-sm"
+                                        disabled={emailLoading}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        onClick={handleEmailChange}
+                                        disabled={!newEmail || emailLoading}
+                                        className="flex-1 h-9 text-sm bg-sky-600 hover:bg-sky-700"
+                                    >
+                                        {emailLoading ? (
+                                            <>
+                                                <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Send Verification
+                                                <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
                             </div>
+                        ) : (
+                            /* Step 2: Email sent — check your inbox */
+                            <div className="space-y-4 text-center">
+                                <div className="flex justify-center pt-1">
+                                    <div className="h-14 w-14 rounded-full bg-sky-50 border-2 border-sky-200 flex items-center justify-center">
+                                        <MailCheck className="h-7 w-7 text-sky-600" />
+                                    </div>
+                                </div>
 
-                            <div className="space-y-1">
-                                <Label htmlFor="newEmail" className="text-xs text-slate-600">New Email</Label>
-                                <Input
-                                    id="newEmail"
-                                    type="email"
-                                    value={newEmail}
-                                    onChange={(e) => setNewEmail(e.target.value)}
-                                    placeholder="new.email@example.com"
-                                    className="border-slate-200 h-9 text-sm"
-                                />
+                                <div className="space-y-1">
+                                    <h3 className="text-base font-semibold text-slate-900">Check Your Inbox</h3>
+                                    <p className="text-sm text-slate-500">
+                                        We sent a verification link to
+                                    </p>
+                                    <p className="text-sm font-medium text-slate-900 bg-slate-50 rounded-md py-1.5 px-3 inline-block">
+                                        {sentToEmail}
+                                    </p>
+                                </div>
+
+                                {/* Instructions */}
+                                <div className="bg-sky-50 border border-sky-200 rounded-lg p-3 text-left space-y-2.5">
+                                    <div className="flex items-start gap-2.5">
+                                        <div className="flex-shrink-0 p-1 rounded-md bg-sky-100">
+                                            <Mail className="h-3.5 w-3.5 text-sky-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-medium text-slate-800">Open the email from HazLabel</p>
+                                            <p className="text-[11px] text-slate-500">Check spam/junk if you don&apos;t see it</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <div className="flex-shrink-0 p-1 rounded-md bg-sky-100">
+                                            <MousePointerClick className="h-3.5 w-3.5 text-sky-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-medium text-slate-800">Click &quot;Change Email&quot; in the email</p>
+                                            <p className="text-[11px] text-slate-500">This confirms you own the new address</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-2.5">
+                                        <div className="flex-shrink-0 p-1 rounded-md bg-sky-100">
+                                            <RefreshCw className="h-3.5 w-3.5 text-sky-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-medium text-slate-800">You&apos;ll be redirected back here</p>
+                                            <p className="text-[11px] text-slate-500">Your email updates instantly once confirmed</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="pt-1">
+                                    <Button
+                                        variant="outline"
+                                        onClick={closeEmailModal}
+                                        className="w-full h-9 text-sm"
+                                    >
+                                        Got it, I&apos;ll check my email
+                                    </Button>
+                                </div>
                             </div>
-
-                            <div className="bg-sky-50 border border-sky-200 rounded-lg p-2.5">
-                                <p className="text-xs text-slate-600 leading-relaxed">
-                                    A verification link will be sent to your new email. Confirm it to complete the change.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-2.5 pt-1">
-                            <Button
-                                variant="outline"
-                                onClick={() => {
-                                    setShowEmailModal(false)
-                                    setNewEmail("")
-                                }}
-                                className="flex-1 h-9 text-sm"
-                                disabled={emailLoading}
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={handleEmailChange}
-                                disabled={!newEmail || emailLoading}
-                                className="flex-1 h-9 text-sm bg-sky-600 hover:bg-sky-700"
-                            >
-                                {emailLoading ? (
-                                    <>
-                                        <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" />
-                                        Sending...
-                                    </>
-                                ) : (
-                                    "Send Verification"
-                                )}
-                            </Button>
-                        </div>
+                        )}
                     </div>
                 </div>
             )}

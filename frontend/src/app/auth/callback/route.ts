@@ -7,7 +7,7 @@ export async function GET(request: Request) {
     const type = searchParams.get('type')
 
     // Determine redirect based on callback type
-    const next = type === 'email_change' ? '/settings' : '/auth/verified'
+    const next = type === 'email_change' ? '/auth/email-changed' : '/auth/verified'
 
     if (code) {
         const supabase = await createClient()
