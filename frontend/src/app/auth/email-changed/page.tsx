@@ -15,17 +15,19 @@ export default function EmailChangedPage() {
     const [countdown, setCountdown] = useState(5)
 
     useEffect(() => {
-        // Check session to confirm the email change went through
+        // Check session to get the updated email address.
+        // Note: The email change is already applied by Supabase's /verify endpoint
+        // before redirecting here, so we show success even if the session check fails
+        // (which happens when the verification link opens in a new tab without cookies).
         const checkSession = async () => {
             const supabase = createClient()
-            const { data: { user }, error } = await supabase.auth.getUser()
+            const { data: { user } } = await supabase.auth.getUser()
 
-            if (error || !user) {
-                setStatus("error")
-                return
+            if (user?.email) {
+                setNewEmail(user.email)
             }
-
-            setNewEmail(user.email || null)
+            // Always show success — the email change was applied by Supabase
+            // before redirecting to this page
             setStatus("success")
         }
 
@@ -34,9 +36,9 @@ export default function EmailChangedPage() {
         return () => clearTimeout(timer)
     }, [])
 
-    // Countdown and auto-redirect once success
+    // Countdown and auto-redirect once success (only if we have a session)
     useEffect(() => {
-        if (status !== "success") return
+        if (status !== "success" || !newEmail) return
 
         const interval = setInterval(() => {
             setCountdown((prev) => {
@@ -50,7 +52,7 @@ export default function EmailChangedPage() {
         }, 1000)
 
         return () => clearInterval(interval)
-    }, [status, router])
+    }, [status, newEmail, router])
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-cyan-50 px-6">
@@ -123,14 +125,20 @@ export default function EmailChangedPage() {
                             <h1 className="text-2xl font-bold text-slate-900">
                                 Email Changed Successfully
                             </h1>
-                            <p className="text-slate-600">
-                                Your email has been updated to:
-                            </p>
-                            {newEmail && (
-                                <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
-                                    <Mail className="h-4 w-4 text-emerald-600" />
-                                    <span className="text-sm font-semibold text-emerald-800">{newEmail}</span>
-                                </div>
+                            {newEmail ? (
+                                <>
+                                    <p className="text-slate-600">
+                                        Your email has been updated to:
+                                    </p>
+                                    <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
+                                        <Mail className="h-4 w-4 text-emerald-600" />
+                                        <span className="text-sm font-semibold text-emerald-800">{newEmail}</span>
+                                    </div>
+                                </>
+                            ) : (
+                                <p className="text-slate-600">
+                                    Your email address has been updated. You can close this tab and return to your settings.
+                                </p>
                             )}
                         </div>
 
@@ -148,30 +156,43 @@ export default function EmailChangedPage() {
                                 </div>
                                 <p className="text-sm text-slate-600">Email address updated</p>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-sky-100 flex items-center justify-center">
-                                    <Loader2 className="h-3.5 w-3.5 text-sky-600 animate-spin" />
+                            {newEmail && (
+                                <div className="flex items-center gap-3">
+                                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-sky-100 flex items-center justify-center">
+                                        <Loader2 className="h-3.5 w-3.5 text-sky-600 animate-spin" />
+                                    </div>
+                                    <p className="text-sm text-slate-700 font-medium">Redirecting to settings...</p>
                                 </div>
-                                <p className="text-sm text-slate-700 font-medium">Redirecting to settings...</p>
-                            </div>
+                            )}
                         </div>
 
                         {/* Action */}
                         <div className="space-y-3 pt-2">
-                            <Button
-                                asChild
-                                className="w-full h-11 bg-sky-600 hover:bg-sky-700 text-white font-semibold gap-2"
-                            >
-                                <Link href="/settings">
-                                    Go to Settings
-                                    <ArrowRight className="h-4 w-4" />
-                                </Link>
-                            </Button>
+                            {newEmail ? (
+                                <Button
+                                    asChild
+                                    className="w-full h-11 bg-sky-600 hover:bg-sky-700 text-white font-semibold gap-2"
+                                >
+                                    <Link href="/settings">
+                                        Go to Settings
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            ) : (
+                                <button
+                                    onClick={() => window.close()}
+                                    className="w-full h-11 bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-lg transition-colors"
+                                >
+                                    Close This Tab
+                                </button>
+                            )}
                         </div>
 
-                        <p className="text-xs text-slate-400">
-                            Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...
-                        </p>
+                        {newEmail && (
+                            <p className="text-xs text-slate-400">
+                                Redirecting in {countdown} second{countdown !== 1 ? "s" : ""}...
+                            </p>
+                        )}
                     </>
                 )}
 
