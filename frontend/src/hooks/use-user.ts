@@ -10,8 +10,8 @@ export function useUser() {
     const supabase = createClient()
 
     useEffect(() => {
-        // Get initial user
-        const getUser = async () => {
+        // Get initial user from server (not cached JWT)
+        const fetchUser = async () => {
             try {
                 const { data: { user } } = await supabase.auth.getUser()
                 setUser(user)
@@ -23,12 +23,26 @@ export function useUser() {
             }
         }
 
-        getUser()
+        fetchUser()
 
-        // Listen for auth changes
+        // Listen for auth changes — fetch fresh server data instead of
+        // using session.user which may have stale JWT claims (e.g. after email change)
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            (_event, session) => {
-                setUser(session?.user ?? null)
+            async (event, session) => {
+                if (!session) {
+                    setUser(null)
+                    setLoading(false)
+                    return
+                }
+                // For sign-out, clear immediately
+                if (event === "SIGNED_OUT") {
+                    setUser(null)
+                    setLoading(false)
+                    return
+                }
+                // Fetch fresh user data from server
+                const { data: { user } } = await supabase.auth.getUser()
+                setUser(user)
                 setLoading(false)
             }
         )
