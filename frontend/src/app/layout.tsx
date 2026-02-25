@@ -5,6 +5,22 @@ import { Toaster } from "@/components/ui/sonner";
 import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
+  display: "swap",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.hazlabel.co"),
@@ -54,7 +70,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased font-sans bg-white text-slate-900 selection:bg-cyan-500/20">
+      <body className={`${instrumentSerif.variable} ${plusJakartaSans.variable} antialiased font-sans bg-white text-slate-900 selection:bg-cyan-500/20`}>
         <Providers>
           {children}
           <Toaster position="top-right" richColors />
