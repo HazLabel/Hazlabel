@@ -106,6 +106,12 @@ export default function SettingsPage() {
     const supabase = createClient()
     const router = useRouter()
 
+    // Refresh session on mount to pick up any changes made externally
+    // (e.g. email change confirmed via verification link in another tab)
+    useEffect(() => {
+        supabase.auth.refreshSession()
+    }, [])
+
     // Load settings from user metadata
     useEffect(() => {
         if (user) {
