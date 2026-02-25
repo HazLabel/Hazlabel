@@ -55,7 +55,6 @@ def load_and_sanitize_env():
                 val = val.replace(f"{var}=", "", 1).strip()
             # Ensure it's only one line
             if "\n" in val:
-                print(f"DEBUG: Sanitizing {var} (removed newline)")
                 val = val.split("\n")[0].strip()
             
             if val.strip() != os.environ.get(var):

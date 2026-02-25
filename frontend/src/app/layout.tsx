@@ -78,6 +78,34 @@ export default function RootLayout({
           <Analytics />
         </Providers>
 
+        {/* JSON-LD Structured Data */}
+        <Script id="json-ld-organization" type="application/ld+json" strategy="afterInteractive">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "HazLabel",
+            "url": "https://www.hazlabel.co",
+            "logo": "https://www.hazlabel.co/logo.png",
+            "description": "AI-powered GHS compliance platform for industrial chemical safety. Automate SDS parsing, label generation, and regulatory compliance."
+          })}
+        </Script>
+        <Script id="json-ld-software" type="application/ld+json" strategy="afterInteractive">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "HazLabel",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "url": "https://www.hazlabel.co",
+            "offers": {
+              "@type": "AggregateOffer",
+              "lowPrice": "0",
+              "highPrice": "299",
+              "priceCurrency": "USD"
+            }
+          })}
+        </Script>
+
         {/* SEO Fixer */}
         <Script
           src="https://seo-fixer.writesonic.com/site-audit/fixer-script/index.js"

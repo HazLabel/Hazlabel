@@ -438,9 +438,7 @@ async def suggest_pictograms(h_codes: str = Query(..., description="Comma-separa
 async def list_chemicals(user: User = Depends(verify_user)):
     """List all chemicals in user's vault."""
     try:
-        print(f"DEBUG: Listing chemicals for user {user.id}")
         chemicals = await get_chemicals(user.id)
-        print(f"DEBUG: Found {len(chemicals)} chemicals for user {user.id}")
         return chemicals
     except Exception as e:
         import traceback

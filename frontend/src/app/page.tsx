@@ -11,8 +11,6 @@ import {
     FileSearch,
     Database,
     CheckCircle2,
-    Linkedin,
-    Twitter,
     History,
     Plus,
     ChevronRight,
@@ -643,10 +641,6 @@ export default function LandingPage() {
                             <p className="text-slate-400 text-sm max-w-xs leading-relaxed">
                                 The modern compliance platform for industrial chemical safety. Built on precision AI and GHS expertise.
                             </p>
-                            <div className="flex gap-4">
-                                <a href="#" className="text-slate-500 hover:text-white transition-colors"><Twitter className="h-4 w-4" /></a>
-                                <a href="#" className="text-slate-500 hover:text-white transition-colors"><Linkedin className="h-4 w-4" /></a>
-                            </div>
                         </div>
                         <FooterLinks title="Product" links={[{ label: "Features", href: "/#features" }, { label: "Pricing", href: "/pricing" }, { label: "API Docs", href: "#" }, { label: "Changelog", href: "#" }]} />
                         <FooterLinks title="Company" links={["About", "Blog", "Careers", "Contact"]} />
