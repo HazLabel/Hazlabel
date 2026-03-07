@@ -349,38 +349,57 @@ export default function ChemicalDetailPage() {
                     )}
 
                     {/* Metadata */}
-                    <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal delay-200">
-                        <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                            Record Details
-                        </h2>
-                        <div className="space-y-4">
+                    <section className="bg-white rounded-xl border border-slate-200 shadow-sm animate-reveal delay-200 overflow-hidden">
+                        <div className="px-5 py-4 border-b border-slate-100">
+                            <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">Record Details</h2>
+                        </div>
+                        <div className="divide-y divide-slate-100">
                             {ghs?.supplier_info && (
-                                <div>
-                                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                                <div className="px-5 py-4">
+                                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                                         Supplier / Manufacturer
                                     </p>
-                                    <p className="text-slate-900 font-medium text-sm leading-relaxed">
-                                        {ghs.supplier_info}
-                                    </p>
+                                    <div className="space-y-0.5">
+                                        {ghs.supplier_info
+                                            .split(/\\n|\n/)
+                                            .map(s => s.trim())
+                                            .filter(Boolean)
+                                            .map((line, i) => {
+                                                const isEmail = line.includes("@")
+                                                const isUrl = line.startsWith("http") || line.startsWith("www.")
+                                                const isPhone = /[\d\-\(\)\+]{7,}/.test(line) && !isEmail && !isUrl
+                                                if (isEmail) return (
+                                                    <a key={i} href={`mailto:${line}`} className="block text-sm text-sky-600 hover:underline truncate">{line}</a>
+                                                )
+                                                if (isUrl) return (
+                                                    <a key={i} href={line.startsWith("http") ? line : `https://${line}`} target="_blank" rel="noopener noreferrer" className="block text-sm text-sky-600 hover:underline truncate">{line}</a>
+                                                )
+                                                return (
+                                                    <p key={i} className={`text-sm ${i === 0 ? "font-semibold text-slate-900" : "text-slate-600"}`}>
+                                                        {line}
+                                                    </p>
+                                                )
+                                            })}
+                                    </div>
                                 </div>
                             )}
                             {ghs?.sds_date && (
-                                <div>
-                                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                                <div className="px-5 py-4">
+                                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                                         SDS Revision Date
                                     </p>
-                                    <p className="text-slate-900 font-medium flex items-center gap-2">
-                                        <FileText className="h-4 w-4 text-slate-400" />
+                                    <p className="text-sm font-medium text-slate-900 flex items-center gap-2">
+                                        <FileText className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                                         {ghs.sds_date}
                                     </p>
                                 </div>
                             )}
-                            <div>
-                                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                            <div className="px-5 py-4">
+                                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                                     Added
                                 </p>
-                                <p className="text-slate-900 font-medium flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-slate-400" />
+                                <p className="text-sm font-medium text-slate-900 flex items-center gap-2">
+                                    <Calendar className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                                     {new Date(chemical.created_at).toLocaleDateString("en-US", {
                                         year: "numeric",
                                         month: "long",
@@ -388,11 +407,11 @@ export default function ChemicalDetailPage() {
                                     })}
                                 </p>
                             </div>
-                            <div>
-                                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">
+                            <div className="px-5 py-4">
+                                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                                     Record ID
                                 </p>
-                                <p className="text-slate-500 font-mono text-sm">
+                                <p className="text-xs text-slate-400 font-mono break-all">
                                     {chemical.id}
                                 </p>
                             </div>
