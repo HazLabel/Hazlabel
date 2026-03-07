@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import type { BlogFrontmatter } from "@/lib/blog";
+import { BlogCTA } from "./blog-cta";
 
 interface BlogPostLayoutProps {
   frontmatter: BlogFrontmatter;
