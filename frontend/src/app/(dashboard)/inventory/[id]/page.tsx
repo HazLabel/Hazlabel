@@ -62,10 +62,10 @@ function groupPCodes(statements: string[]): Record<PCodeCategory, GroupedPCode[]
     }
 
     statements.forEach(statement => {
-        const code = statement.split(":")[0]?.trim() || statement.split(" ")[0]
-        const text = statement.includes(":")
-            ? statement.split(":").slice(1).join(":").trim()
-            : statement
+        // Extract P-code(s) from the beginning: P280, P301+P330+P331, etc.
+        const match = statement.match(/^(P\d+(?:\+P\d+)*)[\s:.]*(.*)/s)
+        const code = match ? match[1] : statement.split(/[\s:]/)[0]
+        const text = match && match[2] ? match[2].trim() : statement
         const category = categorizePCode(code)
 
         groups[category].push({
@@ -198,7 +198,7 @@ export default function ChemicalDetailPage() {
             {/* Main Content Grid */}
             <div className="grid lg:grid-cols-3 gap-6">
                 {/* Main Content */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-6 min-w-0">
                     {/* Product Identifier - Required on GHS Labels */}
                     <section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm animate-reveal">
                         <div className="flex items-center justify-between">
@@ -273,7 +273,7 @@ export default function ChemicalDetailPage() {
                                     Precautionary Statements (P-Codes)
                                 </h2>
                             </div>
-                            <div className="p-4 space-y-6">
+                            <div className="p-4 space-y-6 min-w-0">
                                 {(() => {
                                     const grouped = groupPCodes(ghs.precautionary_statements)
                                     return (
@@ -303,7 +303,7 @@ export default function ChemicalDetailPage() {
                                                                 <div
                                                                     key={i}
                                                                     className={cn(
-                                                                        "flex items-start gap-3 p-3 rounded-lg border",
+                                                                        "flex items-start gap-3 p-3 rounded-lg border min-w-0",
                                                                         config.color === "sky" && "bg-sky-50 border-sky-100",
                                                                         config.color === "amber" && "bg-amber-50 border-amber-100",
                                                                         config.color === "violet" && "bg-violet-50 border-violet-100",
@@ -319,7 +319,7 @@ export default function ChemicalDetailPage() {
                                                                     )}>
                                                                         {item.code}
                                                                     </span>
-                                                                    <span className="text-slate-700 text-sm">
+                                                                    <span className="text-slate-700 text-sm break-words min-w-0">
                                                                         {item.statement}
                                                                     </span>
                                                                 </div>
@@ -337,7 +337,7 @@ export default function ChemicalDetailPage() {
                 </div>
 
                 {/* Sidebar */}
-                <div className="space-y-6">
+                <div className="space-y-6 min-w-0">
                     {/* Validation Panel */}
                     {chemical.validation_results && (
                         <div className="animate-reveal delay-100">
@@ -355,27 +355,26 @@ export default function ChemicalDetailPage() {
                         </div>
                         <div className="divide-y divide-slate-100">
                             {ghs?.supplier_info && (
-                                <div className="px-5 py-4">
+                                <div className="px-5 py-4 overflow-hidden">
                                     <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">
                                         Supplier / Manufacturer
                                     </p>
-                                    <div className="space-y-0.5">
+                                    <div className="space-y-0.5 min-w-0">
                                         {ghs.supplier_info
-                                            .split(/\\n|\n/)
+                                            .split(/\\n|\n|\\\\n/)
                                             .map(s => s.trim())
                                             .filter(Boolean)
                                             .map((line, i) => {
                                                 const isEmail = line.includes("@")
                                                 const isUrl = line.startsWith("http") || line.startsWith("www.")
-                                                const isPhone = /[\d\-\(\)\+]{7,}/.test(line) && !isEmail && !isUrl
                                                 if (isEmail) return (
-                                                    <a key={i} href={`mailto:${line}`} className="block text-sm text-sky-600 hover:underline truncate">{line}</a>
+                                                    <a key={i} href={`mailto:${line}`} className="block text-sm text-sky-600 hover:underline break-all">{line}</a>
                                                 )
                                                 if (isUrl) return (
-                                                    <a key={i} href={line.startsWith("http") ? line : `https://${line}`} target="_blank" rel="noopener noreferrer" className="block text-sm text-sky-600 hover:underline truncate">{line}</a>
+                                                    <a key={i} href={line.startsWith("http") ? line : `https://${line}`} target="_blank" rel="noopener noreferrer" className="block text-sm text-sky-600 hover:underline break-all">{line}</a>
                                                 )
                                                 return (
-                                                    <p key={i} className={`text-sm ${i === 0 ? "font-semibold text-slate-900" : "text-slate-600"}`}>
+                                                    <p key={i} className={`text-sm break-words ${i === 0 ? "font-semibold text-slate-900" : "text-slate-600"}`}>
                                                         {line}
                                                     </p>
                                                 )
