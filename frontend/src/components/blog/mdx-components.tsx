@@ -17,9 +17,7 @@ export const mdxComponents = {
       className="editorial-heading text-2xl md:text-3xl font-normal text-slate-900 mt-12 mb-4 scroll-mt-24 group"
       {...props}
     >
-      <a href={`#${id}`} className="no-underline hover:underline decoration-sky-500/30 underline-offset-4">
-        {children}
-      </a>
+      {children}
     </h2>
   ),
   h3: ({ children, id, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
@@ -78,13 +76,16 @@ export const mdxComponents = {
   ),
   a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
     const isExternal = href?.startsWith("http");
-    if (isExternal) {
+    const isAnchor = href?.startsWith("#");
+    if (isExternal || isAnchor) {
       return (
         <a
           href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sky-600 hover:text-sky-700 underline underline-offset-2 decoration-sky-500/30 hover:decoration-sky-500"
+          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          className={isAnchor
+            ? "no-underline hover:underline decoration-sky-500/30 underline-offset-4"
+            : "text-sky-600 hover:text-sky-700 underline underline-offset-2 decoration-sky-500/30 hover:decoration-sky-500"
+          }
           {...props}
         >
           {children}
@@ -92,7 +93,7 @@ export const mdxComponents = {
       );
     }
     return (
-      <Link href={href || "#"} className="text-sky-600 hover:text-sky-700 underline underline-offset-2 decoration-sky-500/30 hover:decoration-sky-500" {...props}>
+      <Link href={href || "/"} className="text-sky-600 hover:text-sky-700 underline underline-offset-2 decoration-sky-500/30 hover:decoration-sky-500" {...props}>
         {children}
       </Link>
     );

@@ -4,7 +4,6 @@ import Script from "next/script";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { getPostBySlug, getAllSlugs } from "@/lib/blog";
 import { BlogPostLayout } from "@/components/blog/blog-post-layout";
 import { mdxComponents } from "@/components/blog/mdx-components";
@@ -61,7 +60,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       parseFrontmatter: false,
       mdxOptions: {
         remarkPlugins: [remarkGfm],
-        rehypePlugins: [rehypeSlug, [rehypeAutolinkHeadings, { behavior: "wrap" }]],
+        rehypePlugins: [rehypeSlug],
       },
     },
   });
