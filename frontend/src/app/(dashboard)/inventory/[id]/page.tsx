@@ -63,7 +63,8 @@ function groupPCodes(statements: string[]): Record<PCodeCategory, GroupedPCode[]
 
     statements.forEach(statement => {
         // Extract P-code(s) from the beginning: P280, P301+P330+P331, etc.
-        const match = statement.match(/^(P\d+(?:\+P\d+)*)[\s:.]*(.*)/s)
+        const match = statement.match(/^(P\d+(?:\+P\d+)*)[\s:.]*(.*)/)
+
         const code = match ? match[1] : statement.split(/[\s:]/)[0]
         const text = match && match[2] ? match[2].trim() : statement
         const category = categorizePCode(code)
