@@ -81,36 +81,34 @@ export function BlogPostLayout({ frontmatter, heroImage, children }: BlogPostLay
       )}
 
       {/* Content + Sidebar */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex gap-12">
-          {/* Article */}
-          <article className="min-w-0 max-w-3xl flex-1">
-            {children}
-          </article>
+      <div className="relative max-w-7xl mx-auto px-6 py-12">
+        {/* Article — centered */}
+        <article className="max-w-3xl mx-auto">
+          {children}
+        </article>
 
-          {/* Sidebar CTA */}
-          <aside className="hidden lg:block w-80 shrink-0">
-            <div className="sticky top-28">
-              <div className="glass-card-landing rounded-2xl p-6 space-y-4">
-                <h3 className="editorial-heading text-xl text-slate-900">
-                  Generate GHS Labels in Seconds
-                </h3>
-                <p className="text-sm text-slate-500 leading-relaxed">
-                  Upload your SDS and let AI extract hazard data, validate against GHS Rev 11, and generate print-ready labels.
-                </p>
-                <Button asChild className="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-full shadow-lg shadow-sky-500/20">
-                  <Link href="/login" className="flex items-center justify-center gap-2">
-                    Try HazLabel Free
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </Button>
-                <p className="text-xs text-slate-400 text-center">
-                  No credit card required
-                </p>
-              </div>
+        {/* Sidebar CTA — floats independently on xl screens */}
+        <aside className="hidden xl:block absolute top-12 right-6 w-72">
+          <div className="sticky top-28">
+            <div className="glass-card-landing rounded-2xl p-6 space-y-4">
+              <h3 className="editorial-heading text-xl text-slate-900">
+                Generate GHS Labels in Seconds
+              </h3>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Upload your SDS and let AI extract hazard data, validate against GHS Rev 11, and generate print-ready labels.
+              </p>
+              <Button asChild className="w-full bg-sky-600 hover:bg-sky-700 text-white font-semibold rounded-full shadow-lg shadow-sky-500/20">
+                <Link href="/login" className="flex items-center justify-center gap-2">
+                  Try HazLabel Free
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+              <p className="text-xs text-slate-400 text-center">
+                No credit card required
+              </p>
             </div>
-          </aside>
-        </div>
+          </div>
+        </aside>
       </div>
 
       {/* Footer */}
