@@ -272,6 +272,7 @@ export default function LandingPage() {
                         <NavLink href="#features">Features</NavLink>
                         <NavLink href="#how-it-works">How it Works</NavLink>
                         <NavLink href="/pricing">Pricing</NavLink>
+                        <NavLink href="/blog">Blog</NavLink>
                         <NavLink href="/inventory">Dashboard</NavLink>
                     </div>
 
@@ -753,7 +754,7 @@ export default function LandingPage() {
                             </p>
                         </div>
                         <FooterLinks title="Product" links={[{ label: "Features", href: "/#features" }, { label: "Pricing", href: "/pricing" }, { label: "API Docs", href: "#" }, { label: "Changelog", href: "#" }]} />
-                        <FooterLinks title="Company" links={["About", "Blog", "Careers", "Contact"]} />
+                        <FooterLinks title="Company" links={[{ label: "About", href: "#" }, { label: "Blog", href: "/blog" }, { label: "Careers", href: "#" }, { label: "Contact", href: "#" }]} />
                     </div>
                     <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
                         <p>&copy; 2026 HazLabel. All rights reserved.</p>
