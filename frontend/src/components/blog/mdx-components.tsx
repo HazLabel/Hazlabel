@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { BlogCTA } from "@/components/blog/blog-cta";
 
 export const mdxComponents = {
+  BlogCTA,
   h1: ({ children, id, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1
       id={id}
