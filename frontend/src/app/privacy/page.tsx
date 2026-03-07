@@ -3,11 +3,12 @@ import LegalLayout from "../legal-layout"
 import { ShieldCheck } from "lucide-react"
 
 export const metadata: Metadata = {
-    title: "Privacy Policy | HazLabel",
+    title: "Privacy Policy | HazLabel — GHS Compliance Platform",
     description: "How HazLabel collects, uses, and protects your data. Enterprise-grade encryption for all chemical safety documents and personal information.",
     alternates: { canonical: "/privacy" },
+    robots: { index: true, follow: true },
     openGraph: {
-        title: "Privacy Policy | HazLabel",
+        title: "Privacy Policy | HazLabel — GHS Compliance Platform",
         description: "How HazLabel collects, uses, and protects your data.",
         url: "https://www.hazlabel.co/privacy",
     },

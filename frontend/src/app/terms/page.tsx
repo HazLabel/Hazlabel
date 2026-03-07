@@ -3,11 +3,12 @@ import LegalLayout from "../legal-layout"
 import { Scale } from "lucide-react"
 
 export const metadata: Metadata = {
-    title: "Terms of Service | HazLabel",
+    title: "Terms of Service | HazLabel — GHS Compliance Platform",
     description: "Terms and conditions for using HazLabel's AI-powered GHS compliance platform. Covers subscriptions, usage limits, and liability.",
     alternates: { canonical: "/terms" },
+    robots: { index: true, follow: true },
     openGraph: {
-        title: "Terms of Service | HazLabel",
+        title: "Terms of Service | HazLabel — GHS Compliance Platform",
         description: "Terms and conditions for using HazLabel.",
         url: "https://www.hazlabel.co/terms",
     },

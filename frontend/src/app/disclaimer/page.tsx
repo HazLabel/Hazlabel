@@ -3,11 +3,12 @@ import LegalLayout from "../legal-layout"
 import { ShieldAlert } from "lucide-react"
 
 export const metadata: Metadata = {
-    title: "Safety & Liability Disclaimer | HazLabel",
+    title: "Safety & Liability Disclaimer | HazLabel — GHS Platform",
     description: "Important safety and liability information about HazLabel's AI-generated GHS labels. Understand the limitations of automated chemical classification.",
     alternates: { canonical: "/disclaimer" },
+    robots: { index: true, follow: true },
     openGraph: {
-        title: "Safety & Liability Disclaimer | HazLabel",
+        title: "Safety & Liability Disclaimer | HazLabel — GHS Platform",
         description: "Important safety information about AI-generated GHS labels.",
         url: "https://www.hazlabel.co/disclaimer",
     },
