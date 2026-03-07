@@ -27,7 +27,7 @@ export function BlogCTA() {
               className="bg-sky-500 hover:bg-sky-600 text-white font-semibold px-8 py-3 rounded-full text-sm shadow-lg shadow-sky-500/25 transition-all hover:shadow-sky-500/40"
             >
               <Link
-                href="/login"
+                href="/"
                 className="inline-flex items-center gap-2"
               >
                 Try HazLabel Free
