@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "HazLabel | AI-Driven Industrial Chemical Safety",
     description: "Automate GHS compliance with agentic AI. Parse SDS and generate ZPL labels.",
-    url: "https://www.hazlabel.co",
+    url: "https://www.hazlabel.co/",
     siteName: "HazLabel",
     images: [
       {

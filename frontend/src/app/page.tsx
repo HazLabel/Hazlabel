@@ -747,7 +747,7 @@ function PricingCard({
                     asChild
                 >
                     {price === "Custom" ? (
-                        <Link href="/contact">Contact Sales</Link>
+                        <a href="mailto:support@hazlabel.co">Contact Sales</a>
                     ) : price === "0" ? (
                         <Link href="/login">Get Started</Link>
                     ) : (
