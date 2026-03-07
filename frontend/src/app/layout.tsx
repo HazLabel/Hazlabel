@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.hazlabel.co"),
   title: "HazLabel | AI-Driven Industrial Chemical Safety & GHS Compliance",
   description: "Automate GHS compliance with agentic AI. Parse SDS, generate ZPL labels, and manage industrial chemical safety in one futuristic platform.",
-  keywords: ["GHS Compliance", "SDS Parsing", "AI Chemical Safety", "ZPL Label Generator", "Industrial Safety Dashboard"],
+  keywords: ["GHS Compliance", "SDS Parsing", "AI Chemical Safety", "ZPL Label Generator", "Industrial Safety Dashboard", "GHS Compliant Labels", "Hazard Communication", "Chemical Inventory Management", "AI SDS Parsing", "Safety Data Sheet Management", "OSHA HazCom Compliance", "GHS Label Requirements", "Chemical Safety Software"],
   alternates: {
     canonical: "https://www.hazlabel.co",
   },

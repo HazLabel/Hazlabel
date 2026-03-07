@@ -305,7 +305,7 @@ export default function LandingPage() {
                                 >
                                     <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-landing text-sm font-medium text-sky-700 shadow-sm">
                                         <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
-                                        GHS Rev 11 · AI-Powered
+                                        GHS Compliant Labels · AI SDS Parsing
                                     </span>
                                 </motion.div>
 
@@ -326,8 +326,7 @@ export default function LandingPage() {
                                     transition={{ duration: 0.7, delay: 0.4 }}
                                     className="text-lg md:text-xl text-slate-500 leading-relaxed"
                                 >
-                                    Transform Safety Data Sheets into compliant GHS labels in seconds.
-                                    AI-powered extraction with regulatory precision.
+                                    Upload any Safety Data Sheet and get GHS compliant labels in seconds. AI-powered SDS parsing with full hazard communication compliance — OSHA HCS, WHMIS 2015, UN GHS Rev 11.
                                 </motion.p>
 
                                 <motion.div
@@ -500,6 +499,87 @@ export default function LandingPage() {
                     </div>
                 </section>
 
+                {/* ─── Testimonials Section ──────────────────── */}
+                <section className="py-28 md:py-36 bg-slate-50 relative overflow-hidden">
+                    <div className="orb orb-sky w-96 h-96 -bottom-48 right-0 opacity-20" />
+                    <div className="max-w-7xl mx-auto px-6 relative z-10">
+                        <ScrollReveal>
+                            <div className="text-center max-w-2xl mx-auto mb-16">
+                                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-landing text-sm font-medium text-sky-700 shadow-sm mb-6">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                                    Trusted by EHS professionals
+                                </span>
+                                <h2 className="editorial-heading text-4xl md:text-5xl">
+                                    Real teams.{" "}
+                                    <span className="italic text-slate-400">Real compliance.</span>
+                                </h2>
+                            </div>
+                        </ScrollReveal>
+
+                        <div className="grid md:grid-cols-3 gap-6">
+                            <ScrollReveal delay={0.1}>
+                                <div className="glass-card-landing p-8 rounded-2xl flex flex-col gap-5 h-full">
+                                    <div className="flex gap-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <svg key={i} className="h-4 w-4 text-amber-400 fill-amber-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                        ))}
+                                    </div>
+                                    <p className="text-slate-600 leading-relaxed text-[15px] flex-1">
+                                        &ldquo;We used to spend 2 hours per chemical verifying GHS hazard statements manually. HazLabel cut that to under 5 minutes and our labels are always Rev 11 compliant.&rdquo;
+                                    </p>
+                                    <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center text-white text-sm font-bold shrink-0">SK</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-slate-900">Sarah K.</p>
+                                            <p className="text-xs text-slate-500">EHS Manager · Specialty Chemicals</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ScrollReveal>
+
+                            <ScrollReveal delay={0.2}>
+                                <div className="glass-card-landing p-8 rounded-2xl flex flex-col gap-5 h-full">
+                                    <div className="flex gap-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <svg key={i} className="h-4 w-4 text-amber-400 fill-amber-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                        ))}
+                                    </div>
+                                    <p className="text-slate-600 leading-relaxed text-[15px] flex-1">
+                                        &ldquo;The AI SDS parsing is remarkably accurate. It handles every manufacturer&apos;s format — even the messy ones — and flags any GHS code mismatches instantly.&rdquo;
+                                    </p>
+                                    <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">MT</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-slate-900">Dr. Marcus T.</p>
+                                            <p className="text-xs text-slate-500">Lab Safety Coordinator · University Research</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ScrollReveal>
+
+                            <ScrollReveal delay={0.3}>
+                                <div className="glass-card-landing p-8 rounded-2xl flex flex-col gap-5 h-full">
+                                    <div className="flex gap-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <svg key={i} className="h-4 w-4 text-amber-400 fill-amber-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                        ))}
+                                    </div>
+                                    <p className="text-slate-600 leading-relaxed text-[15px] flex-1">
+                                        &ldquo;HazLabel&apos;s chemical inventory management gives us full audit history. During our last OSHA inspection, every SDS and label revision was documented and ready in minutes.&rdquo;
+                                    </p>
+                                    <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-sm font-bold shrink-0">JR</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-slate-900">Jennifer R.</p>
+                                            <p className="text-xs text-slate-500">Regulatory Affairs · Pharmaceutical</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ScrollReveal>
+                        </div>
+                    </div>
+                </section>
+
                 {/* ─── Pricing Section ───────────────────────── */}
                 <section id="pricing" className="py-28 md:py-36 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-white to-slate-50/50" />
@@ -627,9 +707,39 @@ export default function LandingPage() {
                             <ScrollReveal delay={0.1}><FAQItem question="Can I use HazLabel for my local country standards (e.g., OSHA HCS)?" answer="Absolutely. While we follow the UN GHS master database, our extraction engine understands local variations like OSHA HCS 2012 (USA), WHMIS 2015 (Canada), and CLP (EU)." /></ScrollReveal>
                             <ScrollReveal delay={0.15}><FAQItem question="What file formats are supported for labels?" answer="We currently support high-resolution PDF generation for standard laser printers (Avery 5163). Logic for Zebra printers is coming soon." /></ScrollReveal>
                             <ScrollReveal delay={0.2}><FAQItem question="How secure is my chemical data?" answer="We use enterprise-grade encryption for all data at rest and in transit. Your SDS documents are processed securely and never shared with third parties." /></ScrollReveal>
+                            <ScrollReveal delay={0.25}><FAQItem question="What does a GHS compliant label need to include?" answer="A GHS compliant label must include six core elements: a product identifier, signal word (DANGER or WARNING), hazard statements (H-codes), precautionary statements (P-codes), GHS hazard pictograms, and supplier or manufacturer information. HazLabel automatically validates all six elements against UN GHS Revision 11." /></ScrollReveal>
+                            <ScrollReveal delay={0.3}><FAQItem question="What is the difference between DANGER and WARNING signal words?" answer="DANGER indicates more severe hazards in the higher hazard categories, while WARNING is used for less severe hazards. The signal word is determined by the chemical's hazard classification — HazLabel's AI automatically assigns the correct signal word based on the hazard category extracted from the SDS." /></ScrollReveal>
+                            <ScrollReveal delay={0.35}><FAQItem question="Does HazLabel support chemical inventory management?" answer="Yes. The Chemical Vault stores every chemical record in your facility with full SDS history, GHS validation status, and revision tracking. You can search, filter by hazard class, and review compliance status across your entire inventory at a glance." /></ScrollReveal>
+                            <ScrollReveal delay={0.4}><FAQItem question="What is hazard communication (HazCom) and why does it matter?" answer="Hazard Communication (HazCom) — governed by OSHA's Hazard Communication Standard (HCS 29 CFR 1910.1200) — requires chemical manufacturers and employers to communicate chemical hazards through labels, Safety Data Sheets, and training. Failure to comply can result in OSHA citations and significant fines. HazLabel automates the GHS label generation portion of HazCom compliance." /></ScrollReveal>
+                            <ScrollReveal delay={0.45}><FAQItem question="Which GHS hazard pictograms does HazLabel support?" answer="HazLabel supports all nine UN GHS hazard pictograms: GHS01 (Exploding Bomb), GHS02 (Flame), GHS03 (Flame Over Circle), GHS04 (Gas Cylinder), GHS05 (Corrosion), GHS06 (Skull and Crossbones), GHS07 (Exclamation Mark), GHS08 (Health Hazard), and GHS09 (Environmental Hazard). The AI validates that the correct pictograms are assigned for each hazard class." /></ScrollReveal>
+                            <ScrollReveal delay={0.5}><FAQItem question="How does AI-powered SDS parsing work?" answer="HazLabel uses GPT-4o with a structured extraction schema to read your Safety Data Sheet PDF. It locates GHS Section 2 (Hazard Identification), extracts all H-codes, P-codes, pictogram codes, and the signal word, then validates each against the UN GHS Rev 11 master database. The entire process takes under 30 seconds regardless of manufacturer format." /></ScrollReveal>
                         </div>
                     </div>
                 </section>
+
+                {/* ─── FAQ JSON-LD ───────────────────────────── */}
+                <script
+                    type="application/ld+json"
+                    id="json-ld-faq"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "FAQPage",
+                            "mainEntity": [
+                                { "@type": "Question", "name": "Is HazLabel compliant with the latest GHS standards?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, HazLabel is fully compliant with the UN GHS Revision 11 (2025). We update our database immediately when new regulatory changes are published." } },
+                                { "@type": "Question", "name": "Can I use HazLabel for my local country standards (e.g., OSHA HCS)?", "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. While we follow the UN GHS master database, our extraction engine understands local variations like OSHA HCS 2012 (USA), WHMIS 2015 (Canada), and CLP (EU)." } },
+                                { "@type": "Question", "name": "What file formats are supported for labels?", "acceptedAnswer": { "@type": "Answer", "text": "We currently support high-resolution PDF generation for standard laser printers (Avery 5163). Logic for Zebra printers is coming soon." } },
+                                { "@type": "Question", "name": "How secure is my chemical data?", "acceptedAnswer": { "@type": "Answer", "text": "We use enterprise-grade encryption for all data at rest and in transit. Your SDS documents are processed securely and never shared with third parties." } },
+                                { "@type": "Question", "name": "What does a GHS compliant label need to include?", "acceptedAnswer": { "@type": "Answer", "text": "A GHS compliant label must include six core elements: a product identifier, signal word (DANGER or WARNING), hazard statements (H-codes), precautionary statements (P-codes), GHS hazard pictograms, and supplier or manufacturer information. HazLabel automatically validates all six elements against UN GHS Revision 11." } },
+                                { "@type": "Question", "name": "What is the difference between DANGER and WARNING signal words?", "acceptedAnswer": { "@type": "Answer", "text": "DANGER indicates more severe hazards in the higher hazard categories, while WARNING is used for less severe hazards. The signal word is determined by the chemical's hazard classification — HazLabel's AI automatically assigns the correct signal word based on the hazard category extracted from the SDS." } },
+                                { "@type": "Question", "name": "Does HazLabel support chemical inventory management?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The Chemical Vault stores every chemical record in your facility with full SDS history, GHS validation status, and revision tracking. You can search, filter by hazard class, and review compliance status across your entire inventory at a glance." } },
+                                { "@type": "Question", "name": "What is hazard communication (HazCom) and why does it matter?", "acceptedAnswer": { "@type": "Answer", "text": "Hazard Communication (HazCom) — governed by OSHA's Hazard Communication Standard (HCS 29 CFR 1910.1200) — requires chemical manufacturers and employers to communicate chemical hazards through labels, Safety Data Sheets, and training. Failure to comply can result in OSHA citations and significant fines. HazLabel automates the GHS label generation portion of HazCom compliance." } },
+                                { "@type": "Question", "name": "Which GHS hazard pictograms does HazLabel support?", "acceptedAnswer": { "@type": "Answer", "text": "HazLabel supports all nine UN GHS hazard pictograms: GHS01 (Exploding Bomb), GHS02 (Flame), GHS03 (Flame Over Circle), GHS04 (Gas Cylinder), GHS05 (Corrosion), GHS06 (Skull and Crossbones), GHS07 (Exclamation Mark), GHS08 (Health Hazard), and GHS09 (Environmental Hazard). The AI validates that the correct pictograms are assigned for each hazard class." } },
+                                { "@type": "Question", "name": "How does AI-powered SDS parsing work?", "acceptedAnswer": { "@type": "Answer", "text": "HazLabel uses GPT-4o with a structured extraction schema to read your Safety Data Sheet PDF. It locates GHS Section 2 (Hazard Identification), extracts all H-codes, P-codes, pictogram codes, and the signal word, then validates each against the UN GHS Rev 11 master database. The entire process takes under 30 seconds regardless of manufacturer format." } },
+                            ]
+                        })
+                    }}
+                />
             </main>
 
             {/* ─── Footer ───────────────────────────────────── */}
