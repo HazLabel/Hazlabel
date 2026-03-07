@@ -711,9 +711,13 @@ async def bulk_print_pdf(request: BulkPrintRequest, user: User = Depends(verify_
         labels_per_page = 1
         cols = 1
         rows = 1
-        # Center single label on page
-        margin_left = (width - label_width) / 2
-        margin_top = (height - label_height) / 2
+        # Inset the label from page edges for proper GHS label structure
+        # 0.5" margin on all sides keeps content within standard printable area
+        page_margin = 0.5 * inch
+        label_width = width - (2 * page_margin)
+        label_height = height - (2 * page_margin)
+        margin_left = page_margin
+        margin_top = page_margin
     
     label_index = 0
     
@@ -1088,7 +1092,12 @@ async def bulk_print_pdf(request: BulkPrintRequest, user: User = Depends(verify_
         p.setFont("Helvetica", font_supplier)
         p.setFillColor(Color(0.4, 0.4, 0.4))
         supplier = ghs_data.get("supplier_info", "")
-        
+
+        # Normalize newlines: replace literal \n sequences and actual newlines with spaces
+        import re as _re
+        supplier = _re.sub(r'\\n|\\\\n|\n|\r', ' ', supplier)
+        supplier = _re.sub(r'\s{2,}', ' ', supplier).strip()
+
         # Compact format - abbreviate and truncate to fit
         max_supplier_width = text_width
         supplier_compact = supplier.replace("®", "").replace("NuGeneration Technologies, LLC (dba NuGenTec)", "NuGenTec")
