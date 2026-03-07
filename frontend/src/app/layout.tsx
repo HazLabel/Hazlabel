@@ -28,12 +28,12 @@ export const metadata: Metadata = {
   description: "Automate GHS compliance with agentic AI. Parse SDS, generate ZPL labels, and manage industrial chemical safety in one futuristic platform.",
   keywords: ["GHS Compliance", "SDS Parsing", "AI Chemical Safety", "ZPL Label Generator", "Industrial Safety Dashboard"],
   alternates: {
-    canonical: "/",
+    canonical: "https://www.hazlabel.co",
   },
   openGraph: {
     title: "HazLabel | AI-Driven Industrial Chemical Safety",
     description: "Automate GHS compliance with agentic AI. Parse SDS and generate ZPL labels.",
-    url: "https://www.hazlabel.co/",
+    url: "https://www.hazlabel.co",
     siteName: "HazLabel",
     images: [
       {
