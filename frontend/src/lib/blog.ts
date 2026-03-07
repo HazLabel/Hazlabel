@@ -13,6 +13,7 @@ export interface BlogFrontmatter {
   category: string;
   readTime: string;
   featured: boolean;
+  image?: string;
 }
 
 export interface BlogPost {

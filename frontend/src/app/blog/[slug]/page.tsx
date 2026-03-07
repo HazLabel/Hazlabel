@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       >
         {JSON.stringify(jsonLd)}
       </Script>
-      <BlogPostLayout frontmatter={post.frontmatter}>
+      <BlogPostLayout frontmatter={post.frontmatter} heroImage={post.frontmatter.image}>
         {content}
       </BlogPostLayout>
     </>

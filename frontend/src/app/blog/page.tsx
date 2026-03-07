@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/blog/blog-card";
 import { getAllPosts } from "@/lib/blog";
 
@@ -33,20 +32,6 @@ export default function BlogPage() {
           <Link href="/" className="flex items-center">
             <Image src="/logo.png" alt="HazLabel" width={140} height={35} className="h-8 w-auto" />
           </Link>
-          <div className="hidden md:flex items-center gap-10">
-            <Link href="/#features" className="text-[13px] uppercase tracking-[0.1em] font-medium text-slate-500 hover:text-slate-900 transition-colors">Features</Link>
-            <Link href="/#how-it-works" className="text-[13px] uppercase tracking-[0.1em] font-medium text-slate-500 hover:text-slate-900 transition-colors">How it Works</Link>
-            <Link href="/pricing" className="text-[13px] uppercase tracking-[0.1em] font-medium text-slate-500 hover:text-slate-900 transition-colors">Pricing</Link>
-            <Link href="/blog" className="text-[13px] uppercase tracking-[0.1em] font-medium text-sky-600 hover:text-sky-700 transition-colors">Blog</Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors hidden sm:block">
-              Sign In
-            </Link>
-            <Button asChild className="bg-sky-600 hover:bg-sky-700 text-white font-semibold px-6 py-2.5 rounded-full text-sm shadow-lg shadow-sky-500/20">
-              <Link href="/login">Get Started</Link>
-            </Button>
-          </div>
         </div>
       </nav>
 
