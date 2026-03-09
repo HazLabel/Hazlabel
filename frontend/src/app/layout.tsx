@@ -70,6 +70,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18000987405"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads-gtag" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-18000987405');
+          `}
+        </Script>
+      </head>
       <body className={`${instrumentSerif.variable} ${plusJakartaSans.variable} antialiased font-sans bg-white text-slate-900 selection:bg-cyan-500/20`}>
         <Providers>
           {children}
